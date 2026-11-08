@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>【完全図解】AIガチ勢・KEITO氏のAIエコシステム＆作業フロー徹底解説</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #131b2e;
+            --bg-card: rgba(25, 35, 58, 0.78);
+            --bg-card-hover: rgba(35, 49, 82, 0.92);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-orange: #ff6b35;
+            --accent-amber: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: rgba(148, 163, 184, 0.18);
+            --code-bg: #070a12;
+            --font-scale: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #eef2f6;
+            --bg-card: rgba(255, 255, 255, 0.94);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-orange: #ea580c;
+            --accent-amber: #d97706;
+            --accent-blue: #0284c7;
+            --accent-purple: #7e22ce;
+            --accent-green: #059669;
+            --accent-red: #dc2626;
+            --border-color: rgba(15, 23, 42, 0.12);
+            --code-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.75;
+            padding-bottom: 92px;
+            background-image:
+                radial-gradient(circle at 12% 10%, rgba(56, 189, 248, 0.09), transparent 32%),
+                radial-gradient(circle at 88% 80%, rgba(255, 107, 53, 0.08), transparent 32%);
+            background-attachment: fixed;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* 上部固定ガラスヘッダー */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        [data-theme="light"] .top-bar {
+            background: rgba(248, 250, 252, 0.88);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            box-shadow: 0 0 10px var(--accent-blue);
+            flex-shrink: 0;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .ctrl-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.15s ease;
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* メインコンテナ */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.13) 0%, rgba(168, 85, 247, 0.11) 50%, rgba(255, 107, 53, 0.11) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.6rem 1.35rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-orange { background: rgba(255, 107, 53, 0.16); color: var(--accent-orange); border: 1px solid rgba(255, 107, 53, 0.35); }
+        .badge-blue { background: rgba(56, 189, 248, 0.16); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.35); }
+        .badge-purple { background: rgba(168, 85, 247, 0.16); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.35); }
+        .badge-green { background: rgba(16, 185, 129, 0.16); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.35); }
+
+        .hero h1 {
+            font-size: clamp(1.35rem, 4.5vw, 2.05rem);
+            font-weight: 900;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem 1.1rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .video-meta a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* 3行要約ボックス */
+        .tldr-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 14px;
+            padding: 1.15rem 1.25rem;
+            margin-bottom: 1.75rem;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tldr-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--accent-blue);
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tldr-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .tldr-list li {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-left: 1.35rem;
+        }
+
+        .tldr-list li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 900;
+        }
+
+        /* 数値スタッツグリッド */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.95rem 1rem;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.45rem;
+            font-weight: 900;
+            color: var(--accent-amber);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* セクション見出し */
+        .section {
+            margin-bottom: 2.25rem;
+            scroll-margin-top: 68px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-num {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.85rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        /* カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 720px) {
+            .card-grid.two-col {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.2rem;
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.6rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .card-title {
+            font-size: 1.02rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .time-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.18rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.14);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            flex-shrink: 0;
+        }
+
+        .card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: grid;
+            gap: 0.42rem;
+            margin-top: 0.5rem;
+        }
+
+        .bullet-list li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            padding-left: 1.1rem;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0.2rem;
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        .bullet-list strong {
+            color: var(--text-primary);
+        }
+
+        /* コード・設定ブロック */
+        .code-wrap {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.45rem 0.85rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: none;
+            border-radius: 6px;
+            padding: 0.2rem 0.55rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        pre {
+            padding: 0.85rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+        }
+
+        /* フロー図ステップ */
+        .flow-steps {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 14px;
+            padding: 1rem 1.15rem;
+        }
+
+        .flow-step-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .flow-step-title {
+            font-weight: 800;
+            font-size: 0.98rem;
+            color: var(--text-primary);
+        }
+
+        .flow-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            background: rgba(168, 85, 247, 0.18);
+            color: var(--accent-purple);
+        }
+
+        /* レスポンシブ比較テーブル (PC: 表 / スマホ: カード) */
+        .desktop-table-wrap {
+            display: none;
+            overflow-x: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        table.comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .comp-table th, .comp-table td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comp-table th {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .mobile-compare-cards {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .m-comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1rem;
+        }
+
+        .m-comp-title {
+            font-weight: 800;
+            font-size: 0.96rem;
+            color: var(--accent-amber);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .m-comp-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+            padding: 0.4rem 0;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.86rem;
+        }
+
+        .m-comp-label {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-table-wrap { display: block; }
+            .mobile-compare-cards { display: none; }
+        }
+
+        /* アコーディオン（実例ケーススタディ） */
+        details.case-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            margin-bottom: 0.85rem;
+            overflow: hidden;
+        }
+
+        details.case-box summary {
+            padding: 1.05rem 1.2rem;
+            font-weight: 800;
+            font-size: 0.98rem;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        details.case-box summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .case-body {
+            padding: 0 1.2rem 1.2rem 1.2rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.95rem;
+        }
+
+        /* ボトムナビゲーションバー */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
+        }
+
+        [data-theme="light"] .bottom-nav {
+            background: rgba(248, 250, 252, 0.94);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.18rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.3rem 0.1rem;
+            border-radius: 10px;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+
+        .nav-item.active, .nav-item:active {
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上部固定ヘッダー -->
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>KEITO氏のAIエコシステム全体像</span>
+        </div>
+        <div class="controls">
+            <a href="./index.html" class="ctrl-btn" style="text-decoration:none;">🏠 一覧</a>
+            <button class="ctrl-btn" id="fontBtn" onclick="cycleFontSize()" aria-label="文字サイズ切替">🔠 文字大</button>
+            <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()" aria-label="テーマ切替">☀️ ライト</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ヒーローセクション -->
+        <section class="hero" id="top">
+            <div class="hero-badges">
+                <span class="badge badge-blue">🤖 Claude Code 司令塔</span>
+                <span class="badge badge-orange">🛡️ ハーネス＆判断AI</span>
+                <span class="badge badge-purple">⚡ 147スキル × 150エージェント</span>
+                <span class="badge badge-green">🔄 多モデル検品ループ</span>
+            </div>
+            <h1>【本気でAI活用したい人向け】AIガチ勢・KEITO氏のAIエコシステム＆作業フロー徹底解説！</h1>
+            <p class="hero-desc">
+                Claude Codeを唯一の司令塔（オーケストレーター）に据え、判断AI「TypeSafe Jev」・11本のフック・1Password連携・Codex／Antigravityとの分業・147個のスキルと150体のサブエージェントを組み合わせて、高品質な成果物を全自動〜半自動で生み出す実践環境を完全図解します。
+            </p>
+            <div class="video-meta">
+                <span>📺 チャンネル: <strong>KEITO【AI&amp;WEB ch】</strong></span>
+                <span>⏱️ 再生時間: <strong>39分43秒</strong></span>
+                <span>🔗 動画: <a href="https://youtu.be/8XbqxjJOP08" target="_blank" rel="noopener">YouTubeで開く ↗</a></span>
+            </div>
+        </section>
+
+        <!-- 3行要約 -->
+        <div class="tldr-box">
+            <div class="tldr-title">💡 忙しい人のための3行コア要約</div>
+            <ul class="tldr-list">
+                <li><strong>入口はすべてClaude Codeに集約：</strong> スマホアプリ・ターミナル・Discord・定期タスクからの指示をすべてClaude Code（Opus）が受け取り、ハーネス（判断AI・フック・権限管理）を通して安全に振り分ける。</li>
+                <li><strong>適材適所のマルチAI分業＆ナレッジ蓄積：</strong> 画像生成とセカンドレビューは<strong>Codex</strong>、動画生成・長尺レビュー・Google Workspace操作は<strong>Antigravity (agy CLI)</strong> に任せ、記憶メモ（276件）とObsidian（925ノート）をAI自身が育て続ける。</li>
+                <li><strong>「作る役」と「確かめる役」の完全分離：</strong> 自分の仕事を自分で採点させず、判断AI「TypeSafe Jev」・OpenAI Decisions API・専属チェッカー・別AIによる多段階検品を通過したものだけをCloudflareやVercelへ公開する。</li>
+            </ul>
+        </div>
+
+        <!-- エコシステム規模スタッツ -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val">147個</div>
+                <div class="stat-label">自作スキル (SKILL.md)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">150体</div>
+                <div class="stat-label">専属サブエージェント</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">925件</div>
+                <div class="stat-label">Obsidian 蓄積ノート</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">11本</div>
+                <div class="stat-label">自動監視フック (Hooks)</div>
+            </div>
+        </div>
+
+        <!-- セクション1: 入口とハーネス（判断・権限・安全の仕組み） -->
+        <section class="section" id="sec-harness">
+            <div class="section-header">
+                <span class="section-num">1</span>
+                <h2 class="section-title">入口の統一と「ハーネス」（判断・権限・安全設計）</h2>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🚪 4つの入口と司令塔 Claude Code</div>
+                        <span class="time-chip">00:00 - 03:31</span>
+                    </div>
+                    <p>どこから作業を依頼しても、必ずパソコン内の<strong>Claude Code</strong>が司令塔として受け取ります。</p>
+                    <ul class="bullet-list">
+                        <li><strong>スマホのClaudeアプリ（Remote Control）：</strong> 外出先や移動中にスマホから自宅MacのClaude Codeへ指示。</li>
+                        <li><strong>ターミナル / デスクトップ：</strong> PC前にいるときのメイン作業環境（全体の約9割）。</li>
+                        <li><strong>Discordプラグイン：</strong> チャット感覚で外出先やチームから指示を飛ばす窓口。</li>
+                        <li><strong>スケジュール（定期タスク）：</strong> 毎朝7:30のAIニュース・半導体ニュース収集、メール重要度仕分け、YouTube企画出しなどを自動実行。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">⚖️ 2つの判断AI（TypeSafe Jev &amp; Decisions API）</div>
+                        <span class="time-chip">03:32 - 05:31</span>
+                    </div>
+                    <p>AI同士のやり取りや出力のたびに「判断専門のAI」を挟み、暴走や品質低下を防ぎます。</p>
+                    <ul class="bullet-list">
+                        <li><strong>判断AI① TypeSafe Jev（ジェブ）：</strong> 0.2〜0.35秒で採点する高速分類モデル。依頼の曖昧さ判定、実行前の危険度チェック、複数案の採点（<code>jev-judge</code>）、完了報告前の未検証チェックを実施。報告末尾に <code>Jev: A 0.80</code> のようにスコアを付与。</li>
+                        <li><strong>判断AI② OpenAI Decisions API：</strong> 生成した図解・スライド・スクショを画像として自動検査し、<strong>文字化け・矢印の重なり・余白崩れ・個人情報（モザイク漏れ）</strong>を弾く。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🪝 11本のHooks（フック）と権限ルール</div>
+                        <span class="time-chip">05:32 - 06:51</span>
+                    </div>
+                    <p>特定のイベント時に強制発動するフック（11本）と <code>settings.json</code> で事故を物理的に遮断します。</p>
+                    <ul class="bullet-list">
+                        <li><strong>UserPromptSubmit：</strong> 依頼直後に文体ナレッジ（<code>natural-japanese-context</code>）の読み込みとJev判定を強制。</li>
+                        <li><strong>PreToolUse（bash-guard）：</strong> <code>rm -rf</code>（再帰削除）、<code>git push --force</code>、<code>sudo</code>、<code>.env</code>の直接読み取りを検知して確認に回す。</li>
+                        <li><strong>PostToolUse / Stop：</strong> スキル作成時のObsidian自動登録促し、未検証での完了報告差し戻し、利用額（200円以上増加時）の通知。</li>
+                        <li><strong>絶対禁止ルール：</strong> 特定フォルダのファイル削除やChatworkのメッセージ削除は「迂回せず報告して止まる」設定。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🔐 APIキー隔離（.env + 1Password）とCLAUDE.md</div>
+                        <span class="time-chip">06:52 - 08:41</span>
+                    </div>
+                    <p>27個の外部APIキーは1か所に隔離し、AI自身にも中身を見せないセキュア設計です。</p>
+                    <ul class="bullet-list">
+                        <li><strong>1Password × .env隔離：</strong> <code>~/.claude/skills/.env</code> の値は1Passwordのシークレット参照（マスク状態）で保持。スクリプトが実行時に読み込み、Claude Code自体は<code>.env</code>を開かない決まり。</li>
+                        <li><strong>CLAUDE.md の常時ルール5つ：</strong> ①専属サブエージェントの起動、②自然な日本語（<strong>JLS+</strong>）の徹底、③ObsidianはCLI経由で操作、④「AIっぽいデザイン」の禁止（<code>natural-design</code> 73条項）、⑤Jevによる判断。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション2: マルチAI分業・147スキル・ナレッジ棚 -->
+        <section class="section" id="sec-routing">
+            <div class="section-header">
+                <span class="section-num">2</span>
+                <h2 class="section-title">4つの振り分け先と「ナレッジと資産の棚」</h2>
+            </div>
+
+            <!-- PC用テーブル -->
+            <div class="desktop-table-wrap" style="margin-bottom: 1.2rem;">
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>振り分け先 / 棚</th>
+                            <th>主なツール・接続先</th>
+                            <th>役割と使い分けのポイント</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>① ほかのAIに頼む</strong><br><span class="time-chip">08:42 - 10:57</span></td>
+                            <td><strong>Codex</strong> (プラグイン / CLI)<br><strong>Antigravity</strong> (<code>agy</code> CLI / Gemini)</td>
+                            <td>・<strong>Codex：</strong> 画像生成（<code>codex-image</code>）とコード/成果物のセカンドレビュー。<br>・<strong>Antigravity：</strong> 動画生成、動画カットの検品、長大テキストのレビュー、Google Workspace操作。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>② スキルで作る</strong><br><span class="time-chip">10:58 - 13:29</span></td>
+                            <td><strong>147個のスキル</strong> × <strong>150体のサブエージェント</strong></td>
+                            <td>動画編集、サムネ・4コマ漫画、スライド、議事録、LP制作、EmDashブログ、書籍執筆（5冊分の専属チーム約45体）、請求書、X投稿などを細かく部品化。クライアント（A社/B社）ごとにスキルとデザインを完全分離。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>③ 外部サービス・API</strong><br><span class="time-chip">17:06 - 20:20</span></td>
+                            <td><strong>MCP / コネクタ / 27種のAPI</strong><br>(Slack, Notion, Figma, MoneyForward, ElevenLabs, Veo等)</td>
+                            <td>会計・請求書はマネーフォワードMCP、ワイヤーフレームはFigma、音声合成はElevenLabs / Gemini TTS、音楽はSuno、動画生成API（Veo / Seedance / fal）を適材適所で呼び出す。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>④ ナレッジと資産の棚</strong><br><span class="time-chip">13:30 - 17:05</span></td>
+                            <td><strong>記憶メモ (276件)</strong> / <strong>Obsidian (925ノート)</strong> / <strong>デザインシステム</strong> / <strong>GitHub (17リポジトリ)</strong></td>
+                            <td>AIが自分でObsidianに「不自然な日本語リスト」「X投稿ネタ」「メルマガ履歴」を記録。<strong>STYLE VAULT</strong>（1,341件）や<strong>MOTION VAULT</strong>でデザイン品質を固定し、GitHubで履歴管理。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- スマホ用カード -->
+            <div class="mobile-compare-cards" style="margin-bottom: 1.2rem;">
+                <div class="m-comp-card">
+                    <div class="m-comp-title">
+                        <span>① ほかのAIに頼む (Codex / Antigravity)</span>
+                        <span class="time-chip">08:42</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">OpenAI Codex（プラグイン・CLI）</span>
+                        <span>画像生成（<code>codex-image</code>）の基本担当。また、Claude Codeが作った成果物の「セカンドオピニオン検品」や原因調査を担当。</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">Google Antigravity（agy CLI / Gemini）</span>
+                        <span>動画生成、動画カット割りのレビュー、長文ドキュメントの原本照合レビュー、およびGmail・カレンダー・Drive等のGoogle Workspace操作を担当。</span>
+                    </div>
+                </div>
+
+                <div class="m-comp-card">
+                    <div class="m-comp-title">
+                        <span>② スキルで作る (147スキル × 150エージェント)</span>
+                        <span class="time-chip">10:58</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">9つの制作分野</span>
+                        <span>①動画（カット・テロップ・図解）、②画像・サムネ・4コマ漫画、③スライド資料、④議事録・レポート、⑤Webサイト・LP、⑥ブログ（EmDash）、⑦書籍執筆（約45体）、⑧事務・会計、⑨X・SNS運用。</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">案件別の完全分離</span>
+                        <span>クライアント（A社・B社）やチャンネルごとに専用スキル・専用デザインシステムを切り分け、権利やトーン＆マナーの混同を防止。</span>
+                    </div>
+                </div>
+
+                <div class="m-comp-card">
+                    <div class="m-comp-title">
+                        <span>③ ナレッジと資産の棚 (5つの保管庫)</span>
+                        <span class="time-chip">13:30</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">記憶メモ (276件) &amp; Obsidian (925ノート)</span>
+                        <span>AIがAI自身のためにObsidianへノートを作成（使ってはいけないAI臭い日本語、スキル一覧、書籍知識、メルマガ保管庫）。</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">デザインシステム &amp; GitHub (17リポジトリ)</span>
+                        <span>STYLE VAULT（1,341件）やMOTION VAULTを番号指定で呼び出し、誰が作っても同じ品質を維持。コードやLPはGitHub（<code>v-site</code>等）で版管理。</span>
+                    </div>
+                </div>
+
+                <div class="m-comp-card">
+                    <div class="m-comp-title">
+                        <span>④ 外部サービス操作 (MCP) &amp; 外部API</span>
+                        <span class="time-chip">17:06</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">主なMCP・コネクタ</span>
+                        <span>Google Workspace、Slack、Discord、Notion、Chatwork、マネーフォワード（請求書・仕訳・試算表）、Figma、Vercel、Cloudflare、EmDash、Typefully、Suno。</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">主な外部API</span>
+                        <span>動画（Veo / Seedance / fal / Runway）、音声（ElevenLabs / Gemini TTS / Whisper）、画像（gpt-image-2）、判定（TypeSafe Jev / OpenAI Decisions API）。</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション3: 品質の関所・公開出口・別入口Bot -->
+        <section class="section" id="sec-quality">
+            <div class="section-header">
+                <span class="section-num">3</span>
+                <h2 class="section-title">並列検品システム・公開出口・別入口Bot（Grok Bot / クロ）</h2>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🔍 「作る役」と「確かめる役」の完全分離</div>
+                        <span class="time-chip">20:21 - 24:55</span>
+                    </div>
+                    <p>サブエージェント（150体）は役割ごとに厳密に分離されており、<strong>「自分が作ったものを自分で採点させない」</strong>のが最大のルールです。</p>
+                    <ul class="bullet-list">
+                        <li><strong>調べる・作る役：</strong> <code>〜-researcher</code>、<code>〜-planner</code>、<code>〜-copy-writer</code> が並列で作業。</li>
+                        <li><strong>確かめる役（検品専属）：</strong> <code>〜-checker</code>、<code>〜-reviewer</code>、<code>〜-verifier</code>、<code>jlsp-meaning-checker</code> が元資料やルールと照合。</li>
+                        <li><strong>実画面でのレンダリング確認：</strong> スライドはMac内の<strong>LibreOffice</strong>やヘッドレスChromeでPDF/画像化して崩れを目視検査。Webサイトは<strong>Playwright</strong>でスマホ幅・PC幅の両方を撮影して確認。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🚀 公開の出口（Vercel / Cloudflare / 画面操作）</div>
+                        <span class="time-chip">24:56 - 27:33</span>
+                    </div>
+                    <p>合格した成果物はデスクトップの案件フォルダに出力され、KEITO氏の指示があるときだけ外部へ公開されます。</p>
+                    <ul class="bullet-list">
+                        <li><strong>Vercel：</strong> クライアント向けのパスワード付きレポート、LP、作品一覧台帳（<strong>KEITO LAB</strong>）をデプロイ。</li>
+                        <li><strong>Cloudflare（独自ドメイン8つ）：</strong> 会社サイト（<code>realaize.jp</code>）、個人ブログ（<code>ktlog.net</code>）、コミュニティ（<code>procevo.biz</code>）などEmDash CMS 7サイト＋Workers 1つを運用。</li>
+                        <li><strong>APIで届かない所は画面操作：</strong> <strong>Claude in Chrome</strong> や <strong>Computer Use</strong> を使い、X記事エディタへの画像挿入や下書き保存をブラウザ自動操作で完結。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🤖 別の入口①：Grok Bot（クラウドPC × 1Password）</div>
+                        <span class="time-chip">28:26 - 30:11</span>
+                    </div>
+                    <p>自宅Macの電源が入っていなくても動く「第2の司令塔」として、xAIの<strong>Grok Bot</strong>上のクラウドPC（Debian / 8コア / 15GB）を活用しています。</p>
+                    <ul class="bullet-list">
+                        <li><strong>Grok Botの中にClaude Codeを移植：</strong> Grokのクレジット消費を抑えるため、Grok内のクラウドPCにClaude Code（Maxプラン）と全スキル・ハーネス環境を丸ごとコピーして稼働。</li>
+                        <li><strong>1Passwordで安全にWebログイン：</strong> パスワード文字列をAIに一切見せないまま、1Password承認経由でクラウドPC上のブラウザから各Webサービスへログインして定期タスクを実行・確認。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🐦‍⬛ 別の入口②：自作Discord Bot「クロ」</div>
+                        <span class="time-chip">30:12 - 31:09</span>
+                    </div>
+                    <p>チーム共有のDiscordサーバー（チームRealAIze）で動くNode.js製の自作Botです。</p>
+                    <ul class="bullet-list">
+                        <li><strong>全発言をSQLiteに記録＆要約：</strong> メンバーの発言を自動記録し、<code>/ask</code> や <code>/summary</code> で質問への回答や「今日のタスク一覧レポート」を根拠リンク付きで毎日出力。</li>
+                        <li><strong>チャンネル権限フィルタ：</strong> 質問したメンバーが閲覧権限を持つチャンネルの情報だけを材料にして回答する安全設計。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション4: 実践ケーススタディ3選 -->
+        <section class="section" id="sec-cases">
+            <div class="section-header">
+                <span class="section-num">4</span>
+                <h2 class="section-title">具体的タスクで見る！実践ワークフロー3選</h2>
+            </div>
+
+            <details class="case-box" open>
+                <summary>
+                    <span>📝 ケース①：YouTube動画からブログ記事（ktlog.net）が1本完成するまで</span>
+                    <span class="time-chip">31:22 - 33:09</span>
+                </summary>
+                <div class="case-body">
+                    <ol class="bullet-list">
+                        <li><strong>1. 依頼とフック発動：</strong> 「このYouTube動画を <code>ktlog.net</code> の記事にして」とリンクを渡すと、フックが発動し、<strong>Jev</strong>が依頼の種類を判定してブログ作成スキル（<code>ktlog-youtube-article</code>）を選択。</li>
+                        <li><strong>2. 素材解析とWeb検索：</strong> 動画の文字起こしを取得して構成を組み立て、最新情報の裏付けをGoogle検索で調査。さらに動画画面を切り出してHTML/WebPで図解を作成。</li>
+                        <li><strong>3. SEO設計と本文執筆：</strong> 検索上位を狙うタイトル・概要文を作成し、文体ナレッジ（JLS+）に従って本文を執筆・推敲。</li>
+                        <li><strong>4. EmDash連携と元資料照合：</strong> <strong>Jev</strong>の判定後、EmDashのMCP経由で下書きを投入。専属チェッカー（<code>emdash-content-reviewer</code>）が「元の動画内容とズレがないか」を照合し、問題があればステップ2へ差し戻し。合格後に人間が確認して公開！</li>
+                    </ol>
+                </div>
+            </details>
+
+            <details class="case-box" open>
+                <summary>
+                    <span>🎬 ケース②：広告・プロモーション動画が1本完成するまで（所要20〜30分）</span>
+                    <span class="time-chip">33:10 - 35:02</span>
+                </summary>
+                <div class="case-body">
+                    <ol class="bullet-list">
+                        <li><strong>1. デザイン番号指定（MOTION VAULT）：</strong> HTMLカタログからデザイン番号を選び <code>/motion-vault</code> スキルで依頼。フックとJevが方針を決定。</li>
+                        <li><strong>2. 音声合成とBGM生成：</strong> ナレーション原稿を作成して音声合成（ElevenLabs / Gemini TTS）し、BGMを生成。</li>
+                        <li><strong>3. 「1秒ごとの要素」を静止画として組む：</strong> いきなり動画にするのではなく、1秒ごとのコマを画像として生成・配置し、<strong>静止画の状態で文字崩れやレイアウトを検査</strong>（崩れていればその場で修正）。</li>
+                        <li><strong>4. 動画化とトリプル検品：</strong> 静止画を重ねてアニメーション動画（MP4）を書き出し → 専属エージェントが検品 → 動画に強い<strong>Gemini (Antigravity)</strong> に完成動画を見せてカットや動きをレビュー → 最後に<strong>Jev</strong>が最終判定して完成！</li>
+                    </ol>
+                </div>
+            </details>
+
+            <details class="case-box" open>
+                <summary>
+                    <span>🧾 ケース③：マネーフォワードで毎月の請求書を発行するまで（人間承認ループ付き）</span>
+                    <span class="time-chip">35:03 - 36:20</span>
+                </summary>
+                <div class="case-body">
+                    <ol class="bullet-list">
+                        <li><strong>1. スキル選択とAPI鍵の安全取得：</strong> 「〇〇宛ての今月分の請求書を作って」と依頼すると、ハーネス経由で請求書スキル（<code>seikyusho</code>）を起動し、スクリプトが <code>.env</code> からAPIキーを安全に読み込み。</li>
+                        <li><strong>2. 取引先検索と金額照合：</strong> マネーフォワードのMCP機能で取引先を検索し、確認表と照らし合わせて金額をチェック。</li>
+                        <li><strong>3. 【重要】人間（KEITO氏）への確認ステップ：</strong> お金に関わる処理のため、勝手に送信せず<strong>必ず一度人間側に確認を入れるフロー</strong>を挟む。</li>
+                        <li><strong>4. 下書き保存とPDF控え出力：</strong> 承認後、請求書を作成してPDFをデスクトップに保存し、Jevの最終チェックを経て完了報告（最終送付は人間が実行）。</li>
+                    </ol>
+                </div>
+            </details>
+        </section>
+
+        <!-- セクション5: 1件の依頼が進む「5ステップ黄金フロー」まとめ -->
+        <section class="section" id="sec-flow">
+            <div class="section-header">
+                <span class="section-num">5</span>
+                <h2 class="section-title">自分の環境にも応用できる！AI作業の「5ステップ黄金フロー」</h2>
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 1：頼む（指示を出す / スキルを呼ぶ）</span>
+                        <span class="flow-badge">入口</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">自然言語で頼むか、<code>/スキル名</code> で直接呼び出す。Claude Code起動時点で <code>CLAUDE.md</code> の常時ルールと記憶メモの目次（276件）はすでに読み込まれている。</p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 2：受け取って準備する（フック割り込み＆手順書選択）</span>
+                        <span class="flow-badge">ハーネス</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">依頼直後にフックが割り込み、文体ナレッジ読み込み指示と <strong>TypeSafe Jev</strong> の初期判定を実行。最適な <code>SKILL.md</code> を選び、必要なMCP・CLI・APIキーを揃える。</p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 3：材料を集めて作る（ナレッジ参照＆マルチAI制作）</span>
+                        <span class="flow-badge">制作・分業</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">記憶メモ・Obsidian・デザインシステム・Googleドライブ・GitHubを読み込み、手順書通りに組み立てる。<strong>画像はCodex、動画はAntigravity</strong>に作らせて素材を組み込む。コマンド実行のたびに <code>bash-guard</code> とJevが安全を監視。</p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 4：確かめる（他AIレビュー＆専属チェッカー検品）</span>
+                        <span class="flow-badge">品質の関所</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);"><strong>Codex</strong>（セカンドレビュー）・<strong>Antigravity</strong>（原本照合＆動画カット確認）・<strong>JLS+/scan.py/Playwright</strong>（日本語と表示崩れの機械検査）・<strong>専属チェッカー</strong>が並列検品。指摘があればSTEP 3へ戻ってサブエージェントが修正し、再検品する。</p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 5：出して報告し、公開する（資産化＆デプロイ）</span>
+                        <span class="flow-badge">出口・資産化</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">合格したものだけをデスクトップの案件フォルダへ出力し、記憶メモ・Obsidian・KEITO LAB台帳・GitHubへ記録を残してから報告（報告直前にもJevが未検証完了を防止）。人間が中身を見てOKを出したときだけ、CloudflareやVercel等へ本番公開する。</p>
+                </div>
+            </div>
+
+            <div class="code-wrap" style="margin-top: 1.25rem;">
+                <div class="code-header">
+                    <span>💡 自分のClaude Code環境を育てるための実践プロンプト例</span>
+                    <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                </div>
+                <pre><code># KEITO氏のエコシステム設計を取り入れるための相談プロンプト例
+現在の私のClaude Code環境に、以下の仕組みを段階的に導入したいです。
+1. CLAUDE.md に「作る役と検品する役を分ける」「AIっぽい不自然な日本語やデザインを避ける」常時ルールを定義
+2. 危険なコマンド（rm -rf や git push --force や .env の直接読み取り）を防ぐ PreToolUse フック（bash-guard）の作成
+3. よく行う作業を SKILL.md として部品化し、成果物を出す前にPlaywrightやチェッカー用サブエージェントで自己検品するフローの構築
+まずは私の現在の作業内容に合わせて、優先して作るべきスキルとフックの構成案を3つ提案してください。</code></pre>
+            </div>
+        </section>
+    </main>
+
+    <!-- スマホ親指操作用 ボトムナビゲーション -->
+    <nav class="bottom-nav" aria-label="ボトムナビゲーション">
+        <a href="#top" class="nav-item active" onclick="setActive(this)">
+            <span class="nav-icon">🏠</span>
+            <span>概要</span>
+        </a>
+        <a href="#sec-harness" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🛡️</span>
+            <span>ハーネス</span>
+        </a>
+        <a href="#sec-routing" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🔀</span>
+            <span>分業・棚</span>
+        </a>
+        <a href="#sec-quality" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🔍</span>
+            <span>検品・出口</span>
+        </a>
+        <a href="#sec-cases" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🎬</span>
+            <span>実例・5工程</span>
+        </a>
+    </nav>
+
+    <script>
+        // 文字サイズ3段階切り替え (標準 -> 大 -> 特大)
+        const scales = [1, 1.12, 1.25];
+        const labels = ['🔠 文字大', '🔠 文字特大', '🔠 文字標準'];
+        let scaleIdx = 0;
+
+        function cycleFontSize() {
+            scaleIdx = (scaleIdx + 1) % scales.length;
+            document.documentElement.style.setProperty('--font-scale', scales[scaleIdx]);
+            document.getElementById('fontBtn').textContent = labels[scaleIdx];
+        }
+
+        // ダーク/ライトテーマ切り替え
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                btn.textContent = '☀️ ライト';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙 ダーク';
+            }
+        }
+
+        // コードコピー
+        function copyCode(btn) {
+            const code = btn.closest('.code-wrap').querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = '✔ コピー済';
+                setTimeout(() => btn.textContent = orig, 1800);
+            });
+        }
+
+        // ボトムナビのアクティブ表示
+        function setActive(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
