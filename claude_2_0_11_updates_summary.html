@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Anthropic「Claude 2.0」11大アップデート完全図解｜スマホ完全対応</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* オフライン・iPhoneのOneDrive/ファイルアプリ内プレビューでも崩れない自己完結テーマ定義 */
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --muted-foreground: #475569;
+      --border: #e2e8f0;
+      --primary: #d97706;
+      --primary-foreground: #ffffff;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #1e293b;
+    }
+    html.dark {
+      --background: #0b0f19;
+      --foreground: #f1f5f9;
+      --card: #131b2e;
+      --muted-foreground: #94a3b8;
+      --border: #1e293b;
+      --primary: #f59e0b;
+      --primary-foreground: #0f172a;
+      --secondary: #1e293b;
+      --secondary-foreground: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      line-height: 1.65;
+      padding: 12px 12px 96px 12px;
+    }
+    @media (min-width: 768px) { body { padding: 32px; } }
+    .bg-card-fallback { background-color: var(--card); }
+    .bg-bg-fallback { background-color: var(--background); }
+    .hidden { display: none !important; }
+    body.font-large { font-size: 17px; }
+    body.font-large .text-xs { font-size: 0.92rem !important; line-height: 1.55rem !important; }
+    body.font-large .text-sm { font-size: 1.05rem !important; line-height: 1.65rem !important; }
+    body.font-large .text-base { font-size: 1.15rem !important; line-height: 1.75rem !important; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .nav-btn-active {
+      background-color: rgba(245, 158, 11, 0.18) !important;
+      color: #f59e0b !important;
+      border-color: rgba(245, 158, 11, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 sm:p-5 md:p-8 pb-28 md:pb-12">
+  <div class="max-w-5xl mx-auto space-y-4 md:space-y-6">
+
+    <!-- 上部ツールバー（文字サイズ拡大・テーマ切替） -->
+    <div class="sticky top-2 z-20 flex flex-wrap items-center justify-between gap-2 bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-xl px-3.5 py-2.5 shadow-md backdrop-blur">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-amber-500">📱 スマホ完全対応ガイド</span>
+        <span class="hidden sm:inline-block text-xs text-[var(--muted-foreground)]">| 広川万雄氏「Claude 2.0（デスクトップ刷新）11大機能」完全図解</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a href="./index.html" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 transition">🏠 一覧</a>
+        <button onclick="toggleFontSize()" id="font-btn" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🔠 文字を大きく
+        </button>
+        <button onclick="toggleTheme()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🌗 テーマ切替
+        </button>
+      </div>
+    </div>
+
+    <!-- ヒーローヘッダー -->
+    <header class="bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">YouTube完全図解</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">再生時間 14:34</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">11大アップデート＋コピペ指示文収録</span>
+      </div>
+
+      <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold leading-snug">
+        Anthropicが「Claude 2.0」を出した<br class="hidden sm:inline">
+        丸ごと作り変わったClaudeデスクトップ「11の重要アップデート」完全攻略
+      </h1>
+
+      <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">
+        チャンネル：広川万雄｜<a href="https://www.youtube.com/watch?v=XjHkbkifVyk" target="_blank" rel="noopener" class="text-amber-400 underline hover:text-amber-300">元のYouTube動画を開く ↗</a>
+      </p>
+
+      <!-- 3行エグゼクティブサマリー -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 sm:p-4 space-y-2">
+        <div class="text-xs font-bold text-amber-400">💡 動画の核心（30秒でわかる結論）</div>
+        <ul class="text-xs sm:text-sm space-y-1.5 list-disc list-inside">
+          <li><strong>「コード（Claude Code）」タブがすべての主役に：</strong>従来のCoworkタブはChatに統合され、一番良い機能更新はすべて看板製品である「Claude Code」に集約。非エンジニアでも自然言語だけで使える。</li>
+          <li><strong>複数のAIを束ねる「4階層セッション管理」：</strong>フォルダ整理の「セクション」、並列作業の「入れ子セッション」、秘書のように全チャットを監視する「マスターセッション」、PCを閉じてもクラウドで動く「プロジェクト」が登場。</li>
+          <li><strong>Googleドキュメント/スライド代替＆Mods拡張：</strong>AI搭載アーティファクト（ダッシュボード内でAI質問）、7つの便利スラッシュコマンド、プロンプトキャッシュ残量を可視化する無料Mod「Ribbon」など11個の神アプデを一挙解説。</li>
+        </ul>
+      </div>
+
+      <!-- キーワード検索＆PC用カテゴリフィルタ -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <input
+          type="search"
+          placeholder="🔍 キーワードで絞り込み（例：マスターセッション、プロジェクト、Ribbon、コマンド...）"
+          oninput="filterContent(this.value)"
+          class="w-full px-3.5 py-2 rounded-xl text-xs sm:text-sm bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:border-amber-500"
+        >
+        <div class="hidden md:flex items-center gap-1.5 shrink-0">
+          <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">すべて</button>
+          <button onclick="switchTab('sessions')" data-tab="sessions" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🗂️ 1〜5. セッション</button>
+          <button onclick="switchTab('ui-artifacts')" data-tab="ui-artifacts" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🎨 6〜8. 画面・制作</button>
+          <button onclick="switchTab('power')" data-tab="power" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">⚡ 9〜11. コマンド・Mod</button>
+          <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">⚖️ 比較・指示文</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- 導入：まずは「コード（Claude Code）」タブへ（00:00〜01:27） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-3" data-category="sessions">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-400">00:00 - 01:27</span>
+          <h2 class="text-base sm:text-lg font-bold">大前提：非エンジニアも必ず「コード（Claude Code）」タブを使うべき理由</h2>
+        </div>
+      </div>
+      <p class="text-xs sm:text-sm">
+        新しいClaudeデスクトップアプリは上部タブが<strong>「チャット」と「コード」の2つだけ</strong>に整理された（旧Coworkはチャットに統合）。Anthropicは看板製品である<strong>「Claude Code」</strong>に最も優れた最新機能を集中投入している。「コード」という名前だがプログラミング知識は一切不要で、普通の日本語で指示するだけで誰でも使えるため、まずは「コード」タブに切り替えるのが鉄則。
+      </p>
+    </section>
+
+    <!-- Part 1：アップデート 1〜5（セッション管理＆クラウドプロジェクト）（01:28〜07:07） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="sessions">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-500/20 text-blue-400">01:28 - 07:07</span>
+          <h2 class="text-base sm:text-lg font-bold">更新 1〜5：セッション管理の革命（レール・入れ子・マスター・プロジェクト）</h2>
+        </div>
+      </div>
+
+      <div class="space-y-3.5">
+        <!-- 1. セッションレール -->
+        <div class="bg-[var(--secondary)] border-l-4 border-blue-500 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm sm:text-base font-extrabold text-blue-400">1. セッションレール（Session Rail）：スマホ連携＆記憶容量の可視化</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">01:28〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            画面右側に開くカード群（右上「セッションレールを表示」で開閉）。特に重要なのが以下の2枚のカード：
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+              <strong class="text-amber-400 block">📱 環境カード ＆ リモートコントロール</strong>
+              作業中フォルダや実行場所（PC/クラウド）を表示。<strong>「リモートコントロール」をON</strong>にすると、机のPCで始めた作業の続きを外出先のスマホから操作できる。<br>
+              💡 <strong>必須設定2つ：</strong>設定で「新しいセッションをリモートコントロールに接続」と「リモートコントロールのためにこのコンピューターをスリープさせない」を両方ONにしておく。
+            </div>
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+              <strong class="text-emerald-400 block">🧠 コンテキストカード（100万トークン＝ハリポタ4冊分）</strong>
+              メッセージ・記憶ファイル（<code>CLAUDE.md</code>）・スキル・MCPコネクターがそれぞれどれだけ容量を食っているか可視化。1つのセッションを長く使うと毎回最初から読み直して利用枠を削るため、肥大化した要素を一目で特定して整理できる。
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. セクション & 3. 入れ子のセッション -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-blue-400">2. セクション（フォルダ整理）</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">03:06〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              左サイドバーでチャットをフォルダのように分類できる機能。チャット横の「…」→「セクションに移動」で名前を付け、ドラッグ＆ドロップで整理。案件ごと・顧客ごと・業務分野ごとに分けておけば、50個のチャットをスクロールして探す手間がなくなる。
+            </p>
+          </div>
+
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-emerald-400">3. 入れ子のセッション（Nested Sessions）</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">03:26〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              親セッションが自分自身の下に別セッション（子チャット）を立ち上げて並列作業させる機能（例：宣伝親セッションの下に「販売ページ用」「メール用」「広告用」の3つを同時起動）。<br>
+              💡 <strong>サブエージェントとの決定的な違い：</strong>サブエージェントは「一方通行の注文」で途中介入できないが、入れ子セッションは1つ1つが本物のチャットなので、<strong>クリックして中身を見たり、途中で直接話しかけて追加指示を出せる</strong>。
+            </p>
+          </div>
+        </div>
+
+        <!-- 4. マスターセッション & 5. プロジェクト -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div class="bg-[var(--secondary)] border-2 border-amber-500/60 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-amber-400">4. マスターセッション（AI秘書化）👑</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">04:30〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              1つのチャットを一番上にピン留めし、<strong>「これがマスターセッション。他のセッションを見ていて」</strong>と宣言する裏技。Claudeが他の全チャット（直近20個、指示すればそれ以前も）を巡回し、<strong>「今あなたの返事や大事な判断を待っているチャットはどれか」</strong>を一覧で報告してくれる。さらにマスターから新規チャット起動やセクション整理まで自動で行える。
+            </p>
+          </div>
+
+          <div class="bg-[var(--secondary)] border-2 border-purple-500/60 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-purple-400">5. Claude Codeの「プロジェクト」☁️</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">05:29〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              <strong>Anthropicのクラウド上で動く</strong>チーム統括機能（現在Pro/Max向けベータ版）。最大の強みは<strong>「自分のPCを閉じてもクラウド上で作業が動き続ける」</strong>ことと、<strong>「プロジェクト全体の共通記憶・完了/進行中/返事待ち一覧ページ」</strong>があること。<br>
+              ※ローカルPC内のスキルや資料を使うには事前にアップロードが必要（「このプロジェクトに必要なスキルと資料をPCから集めて」と頼めば自動収集してくれる）。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 2：アップデート 6〜8（画面操作・アーティファクト・AI搭載ダッシュボード）（07:19〜10:57） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="ui-artifacts">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400">07:19 - 10:57</span>
+          <h2 class="text-base sm:text-lg font-bold">更新 6〜8：サイドチャット・分割画面・5大アーティファクト＆AI埋め込み</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <!-- 6. サイドチャット -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-emerald-400">6. サイドチャット（永続化された `/btw`）</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">07:19〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            Claudeが長い作業をしている最中に「あとどれくらいで終わる？」「今何を作ってる？」と元のチャットに聞くと、作業が中断されたり再読み込みでトークンを浪費する。<br>
+            右上「…」または <code>/btw</code> で開く<strong>サイドチャット</strong>なら、元のセッションをすべて読んだ上で横で答えてくれる。従来の `/btw` は消えてしまう一時チャットだったが、<strong>新バージョンでは複数開けてすべて保存され、いつでも戻れる</strong>ように大幅改善。
+          </p>
+        </div>
+
+        <!-- 7. スプリットビュー -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-blue-400">7. スプリットビュー（複数チャット同時表示）</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">08:02〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            <code>Alt</code>（Macは <code>Option</code>）を押しながら左サイドバーのチャットをクリック（または右クリック→分割ビュー）すると、1つの画面内に複数のチャットを並べて同時操作できる。<br>
+            <code>Ctrl + -</code>（Macは <code>Cmd + -</code>）で縮小すれば最大10個並べることも可能だが、人間の頭がパンクしないよう<strong>まずは2〜5個並べるのがおすすめ</strong>。
+          </p>
+        </div>
+      </div>
+
+      <!-- 8. 5種類のアーティファクト + AI搭載アーティファクト -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm sm:text-base font-extrabold text-amber-400">8. Googleドキュメント/スライドを置き換える「5大アーティファクト」＋「AI搭載化」</h3>
+          <span class="text-xs text-[var(--muted-foreground)]">08:36〜10:57</span>
+        </div>
+        <p class="text-xs sm:text-sm">
+          人間とClaudeが同じキャンバス上で共同作業し、直してほしい箇所にコメントを残したり、常に最新状態が見られる共有リンクを発行できる。
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <strong class="text-blue-400 block mb-1">📄 ① ドキュメント（Docs）</strong>
+            Googleドキュメント代替。Claudeと1つの文章を共同執筆し、部分コメントで修正指示が可能。
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <strong class="text-amber-400 block mb-1">📊 ② スライド（Slides）</strong>
+            プレゼン資料を作成し、その場で発表するか、PowerPoint（<code>.pptx</code>）として保存可能。
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <strong class="text-pink-400 block mb-1">🎨 ③ デザイン（Design）</strong>
+            SNS投稿やWebサイトを作成。単独のClaude Designサイトは12/14に閉鎖されここへ完全統合（独自デザインシステムも登録可）。
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <strong class="text-emerald-400 block mb-1">📈 ④ ダッシュボード（新機能）</strong>
+            連携アプリから最新データを取得し、リンクを開くたびに数字がリアルタイム更新される。
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <strong class="text-purple-400 block mb-1">🎬 ⑤ Claude Motion（動画）</strong>
+            動画生成AIではなく<strong>コードでアニメーション動画</strong>を作成。1本ごとの従量課金がなく格安で、後から部分修正も簡単。
+          </div>
+          <div class="bg-amber-500/15 p-3 rounded-lg border border-amber-500/40">
+            <strong class="text-amber-300 block mb-1">✨ AI搭載アーティファクト（10:06〜）</strong>
+            設定→機能→「AI搭載のアーティファクト」をONにすると、<strong>共有ダッシュボードの中にClaudeの質問欄・検索欄を埋め込める</strong>。リンクを受け取ったチーム全員がAIでデータ検索できる！
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 3：アップデート 9〜11（スラッシュコマンド・Mods・ショートカット）（10:58〜14:34） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="power">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-400">10:58 - 14:34</span>
+          <h2 class="text-base sm:text-lg font-bold">更新 9〜11：必須スラッシュコマンド7選・神Mod 2選・時短ショートカット</h2>
+        </div>
+      </div>
+
+      <!-- 9. スラッシュコマンド7選 -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm sm:text-base font-extrabold text-amber-400">9. 知っておくべき必須スラッシュコマンド 7選（10:58〜）</h3>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <code class="text-amber-400 font-bold">/output-style</code>
+            <p class="mt-1">Claudeの話し方を変更。<code>ELI5</code>（専門用語を使わず子供にもわかる説明）にしたり、自分専用の文体を作成可能。</p>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <code class="text-emerald-400 font-bold">/doctor</code>
+            <p class="mt-1">設定や <code>CLAUDE.md</code> を点検し、現在の環境の問題点を見つけて自動修正を提案してくれる健康診断コマンド。</p>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <code class="text-emerald-400 font-bold">/skill-doctor</code>
+            <p class="mt-1">各スキルがどれだけ記憶容量（トークン）を占有し、実際に使われているか診断。不要スキルを切ってトークン節約。</p>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-amber-500/40">
+            <code class="text-amber-300 font-bold">/advisor</code> <span class="text-[10px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded">超重要</span>
+            <p class="mt-1">普段は安価なSonnet等を動かし、<strong>重大な判断が必要な時だけOpus等の上位モデルを自動で呼ぶ</strong>トークン節約の切り札。</p>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <code class="text-blue-400 font-bold">/insights</code>
+            <p class="mt-1">あなたの普段のClaude Codeの使い方を分析し、次に試すとよいおすすめ機能をまとめて提示。</p>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+            <code class="text-blue-400 font-bold">/recap</code> ＆ <code class="text-rose-400 font-bold">/rewind</code>
+            <p class="mt-1"><code>/recap</code> は「どこまで進んだか一言で要約」。<code>/rewind</code> は特定の指示より前の時点に会話を巻き戻す「元に戻す」機能。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. Mods & 11. ショートカットキー -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-purple-400">10. アプリを改造する「Mods」おすすめ2選</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">12:19〜</span>
+          </div>
+          <p class="text-xs">
+            Claudeデスクトップの見た目や動きを変える追加パーツ（Claudeに頼んで自作も可能）。
+          </p>
+          <div class="space-y-2 text-xs">
+            <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+              <strong class="text-amber-400">🎀 ① Ribbon（無料公開Mod）：</strong><br>
+              入力欄の上に細いバーを表示し、「今週の残り利用量」と<strong>「プロンプトキャッシュの有効状態」</strong>を表示。キャッシュは<strong>1時間放置すると消えて次回送信時に会話全文の読み直しが発生しトークンを大量消費する</strong>ため、キャッシュ切れ防止に絶大な効果。
+            </div>
+            <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+              <strong class="text-emerald-400">👾 ② Savvy Progress：</strong><br>
+              入力欄の上に長い作業の進捗バーを表示し、さらにサブエージェントが動く仕事では右側の欄に<strong>ドット絵のClaudeキャラクター付きで各サブエージェントの稼働状況</strong>を可愛くリアルタイム表示。
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm font-bold text-blue-400">11. 時間を劇的に節約するショートカットキー4選</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">13:35〜</span>
+          </div>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center justify-between bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+              <span>どこからでもClaudeを即座に開く</span>
+              <kbd class="px-2 py-1 rounded bg-[var(--secondary)] font-mono font-bold text-amber-400">Ctrl + Alt + Space</kbd>
+            </div>
+            <div class="flex items-center justify-between bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+              <span>会話を前の時点に巻き戻す (<code>/rewind</code>)</span>
+              <kbd class="px-2 py-1 rounded bg-[var(--secondary)] font-mono font-bold text-amber-400">Esc を2回押す</kbd>
+            </div>
+            <div class="flex items-center justify-between bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+              <span>タイピングの代わりに音声で話して入力</span>
+              <kbd class="px-2 py-1 rounded bg-[var(--secondary)] font-mono font-bold text-amber-400">Ctrl + D</kbd>
+            </div>
+            <div class="flex items-center justify-between bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+              <span>ショートカットキー一覧を表示</span>
+              <kbd class="px-2 py-1 rounded bg-[var(--secondary)] font-mono font-bold text-amber-400">Ctrl + / (Mac: Cmd + /)</kbd>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 4：比較表＆動画で使われたコピペ指示文集（PC用テーブル＋スマホ用カード） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="compare">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <h2 class="text-base sm:text-lg font-bold">⚖️ 徹底比較：「サブエージェント」「入れ子セッション」「マスター」「プロジェクト」の使い分け</h2>
+      </div>
+
+      <!-- PC画面用テーブル（hidden md:block） -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-[var(--border)] bg-[var(--secondary)]">
+              <th class="p-3 font-bold">機能名</th>
+              <th class="p-3 font-bold">動く場所</th>
+              <th class="p-3 font-bold">途中での対話・介入</th>
+              <th class="p-3 font-bold">特徴とベストな使い所</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="p-3 font-bold text-slate-300">サブエージェント</td>
+              <td class="p-3">ローカルPC</td>
+              <td class="p-3 text-rose-400">❌ 不可（一方通行の注文）</td>
+              <td class="p-3">指示を送って結果が返るだけ。裏側での単発チェックや検証向き。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-emerald-400">入れ子のセッション<br>(Nested Sessions)</td>
+              <td class="p-3">ローカルPC<br><span class="text-xs text-[var(--muted-foreground)]">(全プラン対応)</span></td>
+              <td class="p-3 text-emerald-400">⭕ 可能（本物のチャット）</td>
+              <td class="p-3">PC内の全スキル・ファイル・ツールをそのまま使え、途中で入って一緒に作業できる。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-amber-400">マスターセッション</td>
+              <td class="p-3">ローカルPC</td>
+              <td class="p-3 text-emerald-400">⭕ 全チャットを横断監視</td>
+              <td class="p-3">1つのピン留めチャットを「AI秘書」にし、他のチャット（直近20件〜）の返事待ち確認や整理を任せる。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold text-purple-400">Claude Code<br>プロジェクト</td>
+              <td class="p-3">クラウド<br><span class="text-xs text-[var(--muted-foreground)]">(Pro/Maxベータ)</span></td>
+              <td class="p-3 text-emerald-400">⭕ 進捗一覧ページ付き</td>
+              <td class="p-3"><strong>PCを閉じてもクラウドで動き続ける。</strong>共通記憶を持ち、長期の大規模案件に最適（要事前ファイル収集）。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- スマホ画面専用・縦型カード表示（md:hidden） -->
+      <div class="md:hidden space-y-3">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-extrabold text-slate-300">① サブエージェント（一方通行の手伝い役）</div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            <strong>場所：</strong>PC ／ <strong>途中会話：</strong>❌不可<br>
+            メインが仕事を任せて結果を受け取るだけ。途中で直接話しかけることはできない。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-extrabold text-emerald-400">② 入れ子のセッション（PC内の全ツールが使える並列チャット）</div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            <strong>場所：</strong>PC（全プラン可） ／ <strong>途中会話：</strong>⭕可能<br>
+            親の下に本物のチャットが並び、クリックして途中経過を見たり直接追加指示が出せる。PC内のスキルやファイルをフル活用したい作業に最適。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-extrabold text-amber-400">③ マスターセッション（全チャットを見回るAI秘書）</div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            <strong>場所：</strong>PC ／ <strong>役割：</strong>⭕横断管理<br>
+            ピン留めした1つのチャットから他の全チャットを見渡し、「私の大事な判断を待っているチャットはどれ？」とまとめさせたり整理させる使い方。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-extrabold text-purple-400">④ Claude Code プロジェクト（PCを閉じても動くクラウド拠点）</div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            <strong>場所：</strong>Anthropicクラウド（Pro/Maxベータ） ／ <strong>特徴：</strong>⭕PC閉じてOK・共通記憶<br>
+            プロジェクト全体の共通ルール（記憶）と進捗一覧ページを持ち、大きくて長く続く仕事をクラウド上で自律稼働させるのに最適。
+          </p>
+        </div>
+      </div>
+
+      <!-- 概要欄＆動画内のコピペ指示文集 -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <h3 class="text-sm font-bold text-amber-400">📋 そのままコピペで使える！動画内で紹介された公式プロンプト4選</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-emerald-400 block">① コンテキスト（記憶・スキル・MCP）のスリム化整理</strong>
+            <code class="block select-all">チャットを始める前に読み込まれているものを全部見て。CLAUDE.md・記憶のファイル・スキル・MCP のツール。まず /context を実行して、それぞれがどれくらい場所を取っているかを一覧にして、実際に使っているものを失わずに、短くできるもの・まとめられるもの・切れるものを教えて。私が「いいよ」と言うまで、何も変えないで。</code>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-blue-400 block">② 入れ子のセッションで3つの作業を同時進行</strong>
+            <code class="block select-all">この3つを同時に進めて。それぞれ入れ子のセッションで</code>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-amber-400 block">③ マスターセッション化＆返事待ちチャットの抽出</strong>
+            <code class="block select-all">これがマスターセッション。ほかのセッションを見ていて／どのチャットが、私の大事な判断を待っている？</code>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-purple-400 block">④ プロジェクト用にPC内のスキルと資料を自動収集</strong>
+            <code class="block select-all">このプロジェクトに必要なスキルと資料を、このパソコンから集めて</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- スマホ専用・下部固定ボトムナビゲーションバー -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--card)] bg-card-fallback border-t border-[var(--border)] px-2 py-1.5 shadow-lg">
+    <div class="grid grid-cols-5 gap-1 text-center">
+      <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold border border-transparent">
+        <span>📋</span>
+        <span>すべて</span>
+      </button>
+      <button onclick="switchTab('sessions')" data-tab="sessions" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🗂️</span>
+        <span>1〜5.管理</span>
+      </button>
+      <button onclick="switchTab('ui-artifacts')" data-tab="ui-artifacts" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🎨</span>
+        <span>6〜8.制作</span>
+      </button>
+      <button onclick="switchTab('power')" data-tab="power" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>⚡</span>
+        <span>9〜11.拡張</span>
+      </button>
+      <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>⚖️</span>
+        <span>比較・指示</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+    function toggleFontSize() {
+      document.body.classList.toggle('font-large');
+      const isLarge = document.body.classList.contains('font-large');
+      document.getElementById('font-btn').textContent = isLarge ? '🔠 標準サイズ' : '🔠 文字を大きく';
+    }
+    function switchTab(category) {
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (category === 'all' || sec.getAttribute('data-category') === category) ? '' : 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === category) {
+          btn.classList.add('nav-btn-active');
+        } else {
+          btn.classList.remove('nav-btn-active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function filterContent(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (!q || sec.innerText.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
+

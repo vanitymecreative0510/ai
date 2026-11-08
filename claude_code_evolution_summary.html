@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>【最新】Claude Code進化＆覚醒する「7つの型」完全図解まとめ｜スマホ完全対応</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* オフライン・iPhoneのOneDrive/ファイルアプリ内プレビューでも崩れない自己完結テーマ定義 */
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --muted-foreground: #475569;
+      --border: #e2e8f0;
+      --primary: #d97706;
+      --primary-foreground: #ffffff;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #1e293b;
+    }
+    html.dark {
+      --background: #0b0f19;
+      --foreground: #f1f5f9;
+      --card: #131b2e;
+      --muted-foreground: #94a3b8;
+      --border: #1e293b;
+      --primary: #f59e0b;
+      --primary-foreground: #0f172a;
+      --secondary: #1e293b;
+      --secondary-foreground: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      line-height: 1.65;
+      padding: 12px 12px 96px 12px;
+    }
+    @media (min-width: 768px) { body { padding: 32px; } }
+    .bg-card-fallback { background-color: var(--card); }
+    .bg-bg-fallback { background-color: var(--background); }
+    .hidden { display: none !important; }
+    body.font-large { font-size: 17px; }
+    body.font-large .text-xs { font-size: 0.92rem !important; line-height: 1.55rem !important; }
+    body.font-large .text-sm { font-size: 1.05rem !important; line-height: 1.65rem !important; }
+    body.font-large .text-base { font-size: 1.15rem !important; line-height: 1.75rem !important; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .nav-btn-active {
+      background-color: rgba(245, 158, 11, 0.18) !important;
+      color: #f59e0b !important;
+      border-color: rgba(245, 158, 11, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 sm:p-5 md:p-8 pb-28 md:pb-12">
+  <div class="max-w-5xl mx-auto space-y-4 md:space-y-6">
+
+    <!-- 上部ツールバー（文字サイズ拡大・テーマ切替） -->
+    <div class="sticky top-2 z-20 flex flex-wrap items-center justify-between gap-2 bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-xl px-3.5 py-2.5 shadow-md backdrop-blur">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-amber-500">📱 スマホ完全対応ガイド</span>
+        <span class="hidden sm:inline-block text-xs text-[var(--muted-foreground)]">| みかみ氏「Claude Code最新機能＆7つの型」完全解説</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a href="./index.html" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 transition">🏠 一覧</a>
+        <button onclick="toggleFontSize()" id="font-btn" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🔠 文字を大きく
+        </button>
+        <button onclick="toggleTheme()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🌗 テーマ切替
+        </button>
+      </div>
+    </div>
+
+    <!-- ヒーローヘッダー -->
+    <header class="bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">YouTube完全図解</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">再生時間 32:05</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">指定位置 03:41 (221秒) 重点解説付</span>
+      </div>
+
+      <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold leading-snug">
+        【最新】Claude Codeがここまで進化。<br class="hidden sm:inline">
+        年商30億AI企業社長が「仕事で使える新機能」と「超天才に覚醒させる7つの型」を実演解説
+      </h1>
+
+      <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">
+        登壇者：みかみ（アドネス株式会社 代表取締役 三上功太氏）｜<a href="https://www.youtube.com/watch?v=yzVPVQ0JFp4&t=221s" target="_blank" rel="noopener" class="text-amber-400 underline hover:text-amber-300">元のYouTube動画を開く (03:41〜) ↗</a>
+      </p>
+
+      <!-- 3行エグゼクティブサマリー -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 sm:p-4 space-y-2">
+        <div class="text-xs font-bold text-amber-400">💡 動画の核心（30秒でわかる結論）</div>
+        <ul class="text-xs sm:text-sm space-y-1.5 list-disc list-inside">
+          <li><strong>出力の質の差は「モデル」ではなく「環境（育ち）」：</strong>新しいスレッドは「生まれたての赤ちゃん」。周囲に無関係な情報やダメな例があるとAIは一気にバカになる。</li>
+          <li><strong>直近アプデの目玉は「文脈汚染の防止」と「可視化」：</strong>右側セッションレール、無関係タスクの3択分岐（03:41〜）、入れ子セッション（子タスク）、BTWサイドチャット、タスクリスト表示が実装。</li>
+          <li><strong>真の差別化は「認知負荷対策・7つの型」：</strong>①覚えておかない ②説明し直さない ③判断シートで対話 ④AI構文禁止 ⑤スコープ厳守 ⑥最後までやり切る ⑦全部読ませない、の7つで「天才の脳」を再現する。</li>
+        </ul>
+      </div>
+
+      <!-- キーワード検索＆PC用カテゴリフィルタ -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <input
+          type="search"
+          placeholder="🔍 キーワードで絞り込み（例：入れ子、判断シート、CLAUDE.md、記憶...）"
+          oninput="filterContent(this.value)"
+          class="w-full px-3.5 py-2 rounded-xl text-xs sm:text-sm bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:border-amber-500"
+        >
+        <div class="hidden md:flex items-center gap-1.5 shrink-0">
+          <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">すべて</button>
+          <button onclick="switchTab('updates')" data-tab="updates" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🆕 新機能</button>
+          <button onclick="switchTab('seven-patterns')" data-tab="seven-patterns" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🧠 7つの型</button>
+          <button onclick="switchTab('architecture')" data-tab="architecture" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🏗️ 記憶基盤</button>
+          <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">⚖️ 比較表</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- セクション0：導入＆前提（00:00〜01:44） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="updates">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-400">00:00 - 01:44</span>
+          <h2 class="text-base sm:text-lg font-bold">序章：なぜ同じClaude Codeなのに「超天才」と「超バカ」に分かれるのか？</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <h3 class="text-sm font-bold text-amber-400">👶 新規スレッド ＝「赤ちゃんの誕生」</h3>
+          <p class="text-xs sm:text-sm">
+            Claude Codeは記憶容量（コンテキスト）に限りがあるため、新しいスレッドを立てるたびに<strong>「新しく生まれ直す」</strong>のと同じ状態になる。生まれた周りに「しょうもない相談の名残」「会社と無関係な情報」「ダメな例」が散乱していると、それを吸収してバカな出力になる。
+          </p>
+        </div>
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <h3 class="text-sm font-bold text-emerald-400">⚡ モデルの差ではなく「作業場の設計」の差</h3>
+          <p class="text-xs sm:text-sm">
+            「環境設定が整った旧モデル（GPT-4）」と「環境が散らかった最新モデル」なら、前者の方が圧倒的に賢いアウトプットを出す。100レベルのミュウツーを持っていても「なきごえ」しか指示できなければ意味がないのと同じで、<strong>作業場の設計と仕組みの理解</strong>がすべてを決める。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- セクション1：Claude Code 最新アップデート実演解説（01:44〜08:08） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="updates">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-500/20 text-blue-400">01:44 - 08:08</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 1：Claude Code 直近アップデート「仕事で使える新機能」7選</h2>
+        </div>
+        <span class="text-xs text-amber-400 font-semibold">★ URL指定位置 (03:41) を含むパート</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <!-- 新機能1 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-400">① 右側「セッションレール」の新設</span>
+            <span class="text-xs text-[var(--muted-foreground)]">02:00〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            画面右側にセッションレールが登場し、以前バラバラだったフォルダ表示等が集約。以下の3つがリアルタイムに可視化される：
+          </p>
+          <ul class="text-xs space-y-1 list-disc list-inside text-[var(--muted-foreground)]">
+            <li><strong class="text-[var(--foreground)]">環境（Environment）：</strong>今どこで動いているか</li>
+            <li><strong class="text-[var(--foreground)]">コンテキスト（Context）：</strong>上限100万トークン中、何%がどこに使われているか</li>
+            <li><strong class="text-[var(--foreground)]">コネクター（Connectors）：</strong>外部連携の接続状態</li>
+          </ul>
+        </div>
+
+        <!-- 新機能2（URL指定 03:41 箇所） -->
+        <div class="bg-[var(--secondary)] border-2 border-amber-500/60 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-400">② 無関係なタスク依頼時の「3択制御」🎯</span>
+            <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-xs font-bold">03:36〜 (指定位置)</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            スレッド内で急に文脈と無関係な話を振った際、AIが「今その話関係ないじゃん」と判断して以下の<strong>3つの挙動を設定</strong>できるようになった：
+          </p>
+          <ol class="text-xs space-y-1 list-decimal list-inside">
+            <li><strong>質問する：</strong>「関係ないけど今ここでやりますか？」と確認</li>
+            <li><strong>そのまま実行：</strong>現在のセッション内でそのまま処理</li>
+            <li><strong>別セッション開始：</strong>コンテキスト汚染を防ぐため自動で新規セッションへ分岐</li>
+          </ol>
+          <p class="text-xs text-amber-400/90 pt-1">
+            ⚠️ <strong>みかみ氏の警告：</strong>最近のAIは2択で質問してくるが、人間は文字を読まずに「おすすめ」を思考停止でポチポチ選びがち。安易な2択に流されると人間側が劣化するので要注意。
+          </p>
+        </div>
+
+        <!-- 新機能3 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-400">③ 入れ子のセッション（子タスク機能）</span>
+            <span class="text-xs text-[var(--muted-foreground)]">05:12〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            親セッションの下に階層構造で<strong>「子タスク（入れ子のセッション）」</strong>を起動可能。1つのスレッドで雑多な議論をすると会話がバカになるため、親のコンテキストを引き継ぎつつ子タスクに切り出して実行し、クリック1つで親子の画面を行き来できる。
+          </p>
+        </div>
+
+        <!-- 新機能4 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-400">④ BTW（By The Way / サイドチャット）</span>
+            <span class="text-xs text-[var(--muted-foreground)]">06:15〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            メインの作業スレッドを邪魔せずに、<strong>「ところで（BTW）これ本筋と関係ないけど聞きたい」「なんでこの図いまいちなの？」</strong>といった横道の疑問をサイドチャットとして即座に質問できる機能。
+          </p>
+        </div>
+
+        <!-- 新機能5 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-400">⑤ 動画再生 ＆ 別ウィンドウ切り離し</span>
+            <span class="text-xs text-[var(--muted-foreground)]">06:51〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            従来アプリ内で再生できなかった<strong>動画ファイルの直接再生</strong>に対応。さらに<strong>チャットを別ウィンドウで開く機能</strong>が追加され、重い処理が動いているスレッドを別窓で並べて監視し、ワンクリックでメイン画面に戻せる。
+          </p>
+        </div>
+
+        <!-- 新機能6 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-400">⑥ やることリスト（ToDo）の常時可視化</span>
+            <span class="text-xs text-[var(--muted-foreground)]">07:22〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            「あと何したらいいか考えて」と指示すると、進行中のタスクリストを常時表示。<strong>「タスクは情報の圧縮効率が最も高いフォーマット」</strong>であり、上司（人間）が「AIの進め方が合っているか」を一目で監督できる。
+          </p>
+        </div>
+      </div>
+
+      <!-- コラム：公式の進化予測 -->
+      <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-3.5 text-xs sm:text-sm space-y-1">
+        <div class="font-bold text-amber-400">🔮 みかみ氏の予言：「公式が進化して取り込む領域」は絶対に自分で作るな</div>
+        <p>
+          かつてコンテキスト可視化ツールを必死に自作していた人たちは、今回の公式アップデート（セッションレール）ですべて不要になった。AIツールの進化方向を見極め「そこは作らない」と意思決定することが重要。次にClaude Code公式が確実に取り込むと予言しているのは、アドネス社が独自運用している<strong>「判断シート（部下が上司に『この点についてご意見を伺いたく』と論点を整理して決済を仰ぐ仕組み）」</strong>。
+        </p>
+      </div>
+    </section>
+
+    <!-- セクション2：Claude Codeを覚醒させる「7つの型（認知負荷対策）」（08:08〜26:07） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="seven-patterns">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400">08:08 - 26:07</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 2：自分のClaude Codeを「超天才」に覚醒させる『7つの型』</h2>
+        </div>
+        <span class="text-xs text-[var(--muted-foreground)]">※ 특히 型1〜型3 が本質</span>
+      </div>
+
+      <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">
+        単なる <code>CLAUDE.md</code> の小手先プロンプトではなく、<strong>「成果が出る人間の脳みその動かし方」</strong>をそのままClaude Codeの作業場に再現するための7つの設計ルール。
+      </p>
+
+      <div class="space-y-3.5">
+        <!-- 型1 -->
+        <div class="bg-[var(--secondary)] border-l-4 border-amber-500 rounded-xl p-4 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm sm:text-base font-extrabold text-amber-400">【型1】覚えておかない（記憶の完全デジタル化と「ゴール起点」の統合）</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">12:15〜18:55</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            「自分しか持っていない記憶（紙のメモや頭の中だけの構想）」をゼロにし、<strong>自分の脳内とClaude Codeがアクセスできる情報を8〜9割イコールにする</strong>（紙に書いた場合も即スマホで撮影してAIに送る）。
+          </p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1 text-xs">
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+              <strong class="text-amber-400 block mb-1">📂 2つの記憶の置き場</strong>
+              ・<strong>ローカル（作業場）：</strong>日誌（Dailyログ）、議事録、AIのローカルメモリ<br>
+              ・<strong>クラウド（Addness）：</strong>親ゴール、子ゴール、プロジェクトメモリ
+            </div>
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+              <strong class="text-emerald-400 block mb-1">🔗 なぜObsidianや標準メモリでは不十分か？</strong>
+              単なるベクトル検索やリンク付けは「文字列が検索されるだけ」。人間の脳は<strong>「売上を上げる（ゴール）」に対して過去の別事業やサッカーの経験（点と点）が繋がる</strong>。ゴールに記憶と行動履歴を紐づける基盤が必要。
+            </div>
+          </div>
+        </div>
+
+        <!-- 型2 -->
+        <div class="bg-[var(--secondary)] border-l-4 border-amber-500 rounded-xl p-4 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm sm:text-base font-extrabold text-amber-400">【型2】説明し直さない（前提・背景を1つも取り漏らさない導線設計）</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">18:56〜22:32</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            サッカーの試合に「水筒を1本忘れる」だけで致命傷になるように、仕事も前提が1つ抜けるだけで全く別物になる。しかし人間はAIに「こうですね」と言われると流され、抜けている前提を毎回説明し直すのは不可能。
+          </p>
+          <ul class="text-xs sm:text-sm space-y-1 list-disc list-inside text-[var(--muted-foreground)]">
+            <li>雑に頼んでも<strong class="text-[var(--foreground)]">「ゴールと理想」「過去の経緯」「現在の議論」「関連資料の格納場所」</strong>をAIが自動で取りに行くよう <code>CLAUDE.md</code> と記憶基盤を噛み合わせる。</li>
+            <li>YouTubeのカット編集履歴や数値データ、個人の感覚まで紐づけて蓄積することで、AIが「データ上はこうなので、この改善案もあります」と<strong>自分の感覚の抜けを補う壁打ちパートナー</strong>に進化する。</li>
+          </ul>
+        </div>
+
+        <!-- 型3 -->
+        <div class="bg-[var(--secondary)] border-l-4 border-amber-500 rounded-xl p-4 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm sm:text-base font-extrabold text-amber-400">【型3】コミュニケーションを楽にする（判断シート＆ビジュアル提示）</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">22:33〜23:16</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            チャット画面の長文テキストを読むのは人間の認知負荷が高い。優秀な部下が「図解」や「選択肢」を持ってくるように、AIとの対話フォーマットを規定する：
+          </p>
+          <ul class="text-xs sm:text-sm space-y-1 list-disc list-inside text-[var(--muted-foreground)]">
+            <li>質問がある時は<strong>「判断シート」</strong>の顔つきで論点と選択肢をわかりやすく提示させる。</li>
+            <li>変更点や構成案はHTMLシート等で<strong>ビジュアルに比較表示</strong>させ、「B案ベースで上だけA案を混ぜて」と直感的に指示できるようにする（Claude Code標準の簡易Visualize READMEより見やすい独自シートを出力させる）。</li>
+          </ul>
+        </div>
+
+        <!-- 型4〜型7（2カラムグリッド） -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+          <!-- 型4 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-blue-400">【型4】余計な言葉を使わせない</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">23:17〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              AI特有の気取った比喩（例：「誰の頭を鳴らすか決める」など意味不明な表現）や無駄なオウム返しを徹底禁止。「誰に見せる動画にするか決める」のような<strong>人間にとって自然で直接的な表現</strong>に矯正し、モデル更新のたびに微調整する。
+            </p>
+          </div>
+
+          <!-- 型5 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-blue-400">【型5】勝手にスコープを広げさせない</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">24:11〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              Claude Codeは気を利かせて頼んでもいない周辺タスクまで手を広げ、全体をぐちゃぐちゃにする癖がある（Codexは頼んだことだけスパッとやる）。<strong>「下手にやることを増やすな、指定スコープだけに集中しろ」</strong>と厳格に縛る。
+            </p>
+          </div>
+
+          <!-- 型6 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-blue-400">【型6】判断すべき時だけ止まり、最後までやり切る</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">24:34〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              丁寧ぶって些細なことを毎回確認して止まるのを禁止。<strong>本当に人間の意思決定が必要な分岐点（判断シート）以外は、ビビらずに頼んだゴールまで一気に完走</strong>させる。
+            </p>
+          </div>
+
+          <!-- 型7 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-blue-400">【型7】全部読ませない（コンテキスト絞り込み）</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">24:56〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              すべての情報を無差別にAIに読ませると、トークン効率が悪化するだけでなくノイズで失敗確率が跳ね上がる。<strong>「余計なものは見なくていい」と参照範囲をキュッと絞る</strong>ルーティングを行う。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- セクション3：実演された記憶基盤の中身＆テンプレート構成（26:08〜31:56） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="architecture">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-400">26:08 - 31:56</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 3：実演公開された「超天才の記憶基盤」とテンプレートの全貌</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="text-xs font-bold text-amber-400">🎯 1. ゴール階層ツリー</div>
+          <p class="text-xs sm:text-sm">
+            <strong>「2031年 ARR 3兆円」</strong>という頂点ゴールから、「2027年4月1日の状態」→「2026年10月（今月）誰が・どこで・何を・何の目的でやっているか」までが一気通貫で構造化され、すべての記憶がこのゴールツリーに紐づく。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="text-xs font-bold text-emerald-400">📚 2. 部署別ナレッジ（347件）</div>
+          <p class="text-xs sm:text-sm">
+            「いつ・どこで・誰が・何のために・どういう時はどう動くか」という判断ルールや業務ナレッジが部署ごとに<strong>347件</strong>体系化されており、タスクに応じて必要なナレッジだけが自動で呼び出される。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="text-xs font-bold text-blue-400">📊 3. 全社KPIマップ（627種類）</div>
+          <p class="text-xs sm:text-sm">
+            社内で追っている<strong>627種類の重要数値</strong>（何を・どこで計測し・どう繋がっているか）をClaude Codeがすべて把握。YouTubeのリスト単価が高ければ、マーケや営業のAIが検知して優秀な営業担当を自動アサインする等の連携が可能に。
+          </p>
+        </div>
+      </div>
+
+      <!-- 配布テンプレートに含まれる構築ステップ -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <h3 class="text-sm font-bold text-amber-400">🛠️ 動画内で紹介された「認知負荷対策テンプレート」の構築項目</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5 text-xs">
+          <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+            <strong>① 記憶の置き場設計</strong><br>
+            <code>CLAUDE.md</code> の記述ルール、ローカル作業場ディレクトリ構造、メモリの持ち方
+          </div>
+          <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+            <strong>② 日誌（Days）の記録ルール</strong><br>
+            日々の意思決定や作業ログをどう書き残し、本人にどうヒアリングして進めるか
+          </div>
+          <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+            <strong>③ 説明し直さない連携設定</strong><br>
+            Addness（ゴール基盤）と <code>CLAUDE.md</code> を結びつけ、前提を自動取得する設定
+          </div>
+          <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+            <strong>④ 判断シートの実装と練習</strong><br>
+            人間が迷わず決裁できる「判断シート」のフォーマット定義とテスト運用
+          </div>
+          <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+            <strong>⑤ 停止・確認境界の定義</strong><br>
+            AIが止まって人間に確認する範囲と、無人で最後まで回し切る範囲の線引き
+          </div>
+          <div class="bg-[var(--card)] p-2.5 rounded-lg border border-[var(--border)]">
+            <strong>⑥ 2ステップのキャリア戦略</strong><br>
+            まず自分が使いこなす → 周りの人にも環境を整えて教える（仕事の依頼が殺到する）
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- セクション4：比較表（PC用テーブル ＆ スマホ専用ビフォーアフターカード） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="compare">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <h2 class="text-base sm:text-lg font-bold">⚖️ 徹底比較：「超バカになるClaude Code」vs「超天才に覚醒したClaude Code」</h2>
+      </div>
+
+      <!-- PC画面用テーブル（hidden md:block） -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-[var(--border)] bg-[var(--secondary)]">
+              <th class="p-3 font-bold w-1/5">比較項目</th>
+              <th class="p-3 font-bold text-rose-400 w-2/5">❌ 一般ユーザーの「超バカ」な状態</th>
+              <th class="p-3 font-bold text-emerald-400 w-2/5">⭕ みかみ流「超天才」に覚醒した状態</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="p-3 font-bold">1. スレッド環境・記憶</td>
+              <td class="p-3 text-[var(--muted-foreground)]">無関係な雑談やダメな例が混재。紙のメモや個人の頭の中にしか前提がなく、毎回記憶リセット。</td>
+              <td class="p-3">無関係な話は別セッション/入れ子/BTWへ分離。ローカル日誌＋クラウドのゴールツリーに記憶を8〜9割デジタル統合。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">2. 前提の共有方法</td>
+              <td class="p-3 text-[var(--muted-foreground)]">毎回プロンプトで背景を説明し直すか、前提が抜けたままAIの「こうですね」に流されて失敗する。</td>
+              <td class="p-3"><code>CLAUDE.md</code> と記憶基盤が連動し、ゴール・過去経緯・627種のKPI・347件のナレッジを自動参照。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">3. 対話・確認スタイル</td>
+              <td class="p-3 text-[var(--muted-foreground)]">長文テキストを読むのが苦痛で、AIが出す安易な2択の「おすすめ」を思考停止でポチポチ選ぶ。</td>
+              <td class="p-3">ビジュアル図解と「判断シート」で論点を可視化。「B案ベースで上だけA案」など直感的に意思決定。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">4. 言葉遣い・スコープ</td>
+              <td class="p-3 text-[var(--muted-foreground)]">気取ったAI構文やオウム返しが多く、頼んでもいない周辺作業まで勝手に広げてぐちゃぐちゃになる。</td>
+              <td class="p-3">不自然な比喩やオウム返しを禁止。指定スコープだけを厳守し、判断ポイント以外は最後まで一気に完走。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">5. コンテキスト管理</td>
+              <td class="p-3 text-[var(--muted-foreground)]">ファイルを全部読ませてトークンを浪費し、ノイズ過多で精度が低下する。</td>
+              <td class="p-3">セッションレールで100万トークンの消費を監視しつつ、必要な情報だけを絞って読ませる（型7）。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- スマホ画面専用・縦型ビフォーアフターカード表示（md:hidden） -->
+      <div class="md:hidden space-y-3">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">① スレッド環境・記憶の持ち方</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before（ダメな状態）：</strong><br>
+            1つのスレッドに無関係な話を混ぜて汚染。大事な前提が紙のメモや自分の頭の中にしかなく、毎回リセットされる。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After（覚醒した状態）：</strong><br>
+            入れ子セッション・BTWで文脈を分離。ローカル（日誌）とクラウド（ゴール基盤）に全記憶をデジタル統合。
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">② 前提の共有・説明コスト</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before（ダメな状態）：</strong><br>
+            「水筒を忘れる」ように重要な前提が抜け落ち、AIの「こうですね」に人間が流されて微妙な成果物ができる。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After（覚醒した状態）：</strong><br>
+            雑に頼んでも <code>CLAUDE.md</code> 経由でゴール・過去経緯・KPI・ナレッジを自動で引きずり出し、前提を1つも漏らさない。
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">③ 対話・意思決定のやり方</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before（ダメな状態）：</strong><br>
+            長文テキストを読むのがしんどく、AIが聞いてくる2択の「おすすめ」を思考停止で連打してしまう。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After（覚醒した状態）：</strong><br>
+            「判断シート」とビジュアル比較図で提示させ、本当に人間が決めるべき分岐点だけ直感的に判断する。
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">④ スコープ管理・コンテキスト効率</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before（ダメな状態）：</strong><br>
+            頼んでいない作業まで勝手に広げて破綻。ファイルを全部読ませてトークンと精度を浪費する。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After（覚醒した状態）：</strong><br>
+            余計な言葉・スコープ拡大を禁止し、必要なファイルだけをキュッと絞って読ませて最後まで完走させる。
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- スマホ専用・下部固定ボトムナビゲーションバー -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--card)] bg-card-fallback border-t border-[var(--border)] px-2 py-1.5 shadow-lg">
+    <div class="grid grid-cols-5 gap-1 text-center">
+      <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold border border-transparent">
+        <span>📋</span>
+        <span>すべて</span>
+      </button>
+      <button onclick="switchTab('updates')" data-tab="updates" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🆕</span>
+        <span>新機能</span>
+      </button>
+      <button onclick="switchTab('seven-patterns')" data-tab="seven-patterns" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🧠</span>
+        <span>7つの型</span>
+      </button>
+      <button onclick="switchTab('architecture')" data-tab="architecture" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🏗️</span>
+        <span>記憶基盤</span>
+      </button>
+      <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>⚖️</span>
+        <span>比較表</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+    function toggleFontSize() {
+      document.body.classList.toggle('font-large');
+      const isLarge = document.body.classList.contains('font-large');
+      document.getElementById('font-btn').textContent = isLarge ? '🔠 標準サイズ' : '🔠 文字を大きく';
+    }
+    function switchTab(category) {
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (category === 'all' || sec.getAttribute('data-category') === category) ? '' : 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === category) {
+          btn.classList.add('nav-btn-active');
+        } else {
+          btn.classList.remove('nav-btn-active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function filterContent(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (!q || sec.innerText.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>何時間も節約する「Claude 7つの新機能」（Austin Marchese）完全図解｜スマホ完全対応</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* オフライン・iPhoneのOneDrive/ファイルアプリ内プレビューでも崩れない自己完結テーマ定義 */
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --muted-foreground: #475569;
+      --border: #e2e8f0;
+      --primary: #d97706;
+      --primary-foreground: #ffffff;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #1e293b;
+    }
+    html.dark {
+      --background: #0b0f19;
+      --foreground: #f1f5f9;
+      --card: #131b2e;
+      --muted-foreground: #94a3b8;
+      --border: #1e293b;
+      --primary: #f59e0b;
+      --primary-foreground: #0f172a;
+      --secondary: #1e293b;
+      --secondary-foreground: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      line-height: 1.65;
+      padding: 12px 12px 96px 12px;
+    }
+    @media (min-width: 768px) { body { padding: 32px; } }
+    .bg-card-fallback { background-color: var(--card); }
+    .bg-bg-fallback { background-color: var(--background); }
+    .hidden { display: none !important; }
+    body.font-large { font-size: 17px; }
+    body.font-large .text-xs { font-size: 0.92rem !important; line-height: 1.55rem !important; }
+    body.font-large .text-sm { font-size: 1.05rem !important; line-height: 1.65rem !important; }
+    body.font-large .text-base { font-size: 1.15rem !important; line-height: 1.75rem !important; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .nav-btn-active {
+      background-color: rgba(245, 158, 11, 0.18) !important;
+      color: #f59e0b !important;
+      border-color: rgba(245, 158, 11, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 sm:p-5 md:p-8 pb-28 md:pb-12">
+  <div class="max-w-5xl mx-auto space-y-4 md:space-y-6">
+
+    <!-- 上部ツールバー（文字サイズ拡大・テーマ切替） -->
+    <div class="sticky top-2 z-20 flex flex-wrap items-center justify-between gap-2 bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-xl px-3.5 py-2.5 shadow-md backdrop-blur">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-amber-500">📱 スマホ完全対応ガイド ②</span>
+        <span class="hidden sm:inline-block text-xs text-[var(--muted-foreground)]">| Austin Marchese「何時間も節約するClaude 7つの新機能」</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a href="./index.html" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 transition">🏠 一覧</a>
+        <button onclick="toggleFontSize()" id="font-btn" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🔠 文字を大きく
+        </button>
+        <button onclick="toggleTheme()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🌗 テーマ切替
+        </button>
+      </div>
+    </div>
+
+    <!-- ヒーローヘッダー -->
+    <header class="bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">動画② 完全図解</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">再生時間 17:30</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Google連携・数値検証・リモート操作</span>
+      </div>
+
+      <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold leading-snug">
+        何時間も節約する「Claude 7つの新機能」実演＆辛口本音レビュー<br class="hidden sm:inline">
+        <span class="text-sm sm:text-lg font-normal text-[var(--muted-foreground)]">（7 NEW Claude Features That Will Save You HOURS）</span>
+      </h1>
+
+      <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">
+        チャンネル：Austin Marchese｜<a href="https://youtu.be/BgbJFggbTVE" target="_blank" rel="noopener" class="text-amber-400 underline hover:text-amber-300">元のYouTube動画を開く ↗</a>
+      </p>
+
+      <!-- 3行エグゼクティブサマリー -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 sm:p-4 space-y-2">
+        <div class="text-xs font-bold text-amber-400">💡 動画の核心（30秒でわかる結論）</div>
+        <ul class="text-xs sm:text-sm space-y-1.5 list-disc list-inside">
+          <li><strong>「Claudeと話す」から「Claudeを管理する」へ：</strong>公式Google Workspace連携（Docs/Sheets/Slides）により、いつものスプレッドシートやドキュメントの書式・数式・スキルに直接アクセスして作業が完結する。</li>
+          <li><strong>「偽の仕事（Fake Work）」を見抜き、数値を裏付け検証する：</strong>見栄えだけのModに時間を浪費せず（Burn-MeterやReflectなど実益あるものだけ採用）、ダッシュボードの「数値の根拠を表示（生データと計算式）」でハルシネーションを完全排除する。</li>
+          <li><strong>HaikuによるAPIコスト75%削減＆スマホからのリモート操作：</strong>100万トークン10セントのHaikuでプロダクト組み込みの採算が劇的に改善し、<code>/remotecontrol</code>＋スリープ防止設定（<code>awake</code>）でPCから離れてジムや外出先でも開発を継続できる。</li>
+        </ul>
+      </div>
+
+      <!-- キーワード検索＆PC用カテゴリフィルタ -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <input
+          type="search"
+          placeholder="🔍 キーワードで絞り込み（例：スプレッドシート、Mod、Reflect、根拠、Haiku、awake...）"
+          oninput="filterContent(this.value)"
+          class="w-full px-3.5 py-2 rounded-xl text-xs sm:text-sm bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:border-amber-500"
+        >
+        <div class="hidden md:flex items-center gap-1.5 shrink-0">
+          <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">すべて</button>
+          <button onclick="switchTab('workspace-mods')" data-tab="workspace-mods" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🔌 機能1〜2: Google・Mod</button>
+          <button onclick="switchTab('dash-proj')" data-tab="dash-proj" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">📊 機能3〜5: 検証・Haiku</button>
+          <button onclick="switchTab('docs-remote')" data-tab="docs-remote" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">📱 機能6〜7: スライド・遠隔</button>
+          <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">⚖️ 比較・まとめ</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Part 1：機能1〜2（Google Workspace公式連携 ＆ Claude Modsの真実）（00:00〜06:19） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="workspace-mods">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-blue-500/20 text-blue-400">00:00 - 06:19</span>
+          <h2 class="text-base sm:text-lg font-bold">機能 1〜2：公式Google Workspace連携と「偽の仕事」にならないMod活用</h2>
+        </div>
+      </div>
+
+      <!-- 機能1 -->
+      <div class="bg-[var(--secondary)] border-l-4 border-emerald-500 rounded-xl p-4 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm sm:text-base font-extrabold text-emerald-400">機能 #1：Claude in Google Docs / Sheets / Slides（公式ネイティブ連携）</h3>
+          <span class="text-xs text-[var(--muted-foreground)]">00:00〜01:41</span>
+        </div>
+        <p class="text-xs sm:text-sm">
+          サードパーティ製プラグインではなく、Anthropic公式のネイティブ連携アドオンが登場。
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-amber-400 block">🛠️ セットアップ手順（2ステップ）</strong>
+            ① Google Workspace Marketplaceで「Claude」を検索してインストール。<br>
+            ② Docs/Sheets/Slidesの「拡張機能」＞「アドオン」＞「アドオンを取得」から再度Claudeを有効化すると右サイドバーに出現。
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-emerald-400 block">🔥 なぜスプレッドシート勢が絶賛しているのか？</strong>
+            ・サイドバーから<strong>自作スキルやSlack等のコネクタ</strong>を直接呼び出せる。<br>
+            ・何より<strong>「ネイティブな書式設定・シートの数式・スライドのテーマ情報」</strong>を正確に理解して直接編集できるため、実用性が別次元に進化。
+          </div>
+        </div>
+      </div>
+
+      <!-- 機能2 -->
+      <div class="bg-[var(--secondary)] border-l-4 border-amber-500 rounded-xl p-4 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm sm:text-base font-extrabold text-amber-400">機能 #2：Claude Mods（ハイパーパーソナライゼーションと「偽の仕事」への警告）</h3>
+          <span class="text-xs text-[var(--muted-foreground)]">01:42〜04:58</span>
+        </div>
+        <p class="text-xs sm:text-sm">
+          プロンプトで説明するだけでClaude Codeの入力バーや内部フック（挙動）を改造できる機能。ただしポール・グレアムの名言<strong>「時間を失う最も危険な方法は、遊ぶことではなく『偽の仕事（Fake Work）』に時間を費やすこと」</strong>の通り、見た目だけのMod作りに熱中するのは危険。「実際に何の成果に役立ったか？」で厳選すべき。
+        </p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-amber-400 block">⭕ 本当に役立つMod ①：Burn-Meter（使用量計）</strong>
+            トークン消費状況と制限までの残量を可視化するMod。既存品を入れるだけでなく、プロンプトで自分用のバージョンを作らせて仕組みを掴むのがおすすめ。
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-emerald-400 block">⭕ 本当に役立つMod ②：Reflect（自己改善通知）</strong>
+            会話中に「それは違う」とAIを修正した際、<strong>「その修正を永続的なルールとして保存しますか？」と自動通知</strong>するMod。同じ指摘の繰り返しを根絶できる。<br>
+            ⚠️ <strong>注意：</strong>作ったModはその会話内で消えるため、必ず<strong>「プラグインとして保存・インストールして」</strong>と指示すること。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 2：機能3〜5（ダッシュボード数値検証・Claude Codeプロジェクト・Haiku）（06:20〜12:33） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="dash-proj">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400">06:20 - 12:33</span>
+          <h2 class="text-base sm:text-lg font-bold">機能 3〜5：数値の裏付け検証・プロジェクト自動分割・Haikuのコスト革命</h2>
+        </div>
+      </div>
+
+      <div class="space-y-3.5">
+        <!-- 機能3 -->
+        <div class="bg-[var(--secondary)] border-2 border-emerald-500/60 rounded-xl p-4 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm sm:text-base font-extrabold text-emerald-400">機能 #3：Claude Dashboards（「数値の根拠を表示」でAIのハルシネーションを検証）</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">06:20〜08:16</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            アーティファクトのダッシュボードテンプレートを選び「このプロジェクトで最も役立つダッシュボードを作って」と指示するだけで、外部データと連携した定期更新ダッシュボードが完成する。<br>
+            🔍 <strong>最大の革新「See where the numbers come from（数値の根拠を表示）」：</strong><br>
+            数字の横のボタンをクリックすると、<strong>その数値を算出した「生データ」と「正確な計算式」がすべて表示</strong>される。「AIが出した数字をそのまま経営判断に使っていいのか？」という最大の不安を解消する「信頼せよ、されど確認せよ（Trust, but verify）」機能。
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- 機能4 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-purple-400">機能 #4：Claude Code内の「Projects」</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">08:17〜10:36</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              ※通常のClaudeチャットのプロジェクトとは別物。<br>
+              複数のチャットウィンドウを開いて「どのウィンドウに入力すべきか」迷うボトルネックを解消。1つの継続的な会話が<strong>「コーディネーター」</strong>となり、会話内容に応じて裏側で自動的にスレッドを分割・並列実行し、人間の入力が必要なものだけを知らせてくれる。
+            </p>
+          </div>
+
+          <!-- 機能5 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-amber-400">機能 #5：新型 Haiku（コスト75%削減の衝撃）</h3>
+              <span class="text-xs text-[var(--muted-foreground)]">10:37〜12:33</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              従来比で実行コストが<strong>約75%削減（入力100万トークン約10セント／出力約50セント）</strong>され、「ドル単位からセント単位」へ突入。<br>
+              顧客やチーム向けツールにAPIを組み込む際、OpusやSonnetでは高すぎた壁が消滅。既存ツールのモデルをHaikuに置き換えたり、ダッシュボードへ直接AIを組み込む採算が完全に成立するようになった。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 3：機能6〜7（Artifacts Docs/Slidesの脱AI安っぽさ ＆ Remote Control + Awake）（12:34〜17:27） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="docs-remote">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-400">12:34 - 17:27</span>
+          <h2 class="text-base sm:text-lg font-bold">機能 6〜7：AIっぽさを消すスライド作成術 ＆ スマホ遠隔操作コンボ</h2>
+        </div>
+      </div>
+
+      <div class="space-y-3.5">
+        <!-- 機能6 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm sm:text-base font-extrabold text-blue-400">機能 #6：Claude Artifactsの「ドキュメント」と「スライド」</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">12:34〜14:43</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            <strong>マイルール：「メールより長い文章（提案書・マーケ資料・SNS長文）はすべてArtifactドキュメントで作る」</strong>。その場で直接編集でき、テキストをハイライトして部分修正指示も出せる。<br>
+            また、スライド機能（PPTX/PDF/Googleスライド書き出し対応）でありがちな<strong>「AI特有の安っぽさ」を消す3つの鉄則</strong>：
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+              <strong class="text-amber-400 block mb-1">① デザインシステムを取り込む</strong>
+              自社ブランドのアセットを読み込ませる（未作成なら <code>designmd.app</code> 等を参考に数時間かけてでも一度作れば、全出力が自社ブランド化する）。
+            </div>
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+              <strong class="text-emerald-400 block mb-1">②「1つの思考ルール」</strong>
+              AIを開く前に、必ず<strong>最低1つは自分自身の独自アイデア</strong>を考え、それを洗練・検証・膨らませるためにAIを使う。
+            </div>
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)]">
+              <strong class="text-blue-400 block mb-1">③ 5パターン作らせて選ぶ</strong>
+              1つではなく「5つの異なるバリエーション」を反復生成させ、ベストな1つを選んでから微調整する（※共有相手もClaudeアカウントが必要）。
+            </div>
+          </div>
+        </div>
+
+        <!-- 機能7 -->
+        <div class="bg-[var(--secondary)] border-2 border-amber-500/60 rounded-xl p-4 space-y-2.5">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <h3 class="text-sm sm:text-base font-extrabold text-amber-400">機能 #7：Remote Control（/remotecontrol）＋ Awake（スリープ防止）</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">14:44〜17:27</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            クラウドではなく自分のPC（ローカル）でClaudeを動かすと直接ファイルを編集でき構成もシンプルだが、「PCを開いておく必要がある」のが唯一の弱点。これを以下の<strong>2段コンボ</strong>で完全解決：
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+              <strong class="text-emerald-400 block">📲 Step 1：<code>/remotecontrol</code> でスマホ連携</strong>
+              チャット欄に <code>/remotecontrol</code> と入力するだけで、ローカルPC上のセッションをスマホからそのまま監視・操作可能に。
+            </div>
+            <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+              <strong class="text-amber-400 block">⚡ Step 2：スリープ防止設定（Awake）</strong>
+              Claudeデスクトップの「設定 ＞ Claude Code」で<strong>「動作中はスリープさせない」</strong>と<strong>「バッテリー駆動時もスリープさせない」</strong>を両方ONにする（またはターミナルで3時間起動維持する <code>awake</code> コマンドを設定）。これで30〜40分かかるビルド中にジムやサウナへ行ける！
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 4：比較表＆パラダイムシフトまとめ（PC用テーブル＋スマホ用カード） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="compare">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <h2 class="text-base sm:text-lg font-bold">⚖️ 総まとめ：「Claudeと話す人」vs「Claudeを管理・統括する人」の5大シフト</h2>
+      </div>
+
+      <!-- PC画面用テーブル（hidden md:block） -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-[var(--border)] bg-[var(--secondary)]">
+              <th class="p-3 font-bold w-1/5">領域</th>
+              <th class="p-3 font-bold text-rose-400 w-2/5">❌ 従来の使い方（Talking to Claude）</th>
+              <th class="p-3 font-bold text-emerald-400 w-2/5">⭕ 新時代の管理術（Managing Claude）</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="p-3 font-bold">1. 作業する場所</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Claudeで作った文章や表を、毎回10分かけてGoogle DocsやSheetsへ手作業でコピペ移動する。</td>
+              <td class="p-3"><strong>公式Google Workspaceアドオン</strong>や<strong>Artifact Docs/Slides</strong>を使い、チームの作業場所で直接スキル・数式・書式を動かす。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">2. 作業環境の設計</td>
+              <td class="p-3 text-[var(--muted-foreground)]">デフォルト画面のまま何度も同じ修正指示を繰り返すか、見栄えだけの「偽の仕事」Modで時間を潰す。</td>
+              <td class="p-3">修正を永続ルール化する<strong>「Reflect Mod」</strong>や使用量計<strong>「Burn-Meter」</strong>をプラグイン保存し、環境を継続改善する。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">3. タスクの委譲とコスト</td>
+              <td class="p-3 text-[var(--muted-foreground)]">複数ウィンドウを手動で行き来し、すべて高価なOpus/Sonnetで回してAPI予算がパンクする。</td>
+              <td class="p-3"><strong>Claude Code Projects</strong>にスレッド分割を任せ、定型・大量処理は<strong>コスト75%減のHaiku（100万トークン10セント）</strong>へ委譲。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">4. 数値の信頼性検証</td>
+              <td class="p-3 text-[var(--muted-foreground)]">AIが出したグラフや数値を「たぶん合っているだろう」と盲信するか、不安で使えない。</td>
+              <td class="p-3"><strong>Claude Dashboardsの「数値の根拠を表示」</strong>で、生データと計算式をワンクリックで裏付け確認する。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">5. 働く場所の自由度</td>
+              <td class="p-3 text-[var(--muted-foreground)]">30〜40分かかるローカルビルドが終わるまで、PCの前で画面を見張っている。</td>
+              <td class="p-3"><strong><code>/remotecontrol</code> ＋ スリープ防止（Awake）</strong>で、外出先やジムからスマホでローカルビルドを監視・操作する。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- スマホ画面専用・縦型カード表示（md:hidden） -->
+      <div class="md:hidden space-y-3">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">① ツール連携とドキュメント作成（機能1・6）</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before：</strong>Claudeの出力をGoogle DocsやSheetsに毎回コピペし、AI特有の安っぽいスライドを作る。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After：</strong>公式Google WorkspaceアドオンとArtifact Docsで直接編集。スライドは「デザインシステム＋1思考ルール＋5案生成」で高品質化。
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">② 環境改造と数値の裏付け検証（機能2・3）</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before：</strong>同じ修正を何度も繰り返す。AIが出したダッシュボードの数字が正しいか分からず不安になる。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After：</strong>修正を永続ルール化する「Reflect Mod」を導入し、ダッシュボードの「数値の根拠を表示」で生データと計算式を確認する。
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">③ 並列統括・低コスト化・スマホ遠隔操作（機能4・5・7）</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before：</strong>複数ウィンドウを手動管理し、高価なモデルばかり使い、長いビルド中はPCの前に縛られる。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After：</strong>Projectsで自動スレッド分割、Haikuでコスト75%削減、<code>/remotecontrol</code>＋スリープ防止で外出先からスマホ操作。
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- スマホ専用・下部固定ボトムナビゲーションバー -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--card)] bg-card-fallback border-t border-[var(--border)] px-2 py-1.5 shadow-lg">
+    <div class="grid grid-cols-5 gap-1 text-center">
+      <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold border border-transparent">
+        <span>📋</span>
+        <span>すべて</span>
+      </button>
+      <button onclick="switchTab('workspace-mods')" data-tab="workspace-mods" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🔌</span>
+        <span>機能1〜2</span>
+      </button>
+      <button onclick="switchTab('dash-proj')" data-tab="dash-proj" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>📊</span>
+        <span>機能3〜5</span>
+      </button>
+      <button onclick="switchTab('docs-remote')" data-tab="docs-remote" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>📱</span>
+        <span>機能6〜7</span>
+      </button>
+      <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>⚖️</span>
+        <span>比較表</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+    function toggleFontSize() {
+      document.body.classList.toggle('font-large');
+      const isLarge = document.body.classList.contains('font-large');
+      document.getElementById('font-btn').textContent = isLarge ? '🔠 標準サイズ' : '🔠 文字を大きく';
+    }
+    function switchTab(category) {
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (category === 'all' || sec.getAttribute('data-category') === category) ? '' : 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === category) {
+          btn.classList.add('nav-btn-active');
+        } else {
+          btn.classList.remove('nav-btn-active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function filterContent(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (!q || sec.innerText.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
+

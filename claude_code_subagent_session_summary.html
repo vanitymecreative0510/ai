@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>AIを分けて精度を守る！Claude Codeサブエージェント＆セッション管理完全図解｜スマホ完全対応</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* オフライン・iPhoneのOneDrive/ファイルアプリ内プレビューでも崩れない自己完結テーマ定義 */
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --muted-foreground: #475569;
+      --border: #e2e8f0;
+      --primary: #d97706;
+      --primary-foreground: #ffffff;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #1e293b;
+    }
+    html.dark {
+      --background: #0b0f19;
+      --foreground: #f1f5f9;
+      --card: #131b2e;
+      --muted-foreground: #94a3b8;
+      --border: #1e293b;
+      --primary: #f59e0b;
+      --primary-foreground: #0f172a;
+      --secondary: #1e293b;
+      --secondary-foreground: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      line-height: 1.65;
+      padding: 12px 12px 96px 12px;
+    }
+    @media (min-width: 768px) { body { padding: 32px; } }
+    .bg-card-fallback { background-color: var(--card); }
+    .bg-bg-fallback { background-color: var(--background); }
+    .hidden { display: none !important; }
+    body.font-large { font-size: 17px; }
+    body.font-large .text-xs { font-size: 0.92rem !important; line-height: 1.55rem !important; }
+    body.font-large .text-sm { font-size: 1.05rem !important; line-height: 1.65rem !important; }
+    body.font-large .text-base { font-size: 1.15rem !important; line-height: 1.75rem !important; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .nav-btn-active {
+      background-color: rgba(245, 158, 11, 0.18) !important;
+      color: #f59e0b !important;
+      border-color: rgba(245, 158, 11, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 sm:p-5 md:p-8 pb-28 md:pb-12">
+  <div class="max-w-5xl mx-auto space-y-4 md:space-y-6">
+
+    <!-- 上部ツールバー（文字サイズ拡大・テーマ切替） -->
+    <div class="sticky top-2 z-20 flex flex-wrap items-center justify-between gap-2 bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-xl px-3.5 py-2.5 shadow-md backdrop-blur">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-amber-500">📱 スマホ完全対応ガイド</span>
+        <span class="hidden sm:inline-block text-xs text-[var(--muted-foreground)]">| にゃんたのAIチャンネル「AIを分けて精度を守る技術」完全解説</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a href="./index.html" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 transition">🏠 一覧</a>
+        <button onclick="toggleFontSize()" id="font-btn" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🔠 文字を大きく
+        </button>
+        <button onclick="toggleTheme()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🌗 テーマ切替
+        </button>
+      </div>
+    </div>
+
+    <!-- ヒーローヘッダー -->
+    <header class="bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">YouTube完全図解</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">再生時間 27:14</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">指定位置 17:17 (1037秒) 重点解説付</span>
+      </div>
+
+      <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold leading-snug">
+        AIを分けて精度を守る！<br class="hidden sm:inline">
+        Claude Codeのサブエージェントとセッション管理の使い方を解説してみた
+      </h1>
+
+      <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">
+        チャンネル：にゃんたのAIチャンネル｜紹介論文：Microsoft Research <em>"LLMs Get Lost in Evolving User Intent"</em> (2026年7月)｜<a href="https://www.youtube.com/watch?v=m8RgZaSQwzM&t=1037s" target="_blank" rel="noopener" class="text-amber-400 underline hover:text-amber-300">元のYouTube動画を開く (17:17〜) ↗</a>
+      </p>
+
+      <!-- 3行エグゼクティブサマリー -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 sm:p-4 space-y-2">
+        <div class="text-xs font-bold text-amber-400">💡 動画の核心（30秒でわかる結論）</div>
+        <ul class="text-xs sm:text-sm space-y-1.5 list-disc list-inside">
+          <li><strong>1つの会話で色々頼むと最新AIでも最大約20%精度が落ちる：</strong>Microsoftの研究で、会話途中の「条件追加（Reveal）」「条件修正（Revise）」「別タスク切替（Switch）」のうち、特に<strong>途中で別タスクに切り替えて修正を重ねると精度が激減</strong>することが判明。</li>
+          <li><strong>「作るAI」と「検証するAI」をサブエージェントで分業（17:17〜）：</strong>履歴を引き継がず（フォークせず）独立したサブエージェントを起動してファクトチェックやレイアウト点検を任せることで、シングルターン相当の高精度を維持できる。</li>
+          <li><strong>Claude Desktopの「サブセッション管理」で認知負荷ゼロへ：</strong>メインセッションを窓口にして複数の独立サブセッション（多言語翻訳など）を並列起動・進捗確認・自動アーカイブさせるのが最新の実践解。</li>
+        </ul>
+      </div>
+
+      <!-- キーワード検索＆PC用カテゴリフィルタ -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <input
+          type="search"
+          placeholder="🔍 キーワードで絞り込み（例：Switch、フォーク、ファクトチェック、寝ます、アーカイブ...）"
+          oninput="filterContent(this.value)"
+          class="w-full px-3.5 py-2 rounded-xl text-xs sm:text-sm bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:border-amber-500"
+        >
+        <div class="hidden md:flex items-center gap-1.5 shrink-0">
+          <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">すべて</button>
+          <button onclick="switchTab('research')" data-tab="research" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">📊 精度劣化の研究</button>
+          <button onclick="switchTab('subagent')" data-tab="subagent" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🤖 サブエージェント</button>
+          <button onclick="switchTab('session')" data-tab="session" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🗂️ セッション管理</button>
+          <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">⚖️ 比較・プロンプト</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Part 1：Context RotとMicrosoft論文（00:00〜11:15） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="research">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-rose-500/20 text-rose-400">00:00 - 11:15</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 1：なぜ1つの会話で色々頼むとAIの精度が下がるのか？（Microsoft最新研究）</h2>
+        </div>
+      </div>
+
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+        <h3 class="text-sm font-bold text-amber-400">📉 Context Rot（コンテキストの腐敗）とベンチマークの罠</h3>
+        <p class="text-xs sm:text-sm">
+          AIに入力する文章量が増えるほど性能が落ちる現象は<strong>「Context Rot（コンテキストの腐敗）」</strong>として知られる。さらに重要な点として、各社が発表するモデルのベンチマークは基本的に<strong>「1回の指示（シングルターン）」</strong>で測定されているが、実務では1つのセッションで何度も条件を足したり別の仕事を頼んだりしている。
+        </p>
+      </div>
+
+      <!-- 3種類の意図変化 -->
+      <div class="space-y-2">
+        <h3 class="text-sm font-bold text-blue-400">🔬 Microsoft論文（2026年7月）が検証した「3種類の意図の変化」</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-sky-400">① Reveal（開示・後出し追加）</span>
+              <span class="text-[11px] text-[var(--muted-foreground)]">影響：小〜中</span>
+            </div>
+            <p class="text-xs">
+              <strong>後から条件を足す指示。</strong><br>
+              例：提案書を作らせた後に「相手は製造業のお客さんです」「予算は100万円です」と後出しで条件を追加する。
+            </p>
+          </div>
+
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-amber-400">② Revise（修正・条件変更）</span>
+              <span class="text-[11px] text-[var(--muted-foreground)]">影響：中</span>
+            </div>
+            <p class="text-xs">
+              <strong>途中で条件を覆す指示。</strong><br>
+              例：最初は「製造業・予算100万」と言ったのに、途中で「サービス業でした」「予算300万でした」と変更する。
+            </p>
+          </div>
+
+          <div class="bg-[var(--secondary)] border-2 border-rose-500/60 rounded-xl p-3.5 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-rose-400">③ Switch（タスクの切り替え）⚠️</span>
+              <span class="px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 text-[11px] font-bold">影響：極めて大</span>
+            </div>
+            <p class="text-xs">
+              <strong>途中で別の仕事を頼む指示。</strong><br>
+              例：提案書を作らせた後、同じセッションで「次はこれを先方に送るメールを作って」と仕事を切り替える。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 論文の4大結論 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-bold text-rose-400">🚨 結果1：最新モデルでも最大約18〜20%精度低下（04:47〜）</div>
+          <p class="text-xs sm:text-sm">
+            3種類の変化を2回ずつ（計6回）入れると、最新のGPT-5.5クラスでも全試験で精度が落ち、特定の試験では<strong><code>-18%</code>（約20%近く）低下</strong>。最高位モデル（Opus等）を使っていても、雑多な会話の中で使うと下位モデル（Sonnet等）のシングルターンより低い精度になる。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-bold text-rose-400">🚨 結果2：「途中でSwitch＋その後に修正」が最悪（07:56〜）</div>
+          <p class="text-xs sm:text-sm">
+            会話の「一番最後」に別タスク（Switch）を頼むならまだ耐えられるが、<strong>「途中で別タスクに切り替えた後、さらに日程追加や宛先変更（Reveal/Revise）を重ねる」</strong>と、切り替え前の何を引き継ぐべきかAIが混乱し、精度が著しく崩壊する。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-bold text-amber-400">⚠️ 結果3：プロンプトによる要約指示は劇的には効かない（09:25〜）</div>
+          <p class="text-xs sm:text-sm">
+            「これまでの条件や目標をAI自身に整理・要約させる」プロンプトを入れても精度はわずかに改善する程度で、タスクによっては逆に下がることもあり、根本解決にはならない。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-1.5">
+          <div class="text-xs font-bold text-amber-400">⚠️ 結果4：難しいタスクほど劣化幅が激しい（10:00〜）</div>
+          <p class="text-xs sm:text-sm">
+            簡単なタスクよりも、論理的思考や高度な処理が必要な難しいタスクほど、意図の変化が重なった時の精度の落ち幅が大きくなる。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 2：サブエージェントの実践活用法（11:16〜19:22 / 指定位置 17:17 含む） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="subagent">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400">11:16 - 19:22</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 2：サブエージェントで「作成」と「検証」を分業する技術</h2>
+        </div>
+        <span class="text-xs text-amber-400 font-semibold">★ URL指定位置 (17:17 / 1037秒) を含むパート</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <h3 class="text-sm font-bold text-emerald-400">📌 原則：「1タスク＝1セッション」とサブエージェントの役割</h3>
+          <p class="text-xs sm:text-sm">
+            基本は仕事が変わるたびに「新規作成」で別セッションを開くこと。ただし「Aの作業中に文脈を活かしつつBも頼みたい」「新規セッションにファイル書き出しで引き継ぐのが面倒」という時は、メインエージェントから別のAI（<strong>サブエージェント</strong>）を呼び出して分業させる。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <h3 class="text-sm font-bold text-amber-400">🔑 重要テクニック：「会話をフォークしない」で起動する（14:55〜）</h3>
+          <p class="text-xs sm:text-sm">
+            サブエージェントには「①メインの会話履歴を丸ごと引き継ぐ（フォークする）」と「②必要な文脈だけ指示として渡す」の2パターンがある。論文の通り雑多な会話履歴を引き継ぐと精度が落ちるため、<strong>「フォークしないで（独立した）サブエージェントを起動して」</strong>と指示する方がシングルターンに近い高精度が出る。
+          </p>
+        </div>
+      </div>
+
+      <!-- 指定位置 17:17 の重点解説ボックス -->
+      <div class="bg-[var(--secondary)] border-2 border-amber-500/70 rounded-xl p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm sm:text-base font-extrabold text-amber-400">🎯 実演①：資料作成後の「ファクトチェック＆レイアウト点検」並列分業（15:59〜18:00）</h3>
+          <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-xs font-bold">17:17 (1037秒) 指定箇所</span>
+        </div>
+        <p class="text-xs sm:text-sm">
+          資料を作ったメインAI自身に「これどう？」と聞いても「満点じゃ！」と甘く評価してしまう。そこで<strong>「作る役」と「見る役（検証役）」のAIを完全に分ける</strong>。
+        </p>
+        <div class="bg-[var(--card)] border border-[var(--border)] rounded-lg p-3 text-xs sm:text-sm space-y-2">
+          <div class="font-bold text-emerald-400">💬 実演で使われたプロンプト：</div>
+          <code class="block bg-[var(--background)] p-2.5 rounded border border-[var(--border)] text-amber-300">
+            独立したサブエージェントを起動して、こちらの資料のファクトチェックや、レイアウト・改行などが読みやすいかをチェックして、必要に応じて修正指示を出してください
+          </code>
+          <div class="pt-1 space-y-1 text-xs text-[var(--muted-foreground)]">
+            <p>👉 <strong class="text-[var(--foreground)]">17:04〜17:30（指定秒数の挙動）：</strong>メインエージェントから<strong>「①ファクトチェックを行うサブエージェント」</strong>と<strong>「②レイアウト・改行の点検を行うサブエージェント」</strong>の2つが同時に起動。</p>
+            <p>👉 各サブエージェントは余計な履歴を持たず<strong>「シングルターン」と同じ集中状態</strong>で作業するため、メインAIだけでは見落としていた複数の改善箇所を発見し、そのフィードバックを元にメインAIが自動で高品質に修正を完了した。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 実演2：寝る前プロンプト -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <h3 class="text-sm sm:text-base font-extrabold text-blue-400">🌙 実演②：寝る前に仕込む「自動検証・改善ループ」プロンプト（18:01〜19:22）</h3>
+          <span class="text-xs text-[var(--muted-foreground)]">1回の指示で作成〜検証ループまで自動化</span>
+        </div>
+        <p class="text-xs sm:text-sm">
+          成果物を見てから手動でサブエージェントを呼ぶのではなく、最初のプロンプトに「作成＋サブエージェント検証ループ」をセットで組み込む手法。
+        </p>
+        <code class="block bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] text-xs sm:text-sm text-amber-300">
+          私はもう寝ます。〇〇というタスクをやっておいて、その後サブエージェントを起動してフィードバックループを回すことを最高の品質が出るまで繰り返しやっといてください。おやすみなさい。
+        </code>
+        <p class="text-xs text-[var(--muted-foreground)]">
+          💡 <strong>ポイント：</strong>「私はもう寝ます」と書くことで、AIが気を遣って途中の確認質問で止まらずに最後まで自律的に回し切ってくれる（トークンは多く消費するが、朝起きると高品質な成果物が完成している）。
+        </p>
+      </div>
+    </section>
+
+    <!-- Part 3：Claude Desktopのセッション管理機能（19:23〜27:03） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="session">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-400">19:23 - 27:03</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 3：Claude Desktopの「セッション管理機能」で複数タスクを並列統括</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <h3 class="text-sm font-bold text-purple-400">🖥️ サブエージェントと「サブセッション」の違い（19:23〜）</h3>
+          <p class="text-xs sm:text-sm">
+            通常のサブエージェントはバックグラウンドで動くため「今何をやっているか見えにくい・直接追加指示を出しにくい」という弱点がある。<br>
+            一方、<strong>Claude Desktop（デスクトップアプリ版）</strong>のセッション管理機能を使うと、左サイドバーに<strong>独立した「サブセッション」が自動生成</strong>され、進捗の目視確認や個別指示が自在に行える（CLI版ではできないUIならではの強み）。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <h3 class="text-sm font-bold text-emerald-400">🌐 実演：英語・中国語・フランス語版の並列作成（20:00〜22:15）</h3>
+          <ul class="text-xs sm:text-sm space-y-1 list-disc list-inside">
+            <li><strong>一括起動：</strong>メインセッションで「この資料を英語・中国語・フランス語にするセッションをそれぞれ独立で立ち上げて作っておいて」と指示。</li>
+            <li><strong>進捗確認：</strong>作業中もメインセッションと会話でき、「今どんな進捗？」と聞けば3つのサブセッションの状況を集約して報告してくれる。</li>
+            <li><strong>個別への追加指示：</strong>メインから「中国語版は5枚にしておいて」と頼めば、中国語のサブセッションに自動でメッセージが送られて作業が継続される。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <h3 class="text-sm font-bold text-amber-400">🧹 サイドバーを綺麗に保つ「自動アーカイブ」設定（22:49〜）</h3>
+          <p class="text-xs sm:text-sm">
+            サブセッションを10個・20個と立ち上げると左サイドバーが散らかってしまうため、Claude Codeのメモリに<strong>「タスクが終わったセッションはアーカイブするように覚えておいて」</strong>と記憶させておく。作業完了時に「アーカイブしますか？」とボタンが出るようになり、ワンクリックで左サイドバーから綺麗に収納できる。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <h3 class="text-sm font-bold text-blue-400">🚀 最新トレンド：OpenAI Dots と Claude Duet（23:45〜）</h3>
+          <p class="text-xs sm:text-sm">
+            OpenAIの「Dots」や、Anthropicが米国でリサーチプレビュー提供中の「Claude Duet」も同じく、<strong>「人間が話す窓口は1つのAIだけで、裏側の複数セッション作成・管理はAIが担う」</strong>設計になっている。人間に代わってAIにセッション管理を任せるのが今後の主流トレンド。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 4：比較表＆すぐ使えるプロンプト集（PC用テーブル＋スマホ用カード） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="compare">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <h2 class="text-base sm:text-lg font-bold">⚖️ 徹底比較：3つのAI活用スタイルと使い分け基準</h2>
+      </div>
+
+      <!-- PC画面用テーブル（hidden md:block） -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-[var(--border)] bg-[var(--secondary)]">
+              <th class="p-3 font-bold w-1/5">比較項目</th>
+              <th class="p-3 font-bold text-rose-400 w-1/4">❌ 1つのセッションに詰め込む</th>
+              <th class="p-3 font-bold text-emerald-400 w-1/4">⭕ サブエージェント分業</th>
+              <th class="p-3 font-bold text-purple-400 w-3/10">🌟 サブセッション管理 (Desktop)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="p-3 font-bold">回答・作業の精度</td>
+              <td class="p-3 text-[var(--muted-foreground)]">Context Rotとタスク切替（Switch）により最大約18〜20%精度が劣化。</td>
+              <td class="p-3">フォークせず独立起動することで、シングルターン相当の高い精度を維持。</td>
+              <td class="p-3">完全に独立したセッションで動くため、精度劣化ゼロで並列処理が可能。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">進捗の可視性・追加指示</td>
+              <td class="p-3 text-[var(--muted-foreground)]">1画面で見えるが、作業中は次の指示が出せず文脈がどんどん汚れる。</td>
+              <td class="p-3">裏側で動くため中身を覗いたり個別に途中指示を出すのはやや手間。</td>
+              <td class="p-3">左サイドバーでいつでも中身を確認でき、メイン窓口から個別セッションへ追加指示も可能。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">人間の認知負荷</td>
+              <td class="p-3 text-[var(--muted-foreground)]">精度が落ちた出力の手直しに追われ、結果的に時間がかかる。</td>
+              <td class="p-3">「作成＋検証ループ」を1プロンプトで任せられ、寝ている間に高品質化。</td>
+              <td class="p-3">人間は1つのメインAIと話すだけ。完了後は自動アーカイブで管理コスト極小。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">おすすめの用途</td>
+              <td class="p-3 text-[var(--muted-foreground)]">1回で終わる簡単な質問のみ。</td>
+              <td class="p-3">資料やコード作成後の<strong>ファクトチェック・レイアウト点検・改善ループ</strong>。</td>
+              <td class="p-3"><strong>多言語展開・複数パターンの同時作成</strong>など、独立した複数業務の並列進行。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- スマホ画面専用・縦型カード表示（md:hidden） -->
+      <div class="md:hidden space-y-3">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-rose-400">❌ パターン1：1つのセッションで全部やる（非推奨）</div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            提案書作成の途中でメール作成（Switch）を頼み、さらに条件修正（Revise）を重ねると、最新モデルでも<strong>最大約20%精度が低下</strong>。最上位モデルが下位モデル並みに劣化する。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-emerald-400">⭕ パターン2：サブエージェントで分業（検証・品質向上に最適）</div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            会話履歴を引き継がず（フォークせず）に独立したサブエージェントを起動し、<strong>ファクトチェックやレイアウト点検を別AIに担当させる</strong>。寝る前の自動改善ループにも最適。
+          </p>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-purple-400">🌟 パターン3：Claude Desktopのサブセッション管理（並列作業に最適）</div>
+          <p class="text-xs text-[var(--muted-foreground)]">
+            メインセッションが左サイドバーに複数のサブセッション（英語・中国語・仏語版など）を立ち上げて統括。<strong>人間は1つの窓口と話すだけで進捗確認・追加指示・完了後のアーカイブまで完結</strong>する。
+          </p>
+        </div>
+      </div>
+
+      <!-- コピペで使える実践プロンプト4選 -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-3">
+        <h3 class="text-sm font-bold text-amber-400">📋 明日からそのまま使える！動画内の実践プロンプト4選</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5 text-xs">
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-emerald-400 block">① 履歴を引き継がないサブエージェント起動</strong>
+            <code>会話をフォークしないで独立したサブエージェントを起動して、[別タスクB] を行ってください。</code>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-emerald-400 block">② ファクトチェック＆レイアウト点検の分業（17:17〜）</strong>
+            <code>独立したサブエージェントを起動して、こちらの資料のファクトチェックや、レイアウト・改行などが読みやすいかをチェックして、必要に応じて修正指示を出してください。</code>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-blue-400 block">③ 寝る前の自律改善ループ（18:30〜）</strong>
+            <code>私はもう寝ます。[タスク内容] をやっておいて、その後サブエージェントを起動してフィードバックループを回すことを最高の品質が出るまで繰り返しやっといてください。おやすみなさい。</code>
+          </div>
+          <div class="bg-[var(--card)] p-3 rounded-lg border border-[var(--border)] space-y-1">
+            <strong class="text-purple-400 block">④ サブセッション並列起動＆自動アーカイブ記憶（20:14〜）</strong>
+            <code>この資料を英語、中国語、フランス語にするセッションをそれぞれ独立で立ち上げて資料を作っておいて。（※メモリ設定：タスクが終わったセッションはアーカイブするように覚えておいて）</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- スマホ専用・下部固定ボトムナビゲーションバー -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--card)] bg-card-fallback border-t border-[var(--border)] px-2 py-1.5 shadow-lg">
+    <div class="grid grid-cols-5 gap-1 text-center">
+      <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold border border-transparent">
+        <span>📋</span>
+        <span>すべて</span>
+      </button>
+      <button onclick="switchTab('research')" data-tab="research" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>📊</span>
+        <span>研究結果</span>
+      </button>
+      <button onclick="switchTab('subagent')" data-tab="subagent" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🤖</span>
+        <span>サブAI</span>
+      </button>
+      <button onclick="switchTab('session')" data-tab="session" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🗂️</span>
+        <span>セッション</span>
+      </button>
+      <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>⚖️</span>
+        <span>比較・実践</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+    function toggleFontSize() {
+      document.body.classList.toggle('font-large');
+      const isLarge = document.body.classList.contains('font-large');
+      document.getElementById('font-btn').textContent = isLarge ? '🔠 標準サイズ' : '🔠 文字を大きく';
+    }
+    function switchTab(category) {
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (category === 'all' || sec.getAttribute('data-category') === category) ? '' : 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === category) {
+          btn.classList.add('nav-btn-active');
+        } else {
+          btn.classList.remove('nav-btn-active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function filterContent(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (!q || sec.innerText.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
+

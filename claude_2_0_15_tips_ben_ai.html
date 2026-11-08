@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>上位1%になる「Claude 2.0」15の活用術（Ben AI）完全図解｜スマホ完全対応</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    /* オフライン・iPhoneのOneDrive/ファイルアプリ内プレビューでも崩れない自己完結テーマ定義 */
+    :root {
+      --background: #f8fafc;
+      --foreground: #0f172a;
+      --card: #ffffff;
+      --muted-foreground: #475569;
+      --border: #e2e8f0;
+      --primary: #d97706;
+      --primary-foreground: #ffffff;
+      --secondary: #f1f5f9;
+      --secondary-foreground: #1e293b;
+    }
+    html.dark {
+      --background: #0b0f19;
+      --foreground: #f1f5f9;
+      --card: #131b2e;
+      --muted-foreground: #94a3b8;
+      --border: #1e293b;
+      --primary: #f59e0b;
+      --primary-foreground: #0f172a;
+      --secondary: #1e293b;
+      --secondary-foreground: #e2e8f0;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--background);
+      color: var(--foreground);
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      line-height: 1.65;
+      padding: 12px 12px 96px 12px;
+    }
+    @media (min-width: 768px) { body { padding: 32px; } }
+    .bg-card-fallback { background-color: var(--card); }
+    .bg-bg-fallback { background-color: var(--background); }
+    .hidden { display: none !important; }
+    body.font-large { font-size: 17px; }
+    body.font-large .text-xs { font-size: 0.92rem !important; line-height: 1.55rem !important; }
+    body.font-large .text-sm { font-size: 1.05rem !important; line-height: 1.65rem !important; }
+    body.font-large .text-base { font-size: 1.15rem !important; line-height: 1.75rem !important; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .nav-btn-active {
+      background-color: rgba(245, 158, 11, 0.18) !important;
+      color: #f59e0b !important;
+      border-color: rgba(245, 158, 11, 0.5) !important;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased p-3 sm:p-5 md:p-8 pb-28 md:pb-12">
+  <div class="max-w-5xl mx-auto space-y-4 md:space-y-6">
+
+    <!-- 上部ツールバー（文字サイズ拡大・テーマ切替） -->
+    <div class="sticky top-2 z-20 flex flex-wrap items-center justify-between gap-2 bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-xl px-3.5 py-2.5 shadow-md backdrop-blur">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-bold text-amber-500">📱 スマホ完全対応ガイド ①</span>
+        <span class="hidden sm:inline-block text-xs text-[var(--muted-foreground)]">| Ben AI「上位1%になるClaude 2.0 活用15のヒント」</span>
+      </div>
+      <div class="flex items-center gap-1.5">
+        <a href="./index.html" class="px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 transition">🏠 一覧</a>
+        <button onclick="toggleFontSize()" id="font-btn" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🔠 文字を大きく
+        </button>
+        <button onclick="toggleTheme()" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] active:scale-95 transition">
+          🌗 テーマ切替
+        </button>
+      </div>
+    </div>
+
+    <!-- ヒーローヘッダー -->
+    <header class="bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 shadow-sm space-y-4">
+      <div class="flex flex-wrap items-center gap-2">
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">動画① 完全図解</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/30">再生時間 25:11</span>
+        <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">初級〜上級 15 Tips 完全網羅</span>
+      </div>
+
+      <h1 class="text-lg sm:text-2xl md:text-3xl font-extrabold leading-snug">
+        99%の人よりClaude 2.0を使いこなす「15のシンプル活用術」<br class="hidden sm:inline">
+        <span class="text-sm sm:text-lg font-normal text-[var(--muted-foreground)]">（15 Simple Tips to Use Claude 2.0 Better than 99% of People）</span>
+      </h1>
+
+      <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">
+        チャンネル：Ben AI｜<a href="https://www.youtube.com/watch?v=Q0ArTNWXeAU" target="_blank" rel="noopener" class="text-amber-400 underline hover:text-amber-300">元のYouTube動画を開く ↗</a>
+      </p>
+
+      <!-- 3行エグゼクティブサマリー -->
+      <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 sm:p-4 space-y-2">
+        <div class="text-xs font-bold text-amber-400">💡 動画の核心（30秒でわかる結論）</div>
+        <ul class="text-xs sm:text-sm space-y-1.5 list-disc list-inside">
+          <li><strong>「細かく指示」から「野心的なブリーフィング」へ（Tip 1〜6）：</strong>最新モデルは仕事を丸ごと完走できる。「仕事・理由・制約・完了の定義」の4要素でブリーフィングし、修正ではなく「5案からの選択」と「<code>/rewind</code>（巻き戻し）」で精度を守る。</li>
+          <li><strong>実務からスキルを作り、環境をスリムに保つ（Tip 7〜10）：</strong>成果物のリバースエンジニアリングや画面録画（Record a skill）でスキル化し、デトックス監査と <code>/autocompact</code>（30〜40万トークン設定）で「ダム・ゾーン（精度劣化領域）」を回避する。</li>
+          <li><strong>サブエージェント・キャッシュ管理・第二の脳（Tip 11〜15）：</strong>大量処理は安価なSonnet/Haikuのサブエージェント100個に分散し、1時間で切れるプロンプトキャッシュをModで管理、ローカルフォルダの「セカンドブレイン」を全AIの基盤にする。</li>
+        </ul>
+      </div>
+
+      <!-- キーワード検索＆PC用カテゴリフィルタ -->
+      <div class="flex flex-col sm:flex-row gap-2 pt-1">
+        <input
+          type="search"
+          placeholder="🔍 キーワードで絞り込み（例：ブリーフィング、rewind、ダム・ゾーン、キャッシュ、セカンドブレイン...）"
+          oninput="filterContent(this.value)"
+          class="w-full px-3.5 py-2 rounded-xl text-xs sm:text-sm bg-[var(--background)] border border-[var(--border)] text-[var(--foreground)] focus:outline-none focus:border-amber-500"
+        >
+        <div class="hidden md:flex items-center gap-1.5 shrink-0">
+          <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">すべて</button>
+          <button onclick="switchTab('prompting')" data-tab="prompting" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">📝 Tip 1〜6: 指示と対話</button>
+          <button onclick="switchTab('skills-lean')" data-tab="skills-lean" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">⚙️ Tip 7〜10: スキル・圧縮</button>
+          <button onclick="switchTab('advanced')" data-tab="advanced" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">🚀 Tip 11〜15: 並列・脳</button>
+          <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn px-3 py-2 rounded-xl text-xs font-bold border border-[var(--border)] bg-[var(--secondary)]">⚖️ 比較・実践表</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Part 1：Tip 1〜6（指示の出し方・視覚化・巻き戻し）（01:09〜10:11） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="prompting">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-amber-500/20 text-amber-400">01:09 - 10:11</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 1：最新モデルの能力を100%引き出す「指示と対話の技術」（Tip #1〜#6）</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+        <!-- Tip 1 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-amber-400">Tip #1：もっと野心的なタスクを丸ごと任せる</span>
+            <span class="text-xs text-[var(--muted-foreground)]">01:09〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            1年前のように細かくステップ分けして人間が監督する必要はない。最新モデルは長期タスクを最後まで完走できる（Andrej Karpathy氏や開発者Thariq氏も「できる限り野心的であれ」と推奨）。<br>
+            💡 <strong>秘訣：</strong>Claudeは控えめに解釈して最低限の成果物で済ませる癖があるため、プロンプトに<strong>「意欲的・野心的に取り組んで（Be ambitious）」という1行を足す</strong>だけで出力品質が劇的に跳ね上がる。
+          </p>
+        </div>
+
+        <!-- Tip 2 -->
+        <div class="bg-[var(--secondary)] border-2 border-amber-500/60 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-amber-400">Tip #2：プロンプトではなく「ブリーフィング」を書く</span>
+            <span class="text-xs text-[var(--muted-foreground)]">02:25〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            Claude Code開発者Boris Cherny氏推奨の<strong>4要素メンタルモデル</strong>：
+          </p>
+          <ol class="text-xs space-y-1 list-decimal list-inside">
+            <li><strong>行うべき仕事（What）：</strong>何を作るか</li>
+            <li><strong>なぜ重要か（Why）：</strong>背景・意図を伝えると途中の判断が的確になる</li>
+            <li><strong>役割とガードレール（Guardrails）：</strong>「善意の人がどう誤解し得るか（Cat Wu氏）」を1分考えて制約と理由を書く</li>
+            <li><strong>完了の定義（Definition of Done）：</strong>やりすぎによるトークン浪費を防ぐため、過去の理想例や形式・長さ・終了条件を明記する</li>
+          </ol>
+        </div>
+
+        <!-- Tip 3 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-blue-400">Tip #3：曖昧な時は「事前計画（インタビュー）」させる</span>
+            <span class="text-xs text-[var(--muted-foreground)]">04:46〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            ボトルネックはAIではなく「人間の言語化能力」。要望がまだ曖昧な時は、思いつくままに書き出した最後に<strong>「曖昧な点について一度に一つずつ質問して」</strong>と添える（または <code>interview me</code> スキルを実行）。数問答えてから4要素のブリーフィングを作らせて実行すると一発で高品質になる。
+          </p>
+        </div>
+
+        <!-- Tip 4 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-blue-400">Tip #4：すべての出力を「視覚化（ビジュアライズ）」する</span>
+            <span class="text-xs text-[var(--muted-foreground)]">06:06〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            長文テキストは人間が読み飛ばして見落とす。「視覚情報は脳への高速道路」。<br>
+            ・調査レポート → <strong>1ページデザイン / スライド</strong><br>
+            ・数値分析 → <strong>ダッシュボード</strong>（次回以降も自動更新）<br>
+            ・複雑な概念 → <strong>Claude Motion</strong>（解説アニメ動画）<br>
+            ・原稿やSNS投稿 → <strong>Claude Docs</strong>（チーム共同編集）
+          </p>
+        </div>
+
+        <!-- Tip 5 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-emerald-400">Tip #5：修正せず「各段階でバリエーション（5案）」を出させる</span>
+            <span class="text-xs text-[var(--muted-foreground)]">07:38〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            1つの出力に対してダメ出しを繰り返すのは遅い。人間は実物を見るまで欲しいものが分からないため、<strong>「修正」ではなく「選択」する</strong>。<br>
+            例：10個の切り口 → 1つ選ぶ → 5つの構成案 → 10個の導入フック → 3つの下書き。「5つの選択肢を出して」の一言が作業を最速化する。
+          </p>
+        </div>
+
+        <!-- Tip 6 -->
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-extrabold text-emerald-400">Tip #6：チャット内で修正せず「巻き戻す（/rewind）」</span>
+            <span class="text-xs text-[var(--muted-foreground)]">08:31〜</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            方向性がズレたまま3〜4回修正を重ねると、過去の間違いも毎回読み直されて精度が落ちトークンも浪費する。<br>
+            <code>/rewind</code>（または <code>Esc</code> 2回押し）で最初のプロンプトまで巻き戻し、抜けていた条件（例：「解約済み顧客のみ集計」）を追記してクリーンに再開するのが鉄則。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 2：Tip 7〜10（設定・スキル構築・デトックス・自動圧縮）（10:12〜17:24） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="skills-lean">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-emerald-500/20 text-emerald-400">10:12 - 17:24</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 2：高速設定・実務からのスキル構築・コンテキスト管理（Tip #7〜#10）</h2>
+        </div>
+      </div>
+
+      <div class="space-y-3.5">
+        <!-- Tip 7 & Tip 8 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-amber-400">Tip #7：エフォートレベルは「Medium」を基本にする</span>
+              <span class="text-xs text-[var(--muted-foreground)]">10:12〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              常に最大エフォート（High/Max）にしていると動作が遅くなり利用枠もすぐ溶ける。ほとんどの日常業務では、最上位モデル（Opus）の<strong>デフォルト設定「Medium（ミディアム）」</strong>を使うだけで劇的に高速化し、十分な品質が得られる。
+            </p>
+          </div>
+
+          <div class="bg-[var(--secondary)] border-2 border-emerald-500/60 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-emerald-400">Tip #8：ゼロから作らず「実際の業務」からスキルを作る</span>
+              <span class="text-xs text-[var(--muted-foreground)]">11:43〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              口頭説明だけでスキルを作らせると例外処理が抜ける。以下の<strong>3つの質問（Yesで採用）</strong>で作る：
+            </p>
+            <ol class="text-xs space-y-1 list-decimal list-inside">
+              <li><strong>理想の過去成果物があるか？</strong> → 過去の名作15本を渡して<strong>リバースエンジニアリング</strong>させる</li>
+              <li><strong>Claudeと一緒に行った作業か？</strong> → うまくいった直後に<strong>「今の手順をスキルとして保存して」</strong>と頼む</li>
+              <li><strong>他アプリの手作業ルーチンか？</strong> → 「＋」＞<strong>「スキルを記録（Record a skill）」</strong>で画面操作と「なぜそうするかの音声解説」を録画して自動スキル化する</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- Tip 9 & Tip 10 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-blue-400">Tip #9：環境をスリムに保つ（週1回のデトックス監査）</span>
+              <span class="text-xs text-[var(--muted-foreground)]">14:06〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              スキル・コネクタ・<code>CLAUDE.md`・古いチャットが増えすぎると、全チャットで毎回読み込まれて遅く高コストになる。<br>
+              <strong>①UI/チャット ②スキル ③メモリとCLAUDE.md ④コネクタ ⑤スケジュールタスク</strong>の5項目を監査する「デトックススキル」を週1回実行し、1チャットあたり15,000トークンの無駄を削減する。
+            </p>
+          </div>
+
+          <div class="bg-[var(--secondary)] border-2 border-rose-500/60 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-rose-400">Tip #10：「ダム・ゾーン」に入る前に自動圧縮する</span>
+              <span class="text-xs text-[var(--muted-foreground)]">15:42〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              100万トークン上限でも、実は<strong>20万〜40万トークン付近から精度が落ちる「ダム・ゾーン（愚かな領域）」</strong>に入る。デフォルト圧縮は満杯寸前まで動かないため、以下の3対策をとる：<br>
+              ① 鈍ったらすぐ <code>/compact</code> を打つ<br>
+              ② <code>/compact [残したい情報]</code> で保持内容を指定<br>
+              ③ <strong>最強設定：</strong><code>/autocompact</code> で<strong>30万〜40万トークン</strong>を指定し、劣化する前に自動圧縮させる。
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 3：Tip 11〜15（サブエージェント・プロジェクト・キャッシュ・第二の脳）（17:25〜25:11） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="advanced">
+      <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--border)] pb-3">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 rounded text-xs font-bold bg-purple-500/20 text-purple-400">17:25 - 25:11</span>
+          <h2 class="text-base sm:text-lg font-bold">Part 3：上級者の並列オーケストレーション＆セカンドブレイン（Tip #11〜#15）</h2>
+        </div>
+      </div>
+
+      <div class="space-y-3.5">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+          <!-- Tip 11 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-emerald-400">Tip #11：安価なモデルでサブエージェントを大量並列化する</span>
+              <span class="text-xs text-[var(--muted-foreground)]">17:25〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              大量データの読み込みはサブエージェントに任せて要約だけをメインに返させる。ただしデフォルトでは数が少なすぎ、高価なOpusが使われてしまう。<br>
+              💡 <strong>解決策：</strong>「500件の提案書を分析するなら、<strong>SonnetまたはHaikuのサブエージェントを100個立ち上げて5件ずつ分析して</strong>」と<strong>数とモデルを明示</strong>すると爆速・高精度・低コストになる。
+            </p>
+          </div>
+
+          <!-- Tip 12 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-purple-400">Tip #12：大規模案件はClaude Codeの「プロジェクト」を使う</span>
+              <span class="text-xs text-[var(--muted-foreground)]">19:04〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              1つのメインチャットが「コーディネーター」となり、配下にタスク別の独立スレッド（サムネ用・タイトル用・構成用など）を立ち上げて統括。全スレッドがプロジェクトメモリを共有しつつクリーンなコンテキストで並列稼働し、無関係な質問は自動で別スレッド化を提案してくれる。
+            </p>
+          </div>
+
+          <!-- Tip 13 -->
+          <div class="bg-[var(--secondary)] border-2 border-amber-500/60 rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-amber-400">Tip #13：「キャッシュの1時間ルール」を意識して枠を守る</span>
+              <span class="text-xs text-[var(--muted-foreground)]">20:22〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              会話中、サーバー上のキャッシュが温まっている間は通常の1/20〜1/40のコストで済むが、<strong>サブスク版では1時間（APIは5分）放置するとキャッシュが冷める</strong>。昼食後や翌朝に長いチャットを再開すると、1通目に最大40倍のフル料金がかかる。<br>
+              💡 <strong>2つのModで解決：</strong>残り時間を表示し裏でpingを送って温め続ける「Cache Clock Mod」と、<code>/handoff</code> で引き継ぎ書を作って新チャットへ移行する「Handoff Mod」を活用する。
+            </p>
+          </div>
+
+          <!-- Tip 14 -->
+          <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-4 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold text-blue-400">Tip #14：脱線・進捗確認・レビューは「サイドチャット」で行う</span>
+              <span class="text-xs text-[var(--muted-foreground)]">22:13〜</span>
+            </div>
+            <p class="text-xs sm:text-sm">
+              右上「…」から開くサイドチャットを使うべき3場面：<br>
+              ① <strong>進捗・残り時間の確認</strong>（メインの作業を止めない）<br>
+              ② <strong>作業のレビューと軌道修正</strong>（指示通りか確認しメインへ指示送信）<br>
+              ③ <strong>本筋と無関係な質問</strong>（メインのコンテキストを汚さない）
+            </p>
+          </div>
+        </div>
+
+        <!-- Tip 15 -->
+        <div class="bg-[var(--secondary)] border-l-4 border-amber-500 rounded-xl p-4 space-y-2">
+          <div class="flex items-center justify-between">
+            <h3 class="text-sm sm:text-base font-extrabold text-amber-400">Tip #15（最重要）：すべての基盤となる「セカンドブレイン（第二の脳）」を構築する</h3>
+            <span class="text-xs text-[var(--muted-foreground)]">23:19〜25:11</span>
+          </div>
+          <p class="text-xs sm:text-sm">
+            Claudeの内蔵メモリは断片的な事実しか記録できず制御もできない。「第二の脳」とは、<strong>自社の戦略・チーム資料・過去の全コンテンツ・見込み客の履歴などをテキストファイルとして体系的に格納したPC上のローカルフォルダ</strong>のこと。<br>
+            数千ファイルの文脈をすべてのチャット・スキルから参照できるようにすることで、毎回背景を説明しなくてもビジネスを深く理解した最高のパートナーになる。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Part 4：比較表（PC用テーブル＋スマホ用ビフォーアフターカード） -->
+    <section class="section-block bg-[var(--card)] bg-card-fallback border border-[var(--border)] rounded-2xl p-4 sm:p-6 space-y-4" data-category="compare">
+      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+        <h2 class="text-base sm:text-lg font-bold">⚖️ 徹底比較：「一般ユーザー（99%）」vs「上位1%のClaude 2.0プロフェッショナル」</h2>
+      </div>
+
+      <!-- PC画面用テーブル（hidden md:block） -->
+      <div class="hidden md:block overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+          <thead>
+            <tr class="border-b border-[var(--border)] bg-[var(--secondary)]">
+              <th class="p-3 font-bold w-1/5">場面</th>
+              <th class="p-3 font-bold text-rose-400 w-2/5">❌ 99%の一般ユーザーのやり方</th>
+              <th class="p-3 font-bold text-emerald-400 w-2/5">⭕ 上位1%のプロのやり方（15 Tips）</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-[var(--border)]">
+            <tr>
+              <td class="p-3 font-bold">タスク依頼・プロンプト</td>
+              <td class="p-3 text-[var(--muted-foreground)]">細かくステップ分けして短いプロンプトを何度も送り、曖昧なまま走り出して失敗する。</td>
+              <td class="p-3">事前にインタビュー質問させ、<strong>「仕事・理由・制約・完了の定義」＋「意欲的に取り組んで」</strong>で丸ごと任せる。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">出力の確認・修正</td>
+              <td class="p-3 text-[var(--muted-foreground)]">長文テキストを読み流し、1つの出力に3〜4回ダメ出しを重ねてコンテキストを汚染する。</td>
+              <td class="p-3">アーティファクトで<strong>視覚化</strong>させ、各段階で<strong>「5つの選択肢」</strong>から選ぶ。ズレたら <code>/rewind</code>（Esc 2回）で巻き戻す。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">スキル化・環境管理</td>
+              <td class="p-3 text-[var(--muted-foreground)]">口頭説明で雑なスキルを作り、不要なスキルや古いチャットを放置してトークンを浪費。</td>
+              <td class="p-3">名作15本のリバースエンジニアリングや画面録画（Record a skill）で構築し、週1回デトックス監査でスリム化。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">長文対話・大量処理</td>
+              <td class="p-3 text-[var(--muted-foreground)]">100万トークン満杯まで1つのチャットを使い続け、20〜40万トークン以降の「ダム・ゾーン」で精度低下。</td>
+              <td class="p-3"><code>/autocompact</code> を30〜40万トークンに設定。大量分析は<strong>Sonnet/Haikuのサブエージェント100個</strong>に分散。</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-bold">キャッシュ・知識基盤</td>
+              <td class="p-3 text-[var(--muted-foreground)]">1時間放置した長いチャットにそのまま返信して40倍の枠を消費。毎回会社の前提をコピペ説明する。</td>
+              <td class="p-3">キャッシュ切れ時は <code>/handoff</code> で新チャットへ移行。ローカルの<strong>「セカンドブレイン」</strong>で全文脈を常時共有。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- スマホ画面専用・縦型カード表示（md:hidden） -->
+      <div class="md:hidden space-y-3">
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">① 指示の出し方と修正方法（Tip 1〜6）</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before：</strong>短い指示で1案だけ出させ、チャット内で何度もダメ出し修正を繰り返して精度が崩壊する。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After：</strong>4要素ブリーフィングで丸ごと任せ、各段階で「5案」出させて選ぶ。ズレたら <code>Esc</code> 2回（<code>/rewind</code>）で巻き戻す。
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">② スキル構築とダム・ゾーン回避（Tip 7〜10）</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before：</strong>100万トークン上限まで放置し、20〜40万トークン以降の「ダム・ゾーン」で劣化した回答を使い続ける。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After：</strong><code>/autocompact</code> を30〜40万トークンに設定。スキルは過去の名作や画面録画（Record a skill）から作り、週1回デトックス監査。
+          </div>
+        </div>
+
+        <div class="bg-[var(--secondary)] border border-[var(--border)] rounded-xl p-3.5 space-y-2">
+          <div class="text-xs font-extrabold text-amber-400">③ 並列処理・キャッシュ・第二の脳（Tip 11〜15）</div>
+          <div class="bg-rose-500/10 border border-rose-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-rose-400">❌ Before：</strong>1時間放置して冷めた長いチャットにそのまま返信し、最大40倍のトークンを消費する。
+          </div>
+          <div class="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-2.5 text-xs">
+            <strong class="text-emerald-400">⭕ After：</strong>大量調査はHaiku/Sonnetのサブエージェントに分散。1時間経過後は <code>/handoff</code> で新チャットへ引き継ぎ、セカンドブレインを基盤にする。
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- スマホ専用・下部固定ボトムナビゲーションバー -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-[var(--card)] bg-card-fallback border-t border-[var(--border)] px-2 py-1.5 shadow-lg">
+    <div class="grid grid-cols-5 gap-1 text-center">
+      <button onclick="switchTab('all')" data-tab="all" class="tab-btn nav-btn-active flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold border border-transparent">
+        <span>📋</span>
+        <span>すべて</span>
+      </button>
+      <button onclick="switchTab('prompting')" data-tab="prompting" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>📝</span>
+        <span>Tip 1〜6</span>
+      </button>
+      <button onclick="switchTab('skills-lean')" data-tab="skills-lean" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>⚙️</span>
+        <span>Tip 7〜10</span>
+      </button>
+      <button onclick="switchTab('advanced')" data-tab="advanced" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>🚀</span>
+        <span>Tip 11〜15</span>
+      </button>
+      <button onclick="switchTab('compare')" data-tab="compare" class="tab-btn flex flex-col items-center justify-center py-1 rounded-lg text-[11px] font-bold text-[var(--muted-foreground)] border border-transparent">
+        <span>⚖️</span>
+        <span>比較表</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+    function toggleFontSize() {
+      document.body.classList.toggle('font-large');
+      const isLarge = document.body.classList.contains('font-large');
+      document.getElementById('font-btn').textContent = isLarge ? '🔠 標準サイズ' : '🔠 文字を大きく';
+    }
+    function switchTab(category) {
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (category === 'all' || sec.getAttribute('data-category') === category) ? '' : 'none';
+      });
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === category) {
+          btn.classList.add('nav-btn-active');
+        } else {
+          btn.classList.remove('nav-btn-active');
+        }
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function filterContent(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll('.section-block').forEach(sec => {
+        sec.style.display = (!q || sec.innerText.toLowerCase().includes(q)) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>
+
