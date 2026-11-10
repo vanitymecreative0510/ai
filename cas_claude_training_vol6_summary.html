@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>【第2期 第6回】CAS-Claude活用研修：Claude Code実践システム開発（社内ポータル＆勤怠管理）完全まとめ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #131b2e;
+            --bg-card: rgba(25, 35, 58, 0.78);
+            --bg-card-hover: rgba(35, 49, 82, 0.92);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-orange: #ff6b35;
+            --accent-amber: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: rgba(148, 163, 184, 0.18);
+            --code-bg: #070a12;
+            --font-scale: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #eef2f6;
+            --bg-card: rgba(255, 255, 255, 0.94);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-orange: #ea580c;
+            --accent-amber: #d97706;
+            --accent-blue: #0284c7;
+            --accent-purple: #7e22ce;
+            --accent-green: #059669;
+            --accent-red: #dc2626;
+            --border-color: rgba(15, 23, 42, 0.12);
+            --code-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.75;
+            padding-bottom: 92px;
+            background-image:
+                radial-gradient(circle at 12% 10%, rgba(56, 189, 248, 0.09), transparent 32%),
+                radial-gradient(circle at 88% 80%, rgba(168, 85, 247, 0.08), transparent 32%);
+            background-attachment: fixed;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* 上部固定ガラスヘッダー */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        [data-theme="light"] .top-bar {
+            background: rgba(248, 250, 252, 0.88);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            box-shadow: 0 0 10px var(--accent-orange);
+            flex-shrink: 0;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .ctrl-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.15s ease;
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* メインコンテナ */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.13) 0%, rgba(56, 189, 248, 0.12) 55%, rgba(168, 85, 247, 0.11) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.6rem 1.35rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-orange { background: rgba(255, 107, 53, 0.16); color: var(--accent-orange); border: 1px solid rgba(255, 107, 53, 0.35); }
+        .badge-blue { background: rgba(56, 189, 248, 0.16); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.35); }
+        .badge-purple { background: rgba(168, 85, 247, 0.16); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.35); }
+        .badge-green { background: rgba(16, 185, 129, 0.16); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.35); }
+
+        .hero h1 {
+            font-size: clamp(1.32rem, 4.3vw, 2rem);
+            font-weight: 900;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem 1.1rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .video-meta a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* 3行要約ボックス */
+        .tldr-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 14px;
+            padding: 1.15rem 1.25rem;
+            margin-bottom: 1.75rem;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tldr-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tldr-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .tldr-list li {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-left: 1.35rem;
+        }
+
+        .tldr-list li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 900;
+        }
+
+        /* 数値スタッツグリッド */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.95rem 1rem;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: var(--accent-amber);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* セクション見出し */
+        .section {
+            margin-bottom: 2.25rem;
+            scroll-margin-top: 68px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-num {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.85rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.18rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        /* カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 720px) {
+            .card-grid.two-col {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.2rem;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.6rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .card-title {
+            font-size: 1.02rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .time-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.18rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.14);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            flex-shrink: 0;
+        }
+
+        .card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: grid;
+            gap: 0.45rem;
+            margin-top: 0.5rem;
+        }
+
+        .bullet-list li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            padding-left: 1.1rem;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0.2rem;
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        .bullet-list strong {
+            color: var(--text-primary);
+        }
+
+        /* コード・プロンプトブロック */
+        .code-wrap {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.45rem 0.85rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: none;
+            border-radius: 6px;
+            padding: 0.2rem 0.55rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        pre {
+            padding: 0.85rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+        }
+
+        /* レスポンシブ比較テーブル (PC: 表 / スマホ: カード) */
+        .desktop-table-wrap {
+            display: none;
+            overflow-x: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        table.comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .comp-table th, .comp-table td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comp-table th {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .mobile-compare-cards {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .m-comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1rem;
+        }
+
+        .m-comp-title {
+            font-weight: 800;
+            font-size: 0.96rem;
+            color: var(--accent-amber);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .m-comp-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+            padding: 0.4rem 0;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.86rem;
+        }
+
+        .m-comp-label {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-table-wrap { display: block; }
+            .mobile-compare-cards { display: none; }
+        }
+
+        /* フロー図ステップ */
+        .flow-steps {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 14px;
+            padding: 1rem 1.15rem;
+        }
+
+        .flow-step-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .flow-step-title {
+            font-weight: 800;
+            font-size: 0.98rem;
+            color: var(--text-primary);
+        }
+
+        .flow-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.18);
+            color: var(--accent-blue);
+        }
+
+        /* ボトムナビゲーションバー */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
+        }
+
+        [data-theme="light"] .bottom-nav {
+            background: rgba(248, 250, 252, 0.94);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.18rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.3rem 0.1rem;
+            border-radius: 10px;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+
+        .nav-item.active, .nav-item:active {
+            color: var(--accent-orange);
+            background: rgba(255, 107, 53, 0.12);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上部固定ヘッダー -->
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>第6回 CAS-Claude活用研修 まとめ</span>
+        </div>
+        <div class="controls">
+            <a href="./index.html" class="ctrl-btn" style="text-decoration:none;">🏠 一覧</a>
+            <button class="ctrl-btn" id="fontBtn" onclick="cycleFontSize()" aria-label="文字サイズ切替">🔠 文字大</button>
+            <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()" aria-label="テーマ切替">☀️ ライト</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ヒーローセクション -->
+        <section class="hero" id="top">
+            <div class="hero-badges">
+                <span class="badge badge-orange">🎓 第2期 第6回 研修</span>
+                <span class="badge badge-blue">💻 Claude Code 実践開発</span>
+                <span class="badge badge-purple">🔥 /grill-me 逆質問スキル</span>
+                <span class="badge badge-green">📄 3大MDファイル設計術</span>
+            </div>
+            <h1>【第2期 第6回】CAS-Claude活用研修：Claude Codeで「社内AIポータル」機能実装＆ゼロから「勤怠管理システム」を作る完全ガイド</h1>
+            <p class="hero-desc">
+                「Chat・Cowork・Code」の明確な使い分けから、フロントエンド／バックエンドの基礎知識、AIに逆質問させて仕様の抜け漏れをなくす <code>/grill-me</code> スキル、コンテキスト忘却を防ぐ3大ファイル（<code>要件.md</code>・<code>README.md</code>・<code>CLAUDE.md</code>）の活用法まで、約2時間43分の実践研修を完全図解しました。
+            </p>
+            <div class="video-meta">
+                <span>📅 開催日時: <strong>2026年10月13日 12:47 JST〜</strong></span>
+                <span>⏱️ 録画時間: <strong>2時間43分10秒</strong></span>
+                <span>🔗 録画ファイル: <a href="https://drive.google.com/file/d/1SUdCJ7T3LU3MzW_PuSwq-1R1URwQkieg/view?usp=sharing" target="_blank" rel="noopener">Googleドライブで開く ↗</a></span>
+            </div>
+        </section>
+
+        <!-- 3行コア要約 -->
+        <div class="tldr-box">
+            <div class="tldr-title">💡 本研修（第6回）の3行コア要約</div>
+            <ul class="tldr-list">
+                <li><strong>何か「成果物（システム・書類・集計表）」を作るときは Claude Code 一択：</strong> 相談はChat、事務代行はCowork、そしてWebシステムや行政書類・CADデータ・会計CSVなどの成果物作成は<strong>Claude Code</strong>を使う。</li>
+                <li><strong>いきなり作らせず <code>/grill-me</code>（逆質問）＋「3大MDファイル」で設計を固める：</strong> AIの非決定性（ガチャ）と記憶飛びを防ぐため、<code>/grill-me</code>（1問ずつ質問）で要件の穴を埋め、<strong><code>要件.md</code>・<code>README.md</code>・<code>CLAUDE.md</code></strong> の3ファイルに出力させてから開発・デザインに進む。</li>
+                <li><strong>デザインと機能実装を繋ぎ、修正は「1つずつ」重ねる：</strong> Claude Designで作ったUIを<strong>スタンドアロンHTML</strong>で書き出してClaude Codeで機能実装し、追加要望や修正は一括ではなく<strong>1つずつ指示して動作確認</strong>を繰り返す。</li>
+            </ul>
+        </div>
+
+        <!-- 数値スタッツ -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val">2大実践</div>
+                <div class="stat-label">社内ポータル＆勤怠管理</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">3つのMD</div>
+                <div class="stat-label">要件 / README / CLAUDE</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">30〜100問</div>
+                <div class="stat-label">/grill-me 逆質問の目安</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">Sonnet + 中</div>
+                <div class="stat-label">推奨モデル＆Effort設定</div>
+            </div>
+        </div>
+
+        <!-- セクション1: 3モードの使い分けとClaude Code初期設定 -->
+        <section class="section" id="sec-intro">
+            <div class="section-header">
+                <span class="section-num">1</span>
+                <h2 class="section-title">Chat / Cowork / Code の使い分けとClaude Codeの推奨設定</h2>
+            </div>
+
+            <!-- PC用テーブル -->
+            <div class="desktop-table-wrap" style="margin-bottom: 1.2rem;">
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>モード名</th>
+                            <th>得意なこと・向いている用途</th>
+                            <th>具体例（研修内の解説より）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>💬 Chat（チャット）</strong></td>
+                            <td>壁打ち・ディスカッション・方針の相談</td>
+                            <td>数往復の会話で「何が優れているか」「どう進めるべきか」を議論するとき。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🤝 Cowork（コワーク）</strong></td>
+                            <td>自分がやりたい事務作業やルーチンタスクの代行</td>
+                            <td>日々の定型タスクやファイル整理など、自分の代わりに作業を任せたいとき。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>🛠️ Code（コード）</strong><br><span class="time-chip">本日の主役</span></td>
+                            <td><strong>「成果物（モノ）」を作るとき全般</strong><br>（※システム開発だけでなく書類・データ作成も！）</td>
+                            <td>・社内AIポータルサイト、勤怠管理システムの開発<br>・行政関係の提出書類・認可書類のフォーマット取得＆自動記入<br>・金属加工のCADデータから加工機コード生成、住宅図面から3D CAD生成<br>・レシートデータからの会計集計表・弥生会計等のインプットCSV作成</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- スマホ用カード -->
+            <div class="mobile-compare-cards" style="margin-bottom: 1.2rem;">
+                <div class="m-comp-card">
+                    <div class="m-comp-title">
+                        <span>💬 Chat / 🤝 Cowork / 🛠️ Code の使い分け</span>
+                        <span class="time-chip">00:58 - 11:48</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">💬 Chat（チャット）</span>
+                        <span>数往復の会話でアイデア出しや方針をディスカッションするのに向いている。</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">🤝 Cowork（コワーク）</span>
+                        <span>自分がやりたい事務作業やルーチンタスクを代わりに実行させるのに向いている。</span>
+                    </div>
+                    <div class="m-comp-row">
+                        <span class="m-comp-label">🛠️ Code（コード）【本日の主役】</span>
+                        <span>Webシステムだけでなく、行政提出書類の自動記入、CADデータからの加工コード作成、レシートから弥生会計用CSV作成など<strong>「成果物（モノ）を作るとき」</strong>はすべてCodeを使う。</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">⚙️ Claude Code 起動時の4つの設定ポイント</div>
+                        <span class="time-chip">02:03 - 05:50</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li><strong>① フォルダ接続：</strong> 作業対象のフォルダ（例：<code>Claude研修</code> → <code>第6回</code>）を必ず選択して接続する。一度接続すればそのセッション内では毎回選び直す必要はない。</li>
+                        <li><strong>② 権限設定（手動 / 自動 / 権限バイパス）：</strong> 「毎回このコードを実行していいですか？」の承認を省略して自動で開発させたい場合は「自動」または「権限をバイパス」を選択（※チームプランではバイパスが表示されない場合あり）。</li>
+                        <li><strong>③ モデル選択：</strong> トークン消費と性能のバランスが良い <strong>Claude Sonnet（ソネット）</strong> を選択。</li>
+                        <li><strong>④ Effort（思考量）設定：</strong> 基本は <strong>「中（おすすめ）」</strong> を選択。一番右の「ウルトラ（1タスクに10エージェントを同時並列起動してデザイン・実装・検査を行うモード）」はトークンを猛烈に消費するため、超大型システム以外は「中」で十分。右下の円マークで残りトークン・会話量（コンテキスト）を確認可能。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">📁 準備ワーク：フォルダ作成もCodeにやらせる</div>
+                        <span class="time-chip">06:07 - 10:30</span>
+                    </div>
+                    <p>手作業でフォルダやファイルを整理するのではなく、Claude Codeに自然言語で指示して準備させます。</p>
+                    <div class="code-wrap">
+                        <div class="code-header">
+                            <span>初期フォルダ作成＆第4回データ移行プロンプト</span>
+                            <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                        </div>
+                        <pre><code>このフォルダの中に「第6回」フォルダを作ってください。
+さらに「第6回」フォルダの中に「ポータル」と「勤怠管理」という2つのフォルダを作ってください。
+そして「第4回」フォルダにある完成したHTMLデータ（企画資料HTMLと単体版デザインHTMLの2つ）を「第6回/ポータル」にコピーしてください。</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション2: Webシステムの仕組み（フロントエンド vs バックエンド） -->
+        <section class="section" id="sec-web">
+            <div class="section-header">
+                <span class="section-num">2</span>
+                <h2 class="section-title">知っておくべきWeb開発の基礎（フロントエンド vs バックエンド）</h2>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🎨 フロントエンド（見た目・画面の動き）</div>
+                        <span class="time-chip">12:24 - 15:10</span>
+                    </div>
+                    <p>ブラウザ上で見える「見栄え」や「画面上の動き」を作る部分で、以下の3言語で構成されます。</p>
+                    <ul class="bullet-list">
+                        <li><strong>HTML：</strong> 何を表示するか、文字や配置などの「骨格」を描く言語。</li>
+                        <li><strong>CSS：</strong> タイトルの大きさ、カードの余白、配色などの「デザインルール」を定義する言語。</li>
+                        <li><strong>JavaScript (JS)：</strong> カードが動く、スクロールでふわっと表示されるなどの「動き・機能」をつける言語。</li>
+                        <li><strong>💡 実践知識：</strong> AIに指示しなくても自動でこの3つを使って作ってくれるが、JavaScriptが入ると容量が少し重くなる。「どんな端末でも極限まで軽く動かしたい」ときは<strong>「JavaScriptは使わないで」</strong>とあえて指示する必要がある。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🗄️ バックエンド（裏側の保存処理）とデータベース</div>
+                        <span class="time-chip">15:11 - 25:28</span>
+                    </div>
+                    <p>送信された情報の保存、ログイン認証、Web上でのデータ共有などを担う「裏側の倉庫（データベース）と処理」です。</p>
+                    <ul class="bullet-list">
+                        <li><strong>主な言語：</strong> <strong>PHP、Java、Ruby、JavaScript (Node.js)</strong> など。アップロード先のサーバー環境に合わせて「PHPで作って」のように言語を明示的に指定することが重要。</li>
+                        <li><strong>本日の第6回の位置づけ：</strong> 本日は<strong>フロントエンドのみ（手元のPC上で動く単体システム）</strong>として開発を体験する。</li>
+                        <li><strong>第7回〜第12回でのステップアップ：</strong> バックエンドとデータベースを開発し、Web上にアップロード（デプロイ）して社員全員がログイン・共有できる本格システムへ進化させる。</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション3: /grill-me スキルと3大MDファイル -->
+        <section class="section" id="sec-grill">
+            <div class="section-header">
+                <span class="section-num">3</span>
+                <h2 class="section-title">逆質問スキル <code>/grill-me</code> と「3大MDファイル」設計術</h2>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🔥 逆質問スキル <code>/grill-me</code>（グリリング）とは？</div>
+                        <span class="time-chip">25:29 - 36:25</span>
+                    </div>
+                    <p>AIには<strong>「ハルシネーション」</strong>と<strong>「非決定性（同じ指示でも毎回違うものが出来る性質）」</strong>があるため、人間の短い指示だけで作らせると「思った通りのもの」になりません。</p>
+                    <ul class="bullet-list">
+                        <li><strong>Grilling（グリリング）：</strong> 作る前にAI側から逆質問（30問〜最大100問）を投げさせ、人間が想定できていなかった<strong>要件定義の穴を徹底的に埋める手法</strong>。</li>
+                        <li><strong>⚠️ 導入時の注意点：</strong> スキルを導入した直後のセッションでは使えないため、導入後は<strong>必ず一度「新しいセッション」を開き直してから</strong> <code>/grill-me</code> を実行する。</li>
+                        <li><strong>💡 必須テクニック：</strong> そのまま実行すると一度に30問ドカンと質問されて回答が大変になるため、必ずプロンプトに<strong>「1問ずつ質問してください」</strong>と書き添える！</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">📄 記憶飛びを防ぐ「3つのMDファイル」</div>
+                        <span class="time-chip">46:50 - 55:45</span>
+                    </div>
+                    <p>会話が長くなるとAIは最初の頃の指示を忘れてしまいます（コンテキスト忘却）。これを防ぐため、開発前に必ず以下の3つのMarkdownファイル（メモファイル）をフォルダ内に作らせます。</p>
+                    <ul class="bullet-list">
+                        <li><strong>① <code>要件.md</code>（要件定義書）：</strong> 元々の企画内容と <code>/grill-me</code> の質疑応答で決まった仕様をすべて網羅した設計図。</li>
+                        <li><strong>② <code>README.md</code>（リードミー）：</strong> システムの目的と、<strong>「何が実装済みで、何がまだ未実装か」</strong>を記録するファイル。別セッションへ引き継ぐ際や追加開発時のエラー・機能漏れを劇的に減らす。</li>
+                        <li><strong>③ <code>CLAUDE.md</code>（クロードMD）：</strong> このフォルダで作業する際に絶対守るべきルールや「こうするとうまくいった」という教訓を記録する常時参照ファイル。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-wrap" style="margin-top: 1rem;">
+                <div class="code-header">
+                    <span>📋 コピペで使える！ /grill-me ＋ 3大MDファイル作成プロンプト</span>
+                    <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                </div>
+                <pre><code>/grill-me
+このフォルダのHTMLファイルには企画内容と一旦作ったデザインが入っています。
+これに機能実装をして実際に使えるシステムとして完成させたいので、作る前に決めておくべきことのうち、まだ決まっていない要件の穴を質問してください。
+※質問は必ず「1問ずつ」してください。
+質疑応答がすべて終わったら、決まった内容を元に以下の3つのファイルを作成してください。
+1. 要件.md（要件定義書）
+2. README.md（システムの概要・実装済み機能と未実装機能の記録）
+3. CLAUDE.md（開発時に守るべきルール・方針の記録）</code></pre>
+            </div>
+        </section>
+
+        <!-- セクション4: 社内ポータル＆勤怠管理システムの一気通貫開発フロー -->
+        <section class="section" id="sec-workflow">
+            <div class="section-header">
+                <span class="section-num">4</span>
+                <h2 class="section-title">実践ワークフロー：社内ポータル実装＆ゼロから作る勤怠管理システム</h2>
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 1：新規セッションで対象フォルダを接続し <code>/grill-me</code> で要件定義</span>
+                        <span class="flow-badge">01:15:36〜</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">
+                        システムを作るごとに専用フォルダ（例：<code>第6回/勤怠管理</code>）を作り、そのフォルダをClaude Codeに接続する。チャットを挟まず最初からClaude Code上で <code>/grill-me</code> を起動し、自社の状況（例：介護事業所、シフト制、休憩ルールなど）を伝えて1問ずつ質疑応答を行い、<strong><code>要件.md</code>・<code>README.md</code>・<code>CLAUDE.md</code></strong> の3ファイルを生成させる。
+                    </p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 2：Claude Design用の依頼文を作成し、3つのMDを添付してUI生成</span>
+                        <span class="flow-badge">01:35:11〜</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">
+                        同じセッションのまま「<code>要件.md</code> を元に、Claude Designに貼る依頼文を作ってください」と指示する。続いて <strong>Claude Design</strong> を開き、依頼文を貼るだけでなく、左下の「＋」ボタンから <strong><code>要件.md</code>・<code>README.md</code>・<code>CLAUDE.md</code> の3ファイルをすべてアップロード添付</strong> してUIデザインを生成させる（※Claude Designはローカルフォルダと直接繋がっていないため、ファイルを添付することで抜け漏れがなくなる）。
+                    </p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 3：「Standalone HTML」でダウンロードしてフォルダに保存</span>
+                        <span class="flow-badge">01:47:05〜</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">
+                        Claude Designで理想の見た目に近づいたら、画面右上の <strong>「Share（共有）」→「Project HTML」→「Standalone HTML（スタンドアロンHTML）」→「Export」</strong> を押してダウンロードし、作業フォルダ（<code>勤怠管理</code>）の中に保存する。
+                    </p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 4：Claude Codeで機能実装＆「1つずつ」追加改修</span>
+                        <span class="flow-badge">01:48:29〜</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">
+                        Claude Codeに戻り、「保存したデザインHTMLと <code>要件.md</code> に基づいて機能を実装してください」と指示する。1往復目で動くプロトタイプが出来たら実際にブラウザで触って確認し、<strong>「30分単位の休憩ボタン」「プロンプトのコピーボタン」「検索・印刷ボタン」「管理者モード・Excel/CSV出力」「打刻ミス修正機能」</strong>などを<strong>1つずつ順番に</strong>指示して完成度を高める。
+                    </p>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1.1rem; border-left: 4px solid var(--accent-amber);">
+                <div class="card-head">
+                    <div class="card-title">⚠️ 機能修正・追加実装で失敗しないための黄金ルール</div>
+                    <span class="time-chip">01:07:33 - 01:15:20</span>
+                </div>
+                <ul class="bullet-list">
+                    <li><strong>一撃で100%のものは出来ない前提で進める：</strong> どんなに丁寧に要件定義しても、最初の1往復目で100点満点になることは基本的にない。そこから何往復も対話して育てていくのが本来の開発スタイル。</li>
+                    <li><strong>修正は「まとめず、1つずつ」依頼する：</strong> 一度に5個も10個もまとめて修正を指示すると、<strong>「変えてほしくなかった正常な部分」まで勝手に書き換わって壊れる</strong>原因になる。必ず1つ指示してはブラウザで動作確認し、もし意図と違えば「一旦戻して、こう直して」と1つずつ着実に進める。</li>
+                    <li><strong>複数ページ構成では <code>index.html</code> がトップページになる：</strong> 画面が増えてファイルが4つ以上に増えても、基本的には <code>index.html</code> が入口（先頭ページ）として機能する。</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- セクション5: 次回予告＆質疑応答（MCP/コネクタの組織承認手順） -->
+        <section class="section" id="sec-qa">
+            <div class="section-header">
+                <span class="section-num">5</span>
+                <h2 class="section-title">次回予告（第7回〜第12回）＆ Q&amp;A（Googleコネクタの組織承認手順）</h2>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🗓️ 第7回〜第12回に向けた宿題とロードマップ</div>
+                        <span class="time-chip">01:59:26 - 02:03:58</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li><strong>次回（第7回：10月20日）は丸1日「要件定義」に特化：</strong> 第7回〜第12回の計6回をかけて、社内で本格稼働できるシステムを1つ作り上げる。</li>
+                        <li><strong>第9回〜第11回でWeb公開＆ログイン実装：</strong> 今回作ったPC内（ローカル）動作のシステムから一歩進み、Webサーバーへデプロイして社員全員がログインして使えるバックエンド連携を実装する。</li>
+                        <li><strong>次回までの課題：</strong> ①今回作り始めた「勤怠管理システム」を自社で本当に使えるレベルまでブラッシュアップしてみる、②第7回〜第12回で「自社のどんな業務システムを作るか」を考えておく。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">🔑 Q&amp;A：Googleカレンダー等のコネクタが「承認待ち」になる時の解決法</div>
+                        <span class="time-chip">02:05:05 - 02:19:01</span>
+                    </div>
+                    <p>チームプラン等でメンバーがGoogleカレンダーやスプレッドシートのコネクタ（MCP）を繋ごうとして「承認が必要」と表示された場合の管理者側・申請者側の手順：</p>
+                    <ol class="bullet-list">
+                        <li><strong>1. 管理者が組織設定を開く：</strong> 管理者アカウントでClaudeの「設定」→ <strong>「組織設定（Organization settings）」</strong> → <strong>「保留中のリクエスト」</strong> を開き、リクエストを承認（確認）する。</li>
+                        <li><strong>2. 接続リンクをコピー：</strong> 「接続済み」になった該当コネクタの右端にある <strong>「…（三点リーダー）」→「リンクをコピー」</strong> を押す。</li>
+                        <li><strong>3. 申請者にリンクを送ってGoogleログイン：</strong> コピーしたURLを申請者に送り、申請者がそのURLを開いて右上の <strong>「Claudeに接続」</strong> を押し、普段Googleカレンダー等で使っているGmailアカウントでログインすれば連携完了！</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- スマホ親指操作用 ボトムナビゲーション -->
+    <nav class="bottom-nav" aria-label="ボトムナビゲーション">
+        <a href="#top" class="nav-item active" onclick="setActive(this)">
+            <span class="nav-icon">🏠</span>
+            <span>概要</span>
+        </a>
+        <a href="#sec-intro" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">⚙️</span>
+            <span>Code設定</span>
+        </a>
+        <a href="#sec-web" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🌐</span>
+            <span>Web基礎</span>
+        </a>
+        <a href="#sec-grill" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🔥</span>
+            <span>逆質問・MD</span>
+        </a>
+        <a href="#sec-workflow" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🚀</span>
+            <span>開発手順</span>
+        </a>
+    </nav>
+
+    <script>
+        // 文字サイズ3段階切り替え (標準 -> 大 -> 特大)
+        const scales = [1, 1.12, 1.25];
+        const labels = ['🔠 文字大', '🔠 文字特大', '🔠 文字標準'];
+        let scaleIdx = 0;
+
+        function cycleFontSize() {
+            scaleIdx = (scaleIdx + 1) % scales.length;
+            document.documentElement.style.setProperty('--font-scale', scales[scaleIdx]);
+            document.getElementById('fontBtn').textContent = labels[scaleIdx];
+        }
+
+        // ダーク/ライトテーマ切り替え
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                btn.textContent = '☀️ ライト';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙 ダーク';
+            }
+        }
+
+        // コードコピー
+        function copyCode(btn) {
+            const code = btn.closest('.code-wrap').querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = '✔ コピー済';
+                setTimeout(() => btn.textContent = orig, 1800);
+            });
+        }
+
+        // ボトムナビのアクティブ表示
+        function setActive(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
