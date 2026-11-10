@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>【第2期 第7回】CAS-Claude活用研修：後半戦ロードマップ＆自社システム徹底要件定義・Git管理 完全まとめ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #131b2e;
+            --bg-card: rgba(25, 35, 58, 0.78);
+            --bg-card-hover: rgba(35, 49, 82, 0.92);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-orange: #ff6b35;
+            --accent-amber: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: rgba(148, 163, 184, 0.18);
+            --code-bg: #070a12;
+            --font-scale: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #eef2f6;
+            --bg-card: rgba(255, 255, 255, 0.94);
+            --bg-card-hover: rgba(255, 255, 255, 1);
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-orange: #ea580c;
+            --accent-amber: #d97706;
+            --accent-blue: #0284c7;
+            --accent-purple: #7e22ce;
+            --accent-green: #059669;
+            --accent-red: #dc2626;
+            --border-color: rgba(15, 23, 42, 0.12);
+            --code-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.75;
+            padding-bottom: 92px;
+            background-image:
+                radial-gradient(circle at 12% 10%, rgba(56, 189, 248, 0.09), transparent 32%),
+                radial-gradient(circle at 88% 80%, rgba(168, 85, 247, 0.08), transparent 32%);
+            background-attachment: fixed;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* 上部固定ガラスヘッダー */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.86);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        [data-theme="light"] .top-bar {
+            background: rgba(248, 250, 252, 0.88);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            box-shadow: 0 0 10px var(--accent-orange);
+            flex-shrink: 0;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .ctrl-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: all 0.15s ease;
+        }
+
+        .ctrl-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* メインコンテナ */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        /* ヒーローセクション */
+        .hero {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.13) 0%, rgba(56, 189, 248, 0.12) 55%, rgba(168, 85, 247, 0.11) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 1.6rem 1.35rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-orange { background: rgba(255, 107, 53, 0.16); color: var(--accent-orange); border: 1px solid rgba(255, 107, 53, 0.35); }
+        .badge-blue { background: rgba(56, 189, 248, 0.16); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.35); }
+        .badge-purple { background: rgba(168, 85, 247, 0.16); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.35); }
+        .badge-green { background: rgba(16, 185, 129, 0.16); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.35); }
+
+        .hero h1 {
+            font-size: clamp(1.32rem, 4.3vw, 2rem);
+            font-weight: 900;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.01em;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem 1.1rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .video-meta a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* 3行要約ボックス */
+        .tldr-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 14px;
+            padding: 1.15rem 1.25rem;
+            margin-bottom: 1.75rem;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tldr-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tldr-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .tldr-list li {
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-left: 1.35rem;
+        }
+
+        .tldr-list li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 900;
+        }
+
+        /* 数値スタッツグリッド */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.75rem;
+        }
+
+        @media (min-width: 640px) {
+            .stats-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.95rem 1rem;
+            text-align: center;
+        }
+
+        .stat-val {
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: var(--accent-amber);
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+            font-weight: 600;
+        }
+
+        /* セクション見出し */
+        .section {
+            margin-bottom: 2.25rem;
+            scroll-margin-top: 68px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-num {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.85rem;
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.18rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        /* カードグリッド */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 720px) {
+            .card-grid.two-col {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.2rem;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0.6rem;
+            margin-bottom: 0.65rem;
+        }
+
+        .card-title {
+            font-size: 1.02rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .time-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 600;
+            padding: 0.18rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.14);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            flex-shrink: 0;
+        }
+
+        .card p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: grid;
+            gap: 0.45rem;
+            margin-top: 0.5rem;
+        }
+
+        .bullet-list li {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            padding-left: 1.1rem;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0.2rem;
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        .bullet-list strong {
+            color: var(--text-primary);
+        }
+
+        /* コード・プロンプトブロック */
+        .code-wrap {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.45rem 0.85rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e2e8f0;
+            border: none;
+            border-radius: 6px;
+            padding: 0.2rem 0.55rem;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        pre {
+            padding: 0.85rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+        }
+
+        /* レスポンシブ比較テーブル (PC: 表 / スマホ: カード) */
+        .desktop-table-wrap {
+            display: none;
+            overflow-x: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        table.comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .comp-table th, .comp-table td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comp-table th {
+            background: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .mobile-compare-cards {
+            display: grid;
+            gap: 0.85rem;
+        }
+
+        .m-comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1rem;
+        }
+
+        .m-comp-title {
+            font-weight: 800;
+            font-size: 0.96rem;
+            color: var(--accent-amber);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .m-comp-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+            padding: 0.4rem 0;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.86rem;
+        }
+
+        .m-comp-label {
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-table-wrap { display: block; }
+            .mobile-compare-cards { display: none; }
+        }
+
+        /* フロー図ステップ */
+        .flow-steps {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .flow-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 14px;
+            padding: 1rem 1.15rem;
+        }
+
+        .flow-step-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .flow-step-title {
+            font-weight: 800;
+            font-size: 0.98rem;
+            color: var(--text-primary);
+        }
+
+        .flow-badge {
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            background: rgba(56, 189, 248, 0.18);
+            color: var(--accent-blue);
+        }
+
+        /* ボトムナビゲーションバー */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(11, 15, 25, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
+        }
+
+        [data-theme="light"] .bottom-nav {
+            background: rgba(248, 250, 252, 0.94);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.18rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.3rem 0.1rem;
+            border-radius: 10px;
+            transition: color 0.15s ease, background 0.15s ease;
+        }
+
+        .nav-item.active, .nav-item:active {
+            color: var(--accent-orange);
+            background: rgba(255, 107, 53, 0.12);
+        }
+
+        .nav-icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上部固定ヘッダー -->
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>第7回 CAS-Claude活用研修 まとめ</span>
+        </div>
+        <div class="controls">
+            <a href="./index.html" class="ctrl-btn" style="text-decoration:none;">🏠 一覧</a>
+            <button class="ctrl-btn" id="fontBtn" onclick="cycleFontSize()" aria-label="文字サイズ切替">🔠 文字大</button>
+            <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()" aria-label="テーマ切替">☀️ ライト</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ヒーローセクション -->
+        <section class="hero" id="top">
+            <div class="hero-badges">
+                <span class="badge badge-orange">🎓 第2期 第7回 研修</span>
+                <span class="badge badge-blue">🧭 後半戦ロードマップ</span>
+                <span class="badge badge-purple">📝 README.md &amp; CLAUDE.md</span>
+                <span class="badge badge-green">💾 ローカルGit管理</span>
+            </div>
+            <h1>【第2期 第7回】CAS-Claude活用研修：後半戦6回のシステム開発ロードマップ＆徹底要件定義・Git管理 完全まとめ</h1>
+            <p class="hero-desc">
+                第7回〜第12回の計12時間をかけて「自社で実際に本稼働させる業務システム」を1つ完成させる後半戦のスタート回。いきなりCodeで作り始めず、まずChatで「背景・目的・権限」を壁打ちして仕様を引き継ぎ、Claude Codeの <code>/grill-me</code> と <code>README.md</code> / <code>CLAUDE.md</code> でAIの記憶喪失を防ぎながらプロトタイプ第1弾を実装・ローカルGitでセーブするまでの黄金プロセスを完全網羅。
+            </p>
+            <div class="video-meta">
+                <span>📅 開催日：2026年10月20日（火）12:48〜</span>
+                <span>⏱️ 収録時間：2時間06分36秒</span>
+                <span>🔗 <a href="https://drive.google.com/file/d/174cbSvcPExFxuxWxxQzU5K7JMHHLC0FQ/view?usp=drive_link" target="_blank" rel="noopener">Googleドライブ録画を開く ↗</a></span>
+            </div>
+        </section>
+
+        <!-- 3行要約 (TL;DR) -->
+        <div class="tldr-box">
+            <div class="tldr-title">⚡ 忙しい人のための3行核心サマリー（TL;DR）</div>
+            <ul class="tldr-list">
+                <li><strong>Chat壁打ち → Code引き継ぎの2段階設計：</strong> 最初からClaude Codeに行くと初期文脈が流れやすいため、まず <strong>Chat（チャット）</strong> で「背景・目的・誰が何を入力し誰が承認するか」を詰め、省略なしの<strong>引き継ぎ仕様書</strong>を出力させてからClaude Codeへ渡す。</li>
+                <li><strong>API従量課金をゼロ化する「ルーティンタスク」裏技：</strong> Gmail自動取込や求人記事のAI自動改善などを外部APIで組むと高額な従量課金が発生するが、Claude Code（定額枠内）の<strong>「ルーティンタスク（定期実行）」</strong>で1時間ごとに処理させればAPI課金なしで自動化できる。</li>
+                <li><strong>記憶喪失を防ぐ2大MDファイルとローカルGit：</strong> 仕様と進捗を記録する <strong><code>README.md</code></strong> と、開発ルール・過去の失敗再発防止を記録する <strong><code>CLAUDE.md</code></strong> を必ず作成・自動更新させ、節目のたびに<strong>「ローカルにGitして」</strong>と指示していつでも正常な状態に戻せるセーブポイントを作る。</li>
+            </ul>
+        </div>
+
+        <!-- スタッツカード -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-val">全6回 (12h)</div>
+                <div class="stat-label">第7回〜第12回の開発期間</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">2大MD</div>
+                <div class="stat-label">README.md &amp; CLAUDE.md</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">API費 ¥0</div>
+                <div class="stat-label">ルーティンタスク定期実行</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-val">Git保存</div>
+                <div class="stat-label">差分セーブ＆いつでも復元</div>
+            </div>
+        </div>
+
+        <!-- セクション1: 後半戦（第7回〜第12回）の全体ロードマップ -->
+        <section class="section" id="sec-roadmap">
+            <div class="section-header">
+                <span class="section-num">1</span>
+                <h2 class="section-title">後半戦（第7回〜第12回）のシステム開発ロードマップ</h2>
+            </div>
+
+            <div class="card" style="margin-bottom: 1rem;">
+                <div class="card-head">
+                    <div class="card-title">🗺️ 6回（計12時間）をかけて自社システムを1つ完成させる</div>
+                    <span class="time-chip">00:07 - 08:50</span>
+                </div>
+                <p>後半戦は毎回別々のミニアプリを作るのではなく、<strong>「自社で本当に使いたい1つの業務システム」</strong>を第7回〜第12回まで毎回ステップアップさせながら本稼働レベルまで作り込むカリキュラムになっている。</p>
+            </div>
+
+            <!-- PC用テーブル -->
+            <div class="desktop-table-wrap">
+                <table class="comp-table">
+                    <thead>
+                        <tr>
+                            <th>回</th>
+                            <th>テーマ</th>
+                            <th>具体的に実装・習得する内容</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>第7回（今回）</strong></td>
+                            <td><strong>徹底的な要件定義＆第1弾実装</strong></td>
+                            <td>Chatでの壁打ち → Code <code>/grill-me</code> → <code>README.md</code>・<code>CLAUDE.md</code> 作成 → プロトタイプ実装 → ローカルGit保存。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>第8回</strong></td>
+                            <td><strong>GUI（画面デザイン）の本格構築</strong></td>
+                            <td>グラフィックユーザーインターフェース（見た目のデザイン・レイアウト）をプロ品質に作り込む。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>第9回</strong></td>
+                            <td><strong>Web上へのデプロイ（公開）</strong></td>
+                            <td>自分のPC内だけでなく、URLを発行して社内メンバーや顧客がブラウザからアクセスできる状態にする。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>第10回</strong></td>
+                            <td><strong>UI / UX のブラッシュアップ</strong></td>
+                            <td>実際に触ったときの使いやすさ、ボタン配置、画面遷移、入力体験（UX）を徹底改善する。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>第11回</strong></td>
+                            <td><strong>バックエンド＆データベース実装</strong></td>
+                            <td>ログイン認証機能、データの永続保存、検索、管理者承認フローなどの裏側システムを繋ぎ込む。</td>
+                        </tr>
+                        <tr>
+                            <td><strong>第12回</strong></td>
+                            <td><strong>SEO対策 ＆ システムへのAI組み込み</strong></td>
+                            <td>顧客向けサイトの検索上位表示（社内用は検索除外設定）＋ システム内でAIが自動ヒアリング・記事生成する機能の実装。</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- スマホ用カード -->
+            <div class="mobile-compare-cards">
+                <div class="m-comp-card">
+                    <div class="m-comp-title"><span>第7回（今回）：徹底要件定義＆第1弾実装</span><span class="time-chip">01:36</span></div>
+                    <div class="m-comp-row"><span class="m-comp-label">内容</span><span>Chat壁打ち → <code>/grill-me</code> → <code>README.md</code> &amp; <code>CLAUDE.md</code> → 第1弾プロトタイプ → ローカルGit保存。</span></div>
+                </div>
+                <div class="m-comp-card">
+                    <div class="m-comp-title"><span>第8回：GUI（画面デザイン）構築</span><span class="time-chip">02:02</span></div>
+                    <div class="m-comp-row"><span class="m-comp-label">内容</span><span>グラフィックユーザーインターフェース（画面の見た目・デザイン）を本格的に作り込む。</span></div>
+                </div>
+                <div class="m-comp-card">
+                    <div class="m-comp-title"><span>第9回：Web上へのデプロイ（公開）</span><span class="time-chip">02:27</span></div>
+                    <div class="m-comp-row"><span class="m-comp-label">内容</span><span>PC内だけでなくWeb上に公開し、社員や顧客がURLからアクセスできるようにする。</span></div>
+                </div>
+                <div class="m-comp-card">
+                    <div class="m-comp-title"><span>第10回：UI / UX ブラッシュアップ</span><span class="time-chip">02:50</span></div>
+                    <div class="m-comp-row"><span class="m-comp-label">内容</span><span>現場の使いやすさ・操作体験（UX）を徹底的に磨き上げる。</span></div>
+                </div>
+                <div class="m-comp-card">
+                    <div class="m-comp-title"><span>第11回：バックエンド＆データベース</span><span class="time-chip">03:17</span></div>
+                    <div class="m-comp-row"><span class="m-comp-label">内容</span><span>ログイン機能、アカウント管理、データベースへの永続保存を実装する。</span></div>
+                </div>
+                <div class="m-comp-card">
+                    <div class="m-comp-title"><span>第12回：SEO対策 ＆ AI組み込み</span><span class="time-chip">03:49</span></div>
+                    <div class="m-comp-row"><span class="m-comp-label">内容</span><span>検索上位表示（または社内システムの検索ブロック設定）と、システム内へのAI自動ヒアリング・生成機能の組み込み。</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション2: Step 1 Chatでの壁打ち＆要件定義の極意 -->
+        <section class="section" id="sec-chat">
+            <div class="section-header">
+                <span class="section-num">2</span>
+                <h2 class="section-title">Step 1：まず「Chat」で背景・目的・権限を壁打ちし、引き継ぎ文を作る</h2>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">💬 なぜ最初はCodeではなくChatを使うのか？</div>
+                        <span class="time-chip">08:55 - 17:19</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li><strong>Claude Codeは「すぐ成果物を作る」性質がある：</strong> 最初からCodeで曖昧な相談を始めると、初期の重要な文脈がコード生成の過程で流れてしまいやすい。</li>
+                        <li><strong>最初はChatでディスカッションに集中する：</strong> 「どんなシステムを作るべきか」「どんなワークフローにするか」はまずChat（チャット）で壁打ちする。</li>
+                        <li><strong>第3回の鉄則「背景と目的」を必ず入れる：</strong> 「人手不足で管理が限界（背景）」「〇〇を自動化してミスをゼロにしたい（目的）」を最初に伝えることで、AIの提案精度が劇的に上がる。</li>
+                        <li><strong>視覚化したい時はArtifactで図解させる：</strong> 文字だけでは業務フローがイメージしづらい時は「Artifactでワークフロー図を作って」と指示して自分の頭の中を整理する。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">⚠️ スプレッドシート＆GAS連携の重要な注意点</div>
+                        <span class="time-chip">40:05 - 42:37</span>
+                    </div>
+                    <p>受講生からの「スプレッドシート連携にGASが必要と言われたが大丈夫か？」という質問に対する講師の実践アドバイス：</p>
+                    <ul class="bullet-list">
+                        <li><strong>「システムとスプシの二重管理」は現場が破綻する：</strong> せっかく専用システムを作ったのに「ここからはスプレッドシートを見に行ってください」となると、結局スプシだけでいいじゃんとなり使われなくなる。</li>
+                        <li><strong>推奨構成（データベース主軸＋外部共有のみGAS）：</strong> データの保存・閲覧・編集はすべて<strong>システムのデータベース内</strong>で完結させ、外部の税理士や社労士にデータを渡す必要がある部分だけ、裏側のGASでスプレッドシートへ自動書き出しするのがベスト。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1rem;">
+                <div class="card-head">
+                    <div class="card-title">📋 Chat壁打ちの締めくくり：Codeへの「完全引き継ぎプロンプト」</div>
+                    <span class="time-chip">27:40 - 50:25</span>
+                </div>
+                <p>大枠が固まったら、<strong>「誰が・いつ・どこで・何を入力し、誰が承認・修正するか（管理者と一般ユーザーの権限分け）」</strong>をAIのおすすめ案付きで1問ずつ詰めさせ、最後に以下のプロンプトで引き継ぎ文を出力させる。</p>
+                <div class="code-wrap">
+                    <div class="code-header">
+                        <span>Prompt: ChatからClaude Codeへの引き継ぎ仕様書出力</span>
+                        <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                    </div>
+                    <pre><code>これからClaude Codeに移行してこのシステムの開発を始めます。
+今までのチャットで決まった背景・目的・機能要件・各画面の入力項目・ボタンを押した時の挙動・権限分け・未決定事項について、情報を一切省略せず、そのままClaude Codeに貼り付けて開発をスタートできる引き継ぎ用の仕様書テキストとしてすべて書き出してください。</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション3: Step 2 Claude Codeでの /grill-me とルーティンタスク活用術 -->
+        <section class="section" id="sec-grill">
+            <div class="section-header">
+                <span class="section-num">3</span>
+                <h2 class="section-title">Step 2：Claude Codeで <code>/grill-me</code> ＆ API課金をゼロにする「ルーティンタスク」</h2>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">💻 新UIでのローカルフォルダ接続と <code>/grill-me</code></div>
+                        <span class="time-chip">51:53 - 01:05:30</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li><strong>環境を「このコンピュータ（ローカル）」にする：</strong> Claude Codeの画面左下の環境選択が「クラウド」になっているとPC内のフォルダを選べない。必ず<strong>「ローカル（このコンピュータ）」</strong>に切り替えてから <code>第7回</code> フォルダを選択する。</li>
+                        <li><strong>引き継ぎ文＋ <code>/grill-me</code> でプロ目線の抜け漏れ潰し：</strong> Chatが出力した引き継ぎ文を貼り付け、末尾に <code>/grill-me</code> を添えて送信する。</li>
+                        <li><strong>1問ずつおすすめ案付きで回答：</strong> エンジニア視点で足りない仕様（エッジケース、エラー時の処理、データ形式など）をAIが質問してくるので、1問ずつ答えて仕様を完璧にする。</li>
+                    </ul>
+                </div>
+
+                <div class="card" style="border-left: 4px solid var(--accent-green);">
+                    <div class="card-head">
+                        <div class="card-title">💡 【超重要】API従量課金をゼロにする「ルーティンタスク」裏技</div>
+                        <span class="time-chip">01:16:53 - 01:22:28</span>
+                    </div>
+                    <p>「Gmailに届く大量の応募メールをAIで自動解析してDB登録したい」「2週間応募が来ない求人記事をAIに自動改善させたい」といった機能を実装する際のコスト削減ノウハウ：</p>
+                    <ul class="bullet-list">
+                        <li><strong>普通に外部APIで組むと高額課金になる：</strong> システムの裏側にOpenAI APIやClaude APIを直接組み込むと、メールが来るたび・改善が回るたびに<strong>別枠のAPI従量課金</strong>が発生してしまう。</li>
+                        <li><strong>解決策＝Claude Codeの「ルーティンタスク（定期実行）」を使う：</strong> システム自体にAPIを叩かせるのではなく、<strong>契約中のClaude Code（定額プラン内）の「ルーティンタスク」機能</strong>を使い、「1時間に1回Gmailを見に行って該当メールを抽出し、システムのデータベースへ自動登録する」という定期ジョブを設定する。</li>
+                        <li><strong>ループエンジニアリングの実現：</strong> これにより、追加のAPI費用を一切かけずに、AIによる定期監視・自動登録・PDCA改善ループを回すことができる！</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- セクション4: Step 3 記憶喪失を防ぐ README.md と CLAUDE.md -->
+        <section class="section" id="sec-md">
+            <div class="section-header">
+                <span class="section-num">4</span>
+                <h2 class="section-title">Step 3：AIの記憶喪失と迷子を防ぐ <code>README.md</code> と <code>CLAUDE.md</code></h2>
+            </div>
+
+            <div class="card" style="margin-bottom: 1rem;">
+                <div class="card-head">
+                    <div class="card-title">🧠 なぜ開発途中でAIは仕様を忘れて暴走するのか？</div>
+                    <span class="time-chip">01:22:40 - 01:30:10</span>
+                </div>
+                <p>開発が進んで会話履歴やコード量が増えると、AIのコンテキスト（記憶容量）が圧迫され、<strong>「最初に決めたはずの仕様を忘れる（記憶喪失）」</strong>現象が必ず起きる。さらにAIには「非決定性（毎回違う動きをする性質）」があるため、放っておくと <code>SPEC.md</code> や <code>MEMO.md</code> など毎回違う名前のファイルを勝手に作ってしまい、次回のセッションでどのファイルを読めばいいか迷子になる。これを防ぐ世界共通のお作法が <strong><code>README.md</code></strong> と <strong><code>CLAUDE.md</code></strong> の2ファイル固定運用である。</p>
+            </div>
+
+            <div class="card-grid two-col">
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">📘 1. <code>README.md</code>（システムの取扱説明書・仕様書）</div>
+                        <span class="time-chip">01:25:02 - 01:28:15</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li><strong>役割：</strong> そのシステムが「何の目的で作られ、どんな機能・画面があり、今後何を実装予定で、今どこまで完成しているか」を記録する設計書。</li>
+                        <li><strong>なぜ <code>README.md</code> という名前か：</strong> GitHub等のエンジニア界隈で「最初に必ず読むファイル（Read Me）」として統一されているため、AIも最優先で参照してくれる。</li>
+                        <li><strong>自動更新ルール：</strong> 機能を追加・修正するたびに「変更内容を毎回自動で <code>README.md</code> に記録して」と指示し、常に最新の仕様書として保つ。</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <div class="card-title">📕 2. <code>CLAUDE.md</code>（開発ルール・失敗の再発防止帳）</div>
+                        <span class="time-chip">01:28:16 - 01:37:47</span>
+                    </div>
+                    <ul class="bullet-list">
+                        <li><strong>役割：</strong> Claude Codeが毎回作業を始める前に必ず読み込む「業務マニュアル・禁止事項・過去のミス記録」。</li>
+                        <li><strong>育て方（ミスの再発防止）：</strong> 開発中にAIが「頼んでいない画面まで勝手に消した」「文字化けを起こした」などのミスをしたら、直させた直後に<strong>「今起きたミスを二度と再現しないように <code>CLAUDE.md</code> に原因と対策を記録して」</strong>と指示する。</li>
+                        <li><strong>資産化：</strong> これを繰り返すことで、<code>CLAUDE.md</code> が自社専用の超優秀な開発ガードレールに育っていく。</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="code-wrap" style="margin-top: 1rem;">
+                <div class="code-header">
+                    <span>Prompt: /grill-me 完了後に2大MDファイルを作成させる指示</span>
+                    <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                </div>
+                <pre><code>今までの質疑応答で固まったすべての仕様・実装予定・画面構成・ルールをもとに、このフォルダ内に「README.md」と「CLAUDE.md」の2つのファイルを作成してください。
+また、今後の開発で機能追加や仕様変更を行うたびに、毎回自動で「README.md」と「CLAUDE.md」を最新状態に更新するようにルール化してください。</code></pre>
+            </div>
+        </section>
+
+        <!-- セクション5: Step 4 プロトタイプ実装とローカルGitによるセーブ -->
+        <section class="section" id="sec-git">
+            <div class="section-header">
+                <span class="section-num">5</span>
+                <h2 class="section-title">Step 4：プロトタイプ第1弾の実装と「ローカルGit」によるセーブ機能</h2>
+            </div>
+
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 1：<code>README.md</code> を読ませてシステム第1弾を実装する</span>
+                        <span class="flow-badge">01:37:48〜</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">
+                        <code>README.md</code> と <code>CLAUDE.md</code> が生成されたら、<strong>「<code>README.md</code> を読んで、システムのプロトタイプを実装してください」</strong>と指示する。万が一途中でチャットが重くなったりエラーで止まっても、新しいセッションを開いて「<code>README.md</code> と <code>CLAUDE.md</code> を読んで続きを実装して」と言えば一瞬で復帰できる。
+                    </p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 2：ブラウザで動作確認し、1つずつ修正＆MD自動記録</span>
+                        <span class="flow-badge">01:43:10〜</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">
+                        生成されたHTMLファイル等をブラウザで開いて確認する（※Node.jsや外部DBを使う構成でローカルだけではまだ動かない部分があってもOK。第9回のWebデプロイや第11回のDB接続で動くようになる）。気になる点は1つずつ修正指示を出し、その都度 <code>README.md</code> に変更履歴を記録させる。
+                    </p>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-step-head">
+                        <span class="flow-step-title">STEP 3：「ローカルにGitしてください」でセーブポイントを作成</span>
+                        <span class="flow-badge">01:56:01〜</span>
+                    </div>
+                    <p style="font-size:0.88rem; color:var(--text-secondary);">
+                        キリの良いところまで動いたら、Claude Codeに<strong>「パソコンのローカルにGit（ギット）してください」</strong>と一言伝える。これで現在の全ファイルの状態が最小容量（差分のみ）でセーブされる。
+                    </p>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1.1rem; border-left: 4px solid var(--accent-amber);">
+                <div class="card-head">
+                    <div class="card-title">💾 なぜ「フォルダの手動コピー」ではなく「Git」を使うのか？</div>
+                    <span class="time-chip">01:56:01 - 02:05:50</span>
+                </div>
+                <ul class="bullet-list">
+                    <li><strong>ゲームの「セーブデータ」と同じ役割：</strong> AIでシステム改修を続けていると、「さっきまでは動いていたのに、新しい機能を追加したら画面が真っ白になって戻せない」という事故が必ず起きる。</li>
+                    <li><strong>手動コピーは容量が爆発し、どこが変わったか分からない：</strong> 毎回フォルダごとコピーして「バックアップ1」「バックアップ2」と作るとPCの容量を大量に食ううえ、どのファイルがどう変わったのか比較できない。</li>
+                    <li><strong>Gitなら「変更された差分」だけを極小サイズで完全記録：</strong> Gitを使えば、前回のセーブから変わった行（差分）だけが固有のID（コミットID）付きで記録されるため、容量をほとんど使わずに<strong>「2時間前の正常に動いていたバージョンに戻して」</strong>と一言でタイムスリップできる。</li>
+                    <li><strong>次回（第8回・第9回）への布石：</strong> 今回は自分のPC内（ローカルGit）にセーブしたが、第9回ではこれをクラウド上の<strong>GitHub（ギットハブ）</strong>と連携させ、世界中からアクセスできるWebサイトとしてデプロイ（公開）する。</li>
+                </ul>
+                <div class="code-wrap">
+                    <div class="code-header">
+                        <span>Prompt: 作業終了時にローカルGitでセーブする指示</span>
+                        <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                    </div>
+                    <pre><code>現在の変更内容を「README.md」に反映したうえで、パソコンのローカルにGit（コミット）してセーブポイントを作ってください。</code></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- スマホ親指操作用 ボトムナビゲーション -->
+    <nav class="bottom-nav" aria-label="ボトムナビゲーション">
+        <a href="#top" class="nav-item active" onclick="setActive(this)">
+            <span class="nav-icon">🏠</span>
+            <span>概要</span>
+        </a>
+        <a href="#sec-roadmap" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🗺️</span>
+            <span>全体計画</span>
+        </a>
+        <a href="#sec-chat" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">💬</span>
+            <span>Chat壁打ち</span>
+        </a>
+        <a href="#sec-grill" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">⚡</span>
+            <span>定期実行</span>
+        </a>
+        <a href="#sec-git" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">💾</span>
+            <span>MD・Git</span>
+        </a>
+    </nav>
+
+    <script>
+        // 文字サイズ3段階切り替え (標準 -> 大 -> 特大)
+        const scales = [1, 1.12, 1.25];
+        const labels = ['🔠 文字大', '🔠 文字特大', '🔠 文字標準'];
+        let scaleIdx = 0;
+
+        function cycleFontSize() {
+            scaleIdx = (scaleIdx + 1) % scales.length;
+            document.documentElement.style.setProperty('--font-scale', scales[scaleIdx]);
+            document.getElementById('fontBtn').textContent = labels[scaleIdx];
+        }
+
+        // ダーク/ライトテーマ切り替え
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                btn.textContent = '☀️ ライト';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙 ダーク';
+            }
+        }
+
+        // コードコピー
+        function copyCode(btn) {
+            const code = btn.closest('.code-wrap').querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = '✔ コピー済';
+                setTimeout(() => btn.textContent = orig, 1800);
+            });
+        }
+
+        // ボトムナビのアクティブ表示
+        function setActive(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
