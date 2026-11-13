@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>【完全図解・第2期 第8回】CAS-Claude活用研修：GUI（画面デザイン）本格構築＆バイブコーディング実践ガイド</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #111827;
+            --bg-card: rgba(22, 31, 51, 0.85);
+            --bg-diagram: rgba(13, 19, 34, 0.95);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-orange: #ff6b35;
+            --accent-amber: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --border-color: rgba(148, 163, 184, 0.2);
+            --code-bg: #060911;
+            --font-scale: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #e2e8f0;
+            --bg-card: rgba(255, 255, 255, 0.96);
+            --bg-diagram: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-orange: #ea580c;
+            --accent-amber: #d97706;
+            --accent-blue: #0284c7;
+            --accent-purple: #7e22ce;
+            --accent-green: #059669;
+            --accent-red: #dc2626;
+            --border-color: rgba(15, 23, 42, 0.14);
+            --code-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.72;
+            padding-bottom: 96px;
+            background-image:
+                radial-gradient(circle at 12% 10%, rgba(56, 189, 248, 0.09), transparent 32%),
+                radial-gradient(circle at 88% 80%, rgba(168, 85, 247, 0.08), transparent 32%);
+            background-attachment: fixed;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* 上部固定バー */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        [data-theme="light"] .top-bar {
+            background: rgba(241, 245, 249, 0.9);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 900;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            box-shadow: 0 0 10px var(--accent-orange);
+            flex-shrink: 0;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .ctrl-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        /* ヒーロー */
+        .hero {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.14) 0%, rgba(56, 189, 248, 0.12) 55%, rgba(168, 85, 247, 0.12) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 1.6rem 1.35rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+
+        .badge-orange { background: rgba(255, 107, 53, 0.18); color: var(--accent-orange); border: 1px solid rgba(255, 107, 53, 0.38); }
+        .badge-blue { background: rgba(56, 189, 248, 0.18); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.38); }
+        .badge-purple { background: rgba(168, 85, 247, 0.18); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.38); }
+        .badge-green { background: rgba(16, 185, 129, 0.18); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.38); }
+
+        .hero h1 {
+            font-size: clamp(1.35rem, 4.3vw, 2rem);
+            font-weight: 900;
+            line-height: 1.34;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 0.94rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem 1.1rem;
+            font-size: 0.81rem;
+            color: var(--text-muted);
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .video-meta a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* 3行要約 */
+        .tldr-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 14px;
+            padding: 1.15rem 1.25rem;
+            margin-bottom: 1.75rem;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tldr-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tldr-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .tldr-list li {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-left: 1.35rem;
+        }
+
+        .tldr-list li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 900;
+        }
+
+        /* セクション */
+        .section {
+            margin-bottom: 2.3rem;
+            scroll-margin-top: 70px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 1.05rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-num {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.82rem;
+            padding: 0.22rem 0.65rem;
+            border-radius: 9px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.18rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        /* 図解ボックス */
+        .diagram-box {
+            background: var(--bg-diagram);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+        }
+
+        .diagram-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.14);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        /* 5ステップパイプライン図 */
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        @media (min-width: 760px) {
+            .pipeline-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        .pipe-step {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--accent-blue);
+            border-radius: 14px;
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+            position: relative;
+        }
+
+        .pipe-step.s1 { border-top-color: var(--accent-orange); }
+        .pipe-step.s2 { border-top-color: var(--accent-amber); }
+        .pipe-step.s3 { border-top-color: var(--accent-blue); }
+        .pipe-step.s4 { border-top-color: var(--accent-purple); }
+        .pipe-step.s5 { border-top-color: var(--accent-green); }
+
+        .pipe-num {
+            font-size: 0.72rem;
+            font-weight: 900;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .pipe-title {
+            font-size: 0.9rem;
+            font-weight: 900;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+
+        .pipe-desc {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        /* 2カラム比較カード */
+        .visual-compare-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 720px) {
+            .visual-compare-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .v-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.15rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .v-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .v-card-title {
+            font-size: 0.98rem;
+            font-weight: 900;
+        }
+
+        .time-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            flex-shrink: 0;
+        }
+
+        .sub-diagram {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 0.85rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        [data-theme="light"] .sub-diagram {
+            background: rgba(15, 23, 42, 0.04);
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: grid;
+            gap: 0.42rem;
+        }
+
+        .bullet-list li {
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+            padding-left: 1.1rem;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0.1rem;
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        .bullet-list strong {
+            color: var(--text-primary);
+        }
+
+        /* コード・プロンプト */
+        .code-wrap {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.45rem 0.85rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.12);
+            color: #e2e8f0;
+            border: none;
+            border-radius: 6px;
+            padding: 0.2rem 0.55rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        pre {
+            padding: 0.85rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            color: #e2e8f0;
+            white-space: pre-wrap;
+        }
+
+        /* 放射状ハブ図解（1つのデータから多機能化） */
+        .hub-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .hub-center {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(168, 85, 247, 0.2));
+            border: 2px solid var(--accent-blue);
+            border-radius: 16px;
+            padding: 0.85rem 1.3rem;
+            text-align: center;
+            font-weight: 900;
+            max-width: 460px;
+            width: 100%;
+        }
+
+        .hub-spokes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.65rem;
+            width: 100%;
+        }
+
+        @media (min-width: 720px) {
+            .hub-spokes {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .spoke-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        .spoke-title {
+            font-weight: 800;
+            color: var(--accent-amber);
+            margin-bottom: 0.2rem;
+        }
+
+        /* ボトムナビ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
+        }
+
+        [data-theme="light"] .bottom-nav {
+            background: rgba(241, 245, 249, 0.95);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.15rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.67rem;
+            font-weight: 700;
+            padding: 0.28rem 0.1rem;
+            border-radius: 10px;
+        }
+
+        .nav-item.active, .nav-item:active {
+            color: var(--accent-orange);
+            background: rgba(255, 107, 53, 0.12);
+        }
+
+        .nav-icon {
+            font-size: 1.08rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上部固定ヘッダー -->
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>【完全図解】第8回 CAS-Claude活用研修 まとめ</span>
+        </div>
+        <div class="controls">
+            <a href="./index.html" class="ctrl-btn">🏠 一覧</a>
+            <button class="ctrl-btn" id="fontBtn" onclick="cycleFontSize()">🔠 文字大</button>
+            <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">☀️ ライト</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ヒーローセクション -->
+        <section class="hero" id="top">
+            <div class="hero-badges">
+                <span class="badge badge-orange">🎓 第2期 第8回 研修（後半戦2回目）</span>
+                <span class="badge badge-blue">🎨 GUI（画面デザイン）本格構築</span>
+                <span class="badge badge-purple">🔄 セッション引き継ぎ＆復元術</span>
+                <span class="badge badge-green">⚡ バイブコーディングの極意</span>
+            </div>
+            <h1>【完全図解・第2期 第8回】CAS-Claude活用研修：Claude Design×Code連携によるGUI本格構築＆バイブコーディング実践ガイド</h1>
+            <p class="hero-desc">
+                第7回で定義した自社システムの「見た目（GUI＝グラフィックユーザーインターフェース）」を作り込む実践回。セッションがバグったり消えたりした時の100%復元術から、<code>/grill-me</code> によるデザイン要件定義、Claude Designでの全画面作成・Standalone HTML書き出し、Artifactプレビューを使った微調整、そして開発期間を2ヶ月→2週間に短縮した「バイブコーディング」の本質までを図解で完全網羅。
+            </p>
+            <div class="video-meta">
+                <span>📅 開催日：2026年10月27日（火）12:54〜</span>
+                <span>⏱️ 講義本編：約2時間01分</span>
+                <span>🔗 <a href="https://drive.google.com/file/d/1WqGJQnnNHQzwgKUze-7srqF8DcvanE9J/view?usp=drive_link" target="_blank" rel="noopener">Googleドライブ録画を開く ↗</a></span>
+            </div>
+        </section>
+
+        <!-- 3行要約 (TL;DR) -->
+        <div class="tldr-box">
+            <div class="tldr-title">⚡ 忙しい人のための3行核心サマリー（TL;DR）</div>
+            <ul class="tldr-list">
+                <li><strong>セッション引き継ぎもAIに書かせる＆2大MDで完全復元：</strong> セッションが重くなったり消えたりしても、フォルダ名を <code>MySite</code> にして <code>README.md</code> と <code>CLAUDE.md</code> を読ませれば新セッションで即座に続きから再開できる。</li>
+                <li><strong>大枠のトンマナは「Claude Design」、複製と微調整は「Claude Code」：</strong> 最初の1〜3画面のデザインフォーマットは <code>/grill-me</code> → <strong>Claude Design（Standard HTML書き出し）</strong> でこだわり抜き、以降の画面展開や文字サイズ・余白の微調整は <strong>Claude Code＋Artifactプレビュー</strong> で高速に回す。</li>
+                <li><strong>バイブコーディングの極意は「思ったより良いものができた！」の連発：</strong> 最初に質の高いデザインフォーマットを当てておけば、後から機能追加を指示した際にもAIが自動でトンマナを合わせてくれ、従来2ヶ月（50〜60万円）かかっていた開発が約2週間で完結する。</li>
+            </ul>
+        </div>
+
+        <!-- =======================================================
+             図解セクション1: 第8回の全体ワークフロー（5ステップ図解）
+             ======================================================= -->
+        <section class="section" id="sec-flow">
+            <div class="section-header">
+                <span class="section-num">全体図解</span>
+                <h2 class="section-title">1枚でわかる！第8回「GUI構築〜システム適用〜Git保存」5ステップ全体図</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">🗺️ 図解①：Claude Code と Claude Design を往復する黄金の5ステップ</div>
+
+                <div class="pipeline-grid">
+                    <div class="pipe-step s1">
+                        <span class="pipe-num">STEP 01 [03:05〜]</span>
+                        <div class="pipe-title">🔄 新セッションへの引き継ぎ＆接続</div>
+                        <p class="pipe-desc">フォルダ名を <code>MySite</code> に変更。前回セッションで引き継ぎ文を作らせるか、<code>README.md</code> &amp; <code>CLAUDE.md</code> を新セッションに読ませて再開。</p>
+                    </div>
+                    <div class="pipe-step s2">
+                        <span class="pipe-num">STEP 02 [15:14〜]</span>
+                        <div class="pipe-title">🔥 デザイン仕様を <code>/grill-me</code> で定義</div>
+                        <p class="pipe-desc">「誰が見るか・年齢層・社風カラー」を1問ずつ詰め、<strong>画面ごとに分けたClaude Design用の依頼文</strong>を生成させる。</p>
+                    </div>
+                    <div class="pipe-step s3">
+                        <span class="pipe-num">STEP 03 [33:32〜]</span>
+                        <div class="pipe-title">🎨 Claude Designで作成＆HTML出力</div>
+                        <p class="pipe-desc">「ホーム ＞ デザイン」を開き、<code>MySite</code> を添付して画面を作成。<strong>Share ＞ Project HTML ＞ Standard HTML</strong> で <code>MySite</code> に保存。</p>
+                    </div>
+                    <div class="pipe-step s4">
+                        <span class="pipe-num">STEP 04 [01:13:25〜]</span>
+                        <div class="pipe-title">🖥️ Codeでデザイン適用＆微調整</div>
+                        <p class="pipe-desc">Codeに「新デザインを適用して」と指示。<strong>Artifactプレビュー</strong>で画面遷移や余白・文字サイズを確認し、Code上で微調整。</p>
+                    </div>
+                    <div class="pipe-step s5">
+                        <span class="pipe-num">STEP 05 [01:44:03〜]</span>
+                        <div class="pipe-title">💾 2大MD追記 ＆ ローカルGit保存</div>
+                        <p class="pipe-desc">決まったデザイン規約を <code>README.md</code> と <code>CLAUDE.md</code> の両方に追記させ、<strong>ローカルGit</strong>でセーブポイントを作成。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション2: セッションがバグった・消えた時の2大復元パターン
+             ======================================================= -->
+        <section class="section" id="sec-restore">
+            <div class="section-header">
+                <span class="section-num">Step 1</span>
+                <h2 class="section-title">セッションがバグった・消えた時の「引き継ぎ＆完全復元」2パターン図解</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">🛟 図解②：引き継ぎプロンプトも「人間が書かずClaudeに書かせる」のが鉄則（03:05〜15:10 / 01:55:18〜）</div>
+
+                <div class="visual-compare-grid">
+                    <!-- パターンA -->
+                    <div class="v-card" style="border-left: 4px solid var(--accent-blue);">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-blue);">パターンA：前回のセッションが残っている場合</div>
+                            <span class="time-chip">03:40〜</span>
+                        </div>
+                        <div class="sub-diagram">
+                            💬 <strong>前回のセッション</strong> に「引き継ぎ文を作って」と指示<br>
+                            ⬇ <em>（人間は実装状況を忘れていることがあるためAIに書かせる）</em><br>
+                            📁 フォルダ名を <code>第7回</code> ➔ <strong><code>MySite</code></strong> に変更<br>
+                            ⬇<br>
+                            🆕 <strong>新規セッション（環境：このコンピュータ ＞ MySite）</strong> に貼り付けて再開！
+                        </div>
+                        <div class="code-wrap">
+                            <div class="code-header">
+                                <span>Prompt: 前回のセッションに打つ引き継ぎ作成指示</span>
+                                <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                            </div>
+                            <pre><code>このセッションの続きを別の新しいセッションでやります。
+新しいセッションの最初に貼るための「引き継ぎの文章（現在どこまで実装済みで、次に何をすべきか）」を省略せず作ってください。</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- パターンB -->
+                    <div class="v-card" style="border-left: 4px solid var(--accent-orange);">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-orange);">パターンB：契約変更やバグで前回セッションが消えた場合</div>
+                            <span class="time-chip">06:40〜14:15</span>
+                        </div>
+                        <div class="sub-diagram">
+                            😱 <strong>「前のチャット履歴が消えてしまった！」</strong><br>
+                            ⬇ でもPC内の <strong><code>MySite</code> フォルダ</strong> には前回のファイルが残っている！<br>
+                            📘 <strong><code>README.md</code>（仕様書・進捗）</strong> ＋ 📕 <strong><code>CLAUDE.md</code>（開発ルール）</strong><br>
+                            ⬇<br>
+                            🆕 新規セッションで <code>MySite</code> を接続し、下の1文を送るだけで<strong>100%完全復元！</strong>
+                        </div>
+                        <div class="code-wrap">
+                            <div class="code-header">
+                                <span>Prompt: セッション消失時に新セッションへ打つ復元指示</span>
+                                <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                            </div>
+                            <pre><code>このフォルダ（MySite）内の「README.md」と「CLAUDE.md」および既存ファイルを読み込んでください。
+別のセッションで作成していたシステムの続きを作成したいので、現在の実装状況を把握して報告してください。</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション3: デザイン要件定義（/grill-me）〜 Claude Design 書き出し
+             ======================================================= -->
+        <section class="section" id="sec-design">
+            <div class="section-header">
+                <span class="section-num">Step 2 &amp; 3</span>
+                <h2 class="section-title">デザインも <code>/grill-me</code> で要件定義し、Claude DesignからHTML書き出し</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">🎨 図解③：「かっこよくして」はNG！使う人に合わせたデザイン要件定義と書き出し手順（15:14〜01:13:20）</div>
+
+                <div class="visual-compare-grid">
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title">① デザイン用 <code>/grill-me</code> で決めるべき4要素</div>
+                            <span class="time-chip">16:13 - 30:30</span>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>1. 誰が使うか（ターゲット属性と年齢層）：</strong> 社内専用か顧客も見せるか。例えば高齢者（らくらくホン世代）が使う業務画面なら「文字を大きく・使わない機能を省く」のが正義になる。</li>
+                            <li><strong>2. トンマナ・雰囲気：</strong> 硬い（信頼感・コーポレート調）か、柔らかい（親しみやすい）か、静かか賑やかか。</li>
+                            <li><strong>3. コーポレートカラー＆ロゴ：</strong> 自社のテーマカラーやロゴ配置の有無。</li>
+                            <li><strong>4. 画面ごとに依頼文を分割出力させる：</strong> 質疑応答が終わったら<strong>「Claude Designに貼る依頼文を、画面ごとに1つずつ分けて作ってください」</strong>と指示する。</li>
+                        </ul>
+                        <div class="code-wrap">
+                            <div class="code-header">
+                                <span>Prompt: デザイン仕様の /grill-me 開始〜依頼文出力</span>
+                                <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                            </div>
+                            <pre><code>これからClaude Designでこのシステムの画面デザイン（GUI）を作ります。
+そのための依頼文を作りたいので、ターゲット層・文字サイズ・配色・雰囲気など決めておくべきことを1問ずつ質問してください。 /grill-me
+
+（※質疑応答完了後↓）
+ありがとうございます。では今決まった内容をもとに、Claude Designに貼り付ける依頼文を【画面ごとに1つずつ分けて】出力してください。</code></pre>
+                        </div>
+                    </div>
+
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title">② Claude Designの場所変更と書き出しの鉄則</div>
+                            <span class="time-chip">33:32 - 01:07:35</span>
+                        </div>
+                        <div class="sub-diagram">
+                            📍 <strong>新UIでの場所：</strong> 左メニューの「ホーム」➔ <strong>「デザイン」</strong>（※旧「アプリと拡張機能」から移動）<br>
+                            📎 <strong>添付のコツ：</strong> <code>MySite</code> フォルダ内のファイルを添付した上で、画面ごとの依頼文を貼る。<br>
+                            🥇 <strong>1ページ目に全力を注ぐ：</strong> 1ページ目のデザインを妥協せず固めれば、2ページ目以降はそれを流用して一瞬で作れる！<br>
+                            📥 <strong>書き出し手順：</strong> 右上 <strong>「Share」➔「Export」➔「Project HTML」➔ 必ず「Standard HTML」</strong> を選んで <code>MySite</code> 直下に保存！（※複数ファイルに分かれている場合は全て書き出す）
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション4: Codeでのデザイン適用・Artifact確認・多機能化設計
+             ======================================================= -->
+        <section class="section" id="sec-apply">
+            <div class="section-header">
+                <span class="section-num">Step 4 &amp; 5</span>
+                <h2 class="section-title">Codeへのデザイン適用・Artifactプレビュー・1画面システムの多機能化図解</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">🖥️ 図解④：一度デザインフォーマットができれば、続きの画面や微調整は「Claude Code」で完結する！（01:13:25〜01:33:40）</div>
+
+                <div class="visual-compare-grid">
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title">🔄 デザイン適用＆Artifactでの画面確認</div>
+                            <span class="time-chip">01:13:25 - 01:29:30</span>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>デザイン適用指示：</strong> <code>MySite</code> にHTMLを入れたら、Codeに戻り「新しくダウンロードしたデザインのHTMLをシステム全画面に適用して実装してください」と指示する。</li>
+                            <li><strong>コード側でのデザイン複製力：</strong> 最初の3〜4画面で「見出しサイズ・色・カードの形」という<strong>デザインフォーマット</strong>ができれば、残りの画面や新機能はClaude Designに戻らなくても、Codeが同じトンマナを複製して綺麗に作ってくれる。</li>
+                            <li><strong>起動できない時は「Artifactで見せて」：</strong> Node.jsやPHP製でローカルだけではまだ直接開けない場合も、<strong>「Artifact（アーティファクト）で実際の画面を表示して」</strong>と指示すれば、プレビュー上で画面遷移やボタン配置を確認しながら文字サイズ・行間・余白・スマホ対応（レスポンシブ）を微調整できる。</li>
+                        </ul>
+                    </div>
+
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title">💾 2大MDへの追記とローカルGitの順番</div>
+                            <span class="time-chip">01:44:03 - 01:50:45</span>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>必ずGitの前に両方のMDを更新する：</strong> デザイン適用と微調整が終わったら、まず <strong><code>README.md</code> と <code>CLAUDE.md</code> の両方</strong> に今回決まったデザインルールや画面構成を追記させる。</li>
+                            <li><strong>ローカルGitで記録：</strong> その後、「GitHubには上げないで、このフォルダをパソコンのローカルでGitしてください（記録名：第8回デザイン適用など）」と指示してセーブする。</li>
+                        </ul>
+                        <div class="code-wrap">
+                            <div class="code-header">
+                                <span>Prompt: MD更新＋ローカルGit保存の締めくくり指示</span>
+                                <button class="copy-btn" onclick="copyCode(this)">コピー</button>
+                            </div>
+                            <pre><code>今回適用・修正したデザインの仕様やルールを「README.md」と「CLAUDE.md」の両方に追記してください。
+その後、GitHubには上げずに、パソコンのローカルでGit（コミット）して記録してください。</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 図解5: スプシ閲覧1画面で終わらせない「多機能化・統合システム」の設計図 -->
+            <div class="diagram-box">
+                <div class="diagram-label">💡 図解⑤：「スプレッドシートを見るだけの1画面」から脱却する多機能化（統合システム）の発想法（01:34:00〜01:42:35）</div>
+                <p style="font-size:0.84rem; color:var(--text-secondary); margin-bottom:0.9rem;">
+                    受講生の「進捗確認システムがトップ1画面（スプシ参照）だけで終わってしまった」という相談に対する講師の実例図解。<strong>「同じ1つのデータソース」から、見る人の権限やアウトプット形式を変えるだけで、社内業務を丸ごと自動化する多機能システムに進化できる！</strong>
+                </p>
+
+                <div class="hub-diagram">
+                    <div class="hub-center">
+                        🗄️ 中心：1つの共通データソース（進捗・商談・日報・応募データ）<br>
+                        <span style="font-size:0.76rem; color:var(--text-secondary); font-weight:500;">※システム側で入力・管理し、必要なら裏でスプシへ吐き出す</span>
+                    </div>
+                    <div style="font-size:0.8rem; font-weight:900; color:var(--accent-blue);">⬇ 見方・権限・自動化を広げて「複数画面システム」へ展開 ⬇</div>
+                    <div class="hub-spokes">
+                        <div class="spoke-card">
+                            <div class="spoke-title">① アカウント権限とログイン分離</div>
+                            <p style="color:var(--text-secondary);">「現場（デザイナー等）の入力画面」と「管理者の承認・全体管理画面」を分け、ログイン・新規登録画面を作る。</p>
+                        </div>
+                        <div class="spoke-card">
+                            <div class="spoke-title">② 納期アラートの自動通知</div>
+                            <p style="color:var(--text-secondary);">納期3日前や遅延案件を自動検知し、トップ画面への赤字表示＋Slackやメールへ自動通知を飛ばす。</p>
+                        </div>
+                        <div class="spoke-card">
+                            <div class="spoke-title">③ 売上着地予想＆成果集計</div>
+                            <p style="color:var(--text-secondary);">日々の進捗・テレアポ・商談データから、今月の着地予想グラフをリアルタイム算出。</p>
+                        </div>
+                        <div class="spoke-card">
+                            <div class="spoke-title">④ AIによる商談・業務ギャップ分析</div>
+                            <p style="color:var(--text-secondary);">「理想の商談フロー」と「実際の報告内容」の乖離（改善点）をAIに自動判定させる画面。</p>
+                        </div>
+                        <div class="spoke-card">
+                            <div class="spoke-title">⑤ 求人記事編集＆応募者チャット</div>
+                            <p style="color:var(--text-secondary);">システム内で記事編集から応募者管理、応募者へのメッセージ送信まで一気通貫で完結。</p>
+                        </div>
+                        <div class="spoke-card">
+                            <div class="spoke-title">⑥ 商談結果から請求書を自動生成</div>
+                            <p style="color:var(--text-secondary);">成約した商談データを自動で読み取り、取引先へ送る請求書PDF/データをワンクリック作成。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 図解6: 従来の人間開発 vs バイブコーディングの比較 -->
+            <div class="diagram-box" style="border-left: 4px solid var(--accent-green);">
+                <div class="diagram-label">⚡ 図解⑥：なぜ「バイブコーディング（Vibe Coding）」だと開発期間が2ヶ月→2週間になるのか？（01:50:46〜01:59:40）</div>
+
+                <div class="visual-compare-grid">
+                    <div class="v-card" style="border-top: 3px solid var(--accent-red);">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-red);">🐢 従来の人間によるシステム開発</div>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>手順：</strong> デザイナーが全画面のUIを設計 ➔ エンジニアがコーディング ➔ コードチェックの無限ループ。</li>
+                            <li><strong>コストと期間（講師自社アプリ「Teach」の旧実績）：</strong> 簡単な1機能を追加するだけでも<strong>約2ヶ月・外注費50万〜60万円</strong>かかり、しかも「指示した通りのもの」しか上がってこない。</li>
+                        </ul>
+                    </div>
+
+                    <div class="v-card" style="border-top: 3px solid var(--accent-green);">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-green);">🚀 AIによるバイブコーディング（Vibe Coding）</div>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>本質：</strong> 最初にこだわったデザインフォーマット（今回の第8回）さえ当てておけば、後から「〇〇機能を追加して」と指示した時、細かいUIを指定しなくても<strong>「思ったより良いものができた！」が連発する</strong>。</li>
+                            <li><strong>圧倒的なスピード：</strong> 従来2ヶ月かかっていた実装が<strong>約2週間（約1/4の期間）</strong>に短縮！</li>
+                            <li><strong>次回（第9回：11月10日）予告：</strong> いよいよ今回デザインを当てたシステムを<strong>Web上にデプロイ（アップロード公開）</strong>し、Node.jsやPHP製のシステムも含めてURLから実際にブラウザで動かせるようにする！</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- スマホ親指操作用 ボトムナビゲーション -->
+    <nav class="bottom-nav" aria-label="ボトムナビゲーション">
+        <a href="#top" class="nav-item active" onclick="setActive(this)">
+            <span class="nav-icon">🏠</span>
+            <span>概要</span>
+        </a>
+        <a href="#sec-flow" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🗺️</span>
+            <span>5工程図</span>
+        </a>
+        <a href="#sec-restore" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🛟</span>
+            <span>復元術</span>
+        </a>
+        <a href="#sec-design" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🎨</span>
+            <span>Design</span>
+        </a>
+        <a href="#sec-apply" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">⚡</span>
+            <span>多機能化</span>
+        </a>
+    </nav>
+
+    <script>
+        const scales = [1, 1.12, 1.25];
+        const labels = ['🔠 文字大', '🔠 文字特大', '🔠 文字標準'];
+        let scaleIdx = 0;
+
+        function cycleFontSize() {
+            scaleIdx = (scaleIdx + 1) % scales.length;
+            document.documentElement.style.setProperty('--font-scale', scales[scaleIdx]);
+            document.getElementById('fontBtn').textContent = labels[scaleIdx];
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                btn.textContent = '☀️ ライト';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙 ダーク';
+            }
+        }
+
+        function copyCode(btn) {
+            const code = btn.closest('.code-wrap').querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const orig = btn.textContent;
+                btn.textContent = '✔ コピー済';
+                setTimeout(() => btn.textContent = orig, 1800);
+            });
+        }
+
+        function setActive(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
