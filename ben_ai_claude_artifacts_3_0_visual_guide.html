@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>【完全図解】Claude Artifacts 3.0 ＆ インタラクティブ・コネクタ：Anthropicの4大大型アップデート完全ガイド（Ben AI）</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #111827;
+            --bg-card: rgba(22, 31, 51, 0.85);
+            --bg-diagram: rgba(13, 19, 34, 0.95);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-orange: #ff6b35;
+            --accent-amber: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-pink: #ec4899;
+            --accent-red: #ef4444;
+            --border-color: rgba(148, 163, 184, 0.2);
+            --code-bg: #060911;
+            --font-scale: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #e2e8f0;
+            --bg-card: rgba(255, 255, 255, 0.96);
+            --bg-diagram: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-orange: #ea580c;
+            --accent-amber: #d97706;
+            --accent-blue: #0284c7;
+            --accent-purple: #7e22ce;
+            --accent-green: #059669;
+            --accent-pink: #db2777;
+            --accent-red: #dc2626;
+            --border-color: rgba(15, 23, 42, 0.14);
+            --code-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.72;
+            padding-bottom: 96px;
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(16, 185, 129, 0.09), transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(56, 189, 248, 0.09), transparent 30%),
+                radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.08), transparent 35%);
+            background-attachment: fixed;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* 上部固定バー */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        [data-theme="light"] .top-bar {
+            background: rgba(241, 245, 249, 0.9);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 900;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            box-shadow: 0 0 10px var(--accent-green);
+            flex-shrink: 0;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .ctrl-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        /* ヒーロー */
+        .hero {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.14) 0%, rgba(56, 189, 248, 0.12) 50%, rgba(168, 85, 247, 0.12) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 1.6rem 1.35rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+
+        .badge-green { background: rgba(16, 185, 129, 0.18); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.38); }
+        .badge-blue { background: rgba(56, 189, 248, 0.18); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.38); }
+        .badge-purple { background: rgba(168, 85, 247, 0.18); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.38); }
+        .badge-orange { background: rgba(255, 107, 53, 0.18); color: var(--accent-orange); border: 1px solid rgba(255, 107, 53, 0.38); }
+
+        .hero h1 {
+            font-size: clamp(1.35rem, 4.3vw, 2.02rem);
+            font-weight: 900;
+            line-height: 1.33;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 0.94rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem 1.1rem;
+            font-size: 0.81rem;
+            color: var(--text-muted);
+            padding-top: 0.85rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .video-meta a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* 3行要約 */
+        .tldr-box {
+            background: var(--bg-card);
+            border-left: 4px solid var(--accent-green);
+            border-radius: 14px;
+            padding: 1.15rem 1.25rem;
+            margin-bottom: 1.75rem;
+            border-top: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tldr-title {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            margin-bottom: 0.55rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .tldr-list {
+            list-style: none;
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .tldr-list li {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            position: relative;
+            padding-left: 1.35rem;
+        }
+
+        .tldr-list li::before {
+            content: "✔";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-weight: 900;
+        }
+
+        /* セクション */
+        .section {
+            margin-bottom: 2.3rem;
+            scroll-margin-top: 70px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 1.05rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-num {
+            background: linear-gradient(135deg, var(--accent-green), var(--accent-blue));
+            color: #090d16;
+            font-weight: 900;
+            font-size: 0.82rem;
+            padding: 0.22rem 0.65rem;
+            border-radius: 9px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.18rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        /* 図解ボックス */
+        .diagram-box {
+            background: var(--bg-diagram);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+        }
+
+        .diagram-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.14);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        /* 4大アップデート全体グリッド */
+        .four-pillars {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.9rem;
+        }
+
+        @media (min-width: 720px) {
+            .four-pillars {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .pillar-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--accent-green);
+            border-radius: 16px;
+            padding: 1.1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .pillar-card.blue { border-top-color: var(--accent-blue); }
+        .pillar-card.purple { border-top-color: var(--accent-purple); }
+        .pillar-card.orange { border-top-color: var(--accent-orange); }
+
+        .pillar-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .pillar-title {
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        .time-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            flex-shrink: 0;
+        }
+
+        .replace-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 0.25rem 0.6rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .sub-diagram {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 0.85rem;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        [data-theme="light"] .sub-diagram {
+            background: rgba(15, 23, 42, 0.04);
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: grid;
+            gap: 0.42rem;
+        }
+
+        .bullet-list li {
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+            padding-left: 1.1rem;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0.1rem;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .bullet-list strong {
+            color: var(--text-primary);
+        }
+
+        /* 3ステップ横並びフロー図 */
+        .step3-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+
+        @media (min-width: 720px) {
+            .step3-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .step3-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.95rem;
+        }
+
+        /* 4つのフォーマットカード */
+        .format4-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+
+        @media (min-width: 680px) {
+            .format4-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .format4-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .format-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        /* インタラクティブ・コネクタ画面分割モックアップ */
+        .split-screen-mock {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-orange);
+            border-radius: 16px;
+            padding: 1rem;
+        }
+
+        @media (min-width: 720px) {
+            .split-screen-mock {
+                grid-template-columns: 1fr 1.25fr;
+            }
+        }
+
+        .mock-pane {
+            background: var(--bg-diagram);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.9rem;
+        }
+
+        /* ボトムナビ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
+        }
+
+        [data-theme="light"] .bottom-nav {
+            background: rgba(241, 245, 249, 0.95);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.15rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.67rem;
+            font-weight: 700;
+            padding: 0.28rem 0.1rem;
+            border-radius: 10px;
+        }
+
+        .nav-item.active, .nav-item:active {
+            color: var(--accent-green);
+            background: rgba(16, 185, 129, 0.12);
+        }
+
+        .nav-icon {
+            font-size: 1.08rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上部固定ヘッダー -->
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>【完全図解】Claude 4大アップデート（Artifacts 3.0）</span>
+        </div>
+        <div class="controls">
+            <a href="./index.html" class="ctrl-btn">🏠 一覧</a>
+            <button class="ctrl-btn" id="fontBtn" onclick="cycleFontSize()">🔠 文字大</button>
+            <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">☀️ ライト</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ヒーローセクション -->
+        <section class="hero" id="top">
+            <div class="hero-badges">
+                <span class="badge badge-green">📊 Claude Sheets</span>
+                <span class="badge badge-blue">🎨 Claude Whiteboards</span>
+                <span class="badge badge-purple">📈 Claude Data (4形式)</span>
+                <span class="badge badge-orange">🔌 インタラクティブ・コネクタ</span>
+            </div>
+            <h1>【完全図解】Anthropicが放つ4大大型アップデート：Claude Artifacts 3.0 ＆ インタラクティブ・コネクタ完全ガイド（Ben AI）</h1>
+            <p class="hero-desc">
+                Googleスプレッドシート、Miro/FigJam、BIダッシュボード、さらにはNotionやCanva・Adobe・HubSpotまでが<strong>「Claudeのチャット横パネル」に完全統合</strong>！5つもの別ツールを行き来する働き方を終わらせ、ClaudeをチームのメインOSへと進化させる4大新機能（＋フォルダ一括管理）の使い方・制限・実務ワークフローを図解で完全網羅。
+            </p>
+            <div class="video-meta">
+                <span>📺 チャンネル：Ben AI</span>
+                <span>⏱️ 再生時間：14分56秒</span>
+                <span>🔗 <a href="https://www.youtube.com/watch?v=vyhzL1tW7rE" target="_blank" rel="noopener">YouTube動画を開く ↗</a></span>
+            </div>
+        </section>
+
+        <!-- 3行要約 (TL;DR) -->
+        <div class="tldr-box">
+            <div class="tldr-title">⚡ 忙しい人のための3行核心サマリー（TL;DR）</div>
+            <ul class="tldr-list">
+                <li><strong>3つの新Artifactで外部ツール不要に：</strong> 数式・グラフ・定期自動更新対応の <strong><code>Claude Sheets</code></strong>、音声ブレストから図解＆Docs化する <strong><code>Claude Whiteboards</code></strong>、そして旧Dashboardsが進化した <strong><code>Claude Data</code></strong> が登場。</li>
+                <li><strong>Claude Dataの「4形式変換・ライブ共有・認定クエリ」が革命的：</strong> 同じデータをワンクリックで「スクロール物語」や「音声付き1〜2分ショート動画」に変換でき、コネクタ権限がない同僚への<strong>安全なライブ共有</strong>や、社内公式の計算式を統一する<strong>認定クエリ（バッジ付き）</strong>に対応。</li>
+                <li><strong>目玉機能「インタラクティブ・コネクタ」で外部アプリを横パネル直接操作：</strong> Notion・Canva・Adobe・HubSpot等のアプリ画面全体がチャット横に直接開き、<strong>MCP技術でClaudeが高速自動操作する様子を見ながら、人間もその場で直接手直しできる</strong>。</li>
+            </ul>
+        </div>
+
+        <!-- =======================================================
+             図解セクション1: 全体像マップ（全7種のArtifactと4大アップデート）
+             ======================================================= -->
+        <section class="section" id="sec-overview">
+            <div class="section-header">
+                <span class="section-num">全体図解</span>
+                <h2 class="section-title">1枚でわかる！「5つのツールを行き来する時代」を終わらせる4大アップデート地図</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">🗺️ 図解①：どの外部ツールがClaude内のどの機能に置き換わるのか？（00:00〜01:43）</div>
+
+                <div class="four-pillars">
+                    <!-- 1. Claude Sheets -->
+                    <div class="pillar-card">
+                        <div class="pillar-head">
+                            <span class="pillar-title" style="color:var(--accent-green);">① Claude Sheets（表計算）</span>
+                            <span class="time-chip">01:44〜</span>
+                        </div>
+                        <div class="replace-badge">🔄 代替対象：Googleスプレッドシート / Excel / Airtable</div>
+                        <p style="font-size:0.83rem; color:var(--text-secondary);">
+                            セル・タブ跨ぎの数式、条件付き書式、動的グラフ、CSV/Excel入出力、チーム同時編集、さらに<strong>スケジュールタスクによる毎月の全自動データ更新</strong>までClaude内で完結。
+                        </p>
+                    </div>
+
+                    <!-- 2. Claude Whiteboards -->
+                    <div class="pillar-card blue">
+                        <div class="pillar-head">
+                            <span class="pillar-title" style="color:var(--accent-blue);">② Claude Whiteboards（無限ボード）</span>
+                            <span class="time-chip">03:59〜</span>
+                        </div>
+                        <div class="replace-badge">🔄 代替対象：Miro / FigJam</div>
+                        <p style="font-size:0.83rem; color:var(--text-secondary);">
+                            音声で頭の中のアイデアを喋るだけで、AIが付箋・フレーム・フロー図に視覚整理。選んだ枠からワンクリックで<strong>企画書（Claude Docs）へ変換</strong>できる。
+                        </p>
+                    </div>
+
+                    <!-- 3. Claude Data + Folders -->
+                    <div class="pillar-card purple">
+                        <div class="pillar-head">
+                            <span class="pillar-title" style="color:var(--accent-purple);">③ Claude Data ＆ フォルダ整理</span>
+                            <span class="time-chip">06:49〜</span>
+                        </div>
+                        <div class="replace-badge">🔄 代替対象：Looker / Tableau / Googleドライブ整理</div>
+                        <p style="font-size:0.83rem; color:var(--text-secondary);">
+                            旧Dashboardsが進化。1つのデータを<strong>4つの表現形式（スクロール物語・ショート動画等）</strong>に変換でき、<strong>ライブ共有・認定クエリ・階層フォルダ共有</strong>を搭載。
+                        </p>
+                    </div>
+
+                    <!-- 4. Interactive Connectors -->
+                    <div class="pillar-card orange">
+                        <div class="pillar-head">
+                            <span class="pillar-title" style="color:var(--accent-orange);">④ インタラクティブ・コネクタ</span>
+                            <span class="time-chip">12:14〜</span>
+                        </div>
+                        <div class="replace-badge">🔌 直接統合：Notion / Canva / Adobe / HubSpot 等</div>
+                        <p style="font-size:0.83rem; color:var(--text-secondary);">
+                            外部アプリ全体がチャット横のパネルに直接出現！<strong>ClaudeによるMCP高速操作と、人間による直接ドラッグ＆編集が1画面で同時並行</strong>できる今回の最大目玉。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="sub-diagram" style="margin-top:0.9rem; text-align:center;">
+                    📦 <strong>現在のClaude Artifacts 全7種類フルラインナップ：</strong><br>
+                    既存4種（<code>Docs</code> / <code>Slides</code> / <code>Motion</code> / <code>Design</code>）＋ <strong>今回追加・刷新3種（<code>Sheets</code> / <code>Whiteboards</code> / <code>Data</code>）</strong> ＋ <strong><code>Artifact Folders</code></strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション2: アップデート①「Claude Sheets」
+             ======================================================= -->
+        <section class="section" id="sec-sheets">
+            <div class="section-header">
+                <span class="section-num">Update 1</span>
+                <h2 class="section-title">Claude Sheets：自動更新されるAI内蔵スプレッドシートの機能と制限</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">📊 図解②：Claude Sheets の「7大できること」vs「3つの制限事項」（01:44〜03:58）</div>
+
+                <div class="four-pillars">
+                    <div class="pillar-card">
+                        <div class="pillar-head">
+                            <span class="pillar-title" style="color:var(--accent-green);">⭕ できること（7大機能＋自動更新）</span>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>① 本物の数式（Formula）記述：</strong> セル内や複数タブを跨ぐ計算式をAIが自動構築（数値クリックで計算根拠を表示）。</li>
+                            <li><strong>② 条件付き書式ルール：</strong> 「価格50ドル未満の行を赤くする」等の視覚ルール設定。</li>
+                            <li><strong>③ 動的連動グラフ：</strong> 表の数値を書き換えるとグラフもリアルタイム更新。</li>
+                            <li><strong>④ 行・列の固定（フリーズ）：</strong> スクロールしても見出し行を固定表示。</li>
+                            <li><strong>⑤ 範囲選択ピンポイント質問：</strong> 特定のセル範囲だけをドラッグ選択し、その部分だけをClaudeに質問・修正指示。</li>
+                            <li><strong>⑥ Excel / CSV の入出力 ＆ バージョン履歴：</strong> 既存ファイルのインポート・エクスポートと過去版への巻き戻し。</li>
+                            <li><strong>⑦ チーム同時編集 ＆ スケジュール自動更新：</strong> 毎月「Stripe・メール・各ソフトから請求書を探して月次経理シートを更新する」定期タスクを回せる！</li>
+                        </ul>
+                    </div>
+
+                    <div class="pillar-card orange">
+                        <div class="pillar-head">
+                            <span class="pillar-title" style="color:var(--accent-amber);">⚠️ 知っておくべき現在の制限（3点）</span>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>制限① 上限は「最大10万セル」まで：</strong> 超巨大な財務モデル等を扱う場合は従来のExcelが推奨。</li>
+                            <li><strong>制限② ピボットテーブル・検索＆置換は未対応：</strong> 現時点ではまだピボット集計や一括検索置換機能はない。</li>
+                            <li><strong>制限③ セルや行のロック・非表示が不可：</strong> 共有したチームメンバー全員がすべてのセルを閲覧・編集できる状態になる点に注意。</li>
+                        </ul>
+                        <div class="sub-diagram" style="margin-top:0.5rem;">
+                            💡 <strong>結論（ベストな使い道）：</strong><br>
+                            月次経理トラッカー、営業パイプライン、コンテンツカレンダー、予算管理、採用管理など<strong>日常業務の9割の表管理はこれで1つに集約できる！</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション3: アップデート②「Claude Whiteboards」
+             ======================================================= -->
+        <section class="section" id="sec-whiteboard">
+            <div class="section-header">
+                <span class="section-num">Update 2</span>
+                <h2 class="section-title">Claude Whiteboards：音声ブレストから図解・企画書化までの黄金3ステップ</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">🎨 図解③：長文チャットをやめて「ホワイトボード」で思考を視覚化するフロー（03:59〜06:48）</div>
+
+                <div class="step3-grid">
+                    <div class="step3-card" style="border-top: 4px solid var(--accent-blue);">
+                        <div style="font-weight:900; color:var(--accent-blue); margin-bottom:0.35rem;">STEP 1：音声で脳内を吐き出す</div>
+                        <p style="font-size:0.82rem; color:var(--text-secondary);">
+                            下部ツールバーの<strong>音声録音（マイク）</strong>をONにし、頭の中のモヤモヤした企画アイデアをそのまま喋る（または複雑な長文記事・台本を貼り付ける）。
+                        </p>
+                    </div>
+
+                    <div class="step3-card" style="border-top: 4px solid var(--accent-purple);">
+                        <div style="font-weight:900; color:var(--accent-purple); margin-bottom:0.35rem;">STEP 2：AIが自動で図解マップ化</div>
+                        <p style="font-size:0.82rem; color:var(--text-secondary);">
+                            Claudeが自動で<strong>切り口別のグループ・フロー図・タイムライン・付箋</strong>に視覚整理！人間もペン・図形・ステッカー・画像/動画配置・要素ロックで共同編集できる。
+                        </p>
+                    </div>
+
+                    <div class="step3-card" style="border-top: 4px solid var(--accent-green);">
+                        <div style="font-weight:900; color:var(--accent-green); margin-bottom:0.35rem;">STEP 3：1枠を選んで一発Docs化</div>
+                        <p style="font-size:0.82rem; color:var(--text-secondary);">
+                            整理された複数の切り口から気に入った1枠を選択し、「これを構成案にして」と頼むだけで<strong>完成された <code>Claude Docs</code>（台本・企画書）</strong>が出力される！
+                        </p>
+                    </div>
+                </div>
+
+                <div class="sub-diagram" style="margin-top:0.9rem;">
+                    💡 <strong>制限と裏技（06:05〜06:16）：</strong> 現在のエクスポートは <strong>PNG画像のみ</strong> で、MiroやFigmaからのファイル直接インポートには未対応。ただし、<strong>「過去のMiro/Figmaボードのスクリーンショットを撮ってClaudeに貼り、ホワイトボード上に再現してと頼む」</strong>ことで簡単に移行できる！
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション4: アップデート③「Claude Data」＆「Artifact Folders」
+             ======================================================= -->
+        <section class="section" id="sec-data">
+            <div class="section-header">
+                <span class="section-num">Update 3</span>
+                <h2 class="section-title">Claude Data（旧Dashboards）：4つの新フォーマット＆2大チーム共有革命</h2>
+            </div>
+
+            <!-- 図解4: 4つのフォーマット -->
+            <div class="diagram-box">
+                <div class="diagram-label">📈 図解④：右上「パレットアイコン」から同じデータをワンクリックで4つの形式に変換！（07:45〜09:16）</div>
+
+                <div class="format4-grid">
+                    <div class="format-card" style="border-top: 3px solid var(--accent-blue);">
+                        <div style="font-weight:900; font-size:0.9rem; color:var(--accent-blue);">① 従来型ダッシュボード</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted);">Dashboard</div>
+                        <p style="font-size:0.79rem; color:var(--text-secondary);">複数のコネクタやCSV/JSONからKPIとグラフを集約し、開くたび自動更新される標準一覧画面。</p>
+                    </div>
+
+                    <div class="format-card" style="border-top: 3px solid var(--accent-purple);">
+                        <div style="font-weight:900; font-size:0.9rem; color:var(--accent-purple);">② スクロールテラー</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted);">Scrollteller</div>
+                        <p style="font-size:0.79rem; color:var(--text-secondary);"><strong>スクロールに合わせてグラフが変化する章立てストーリー形式</strong>。四半期レビュー等で口頭説明なしでも全員が理解できる。</p>
+                    </div>
+
+                    <div class="format-card" style="border-top: 3px solid var(--accent-orange);">
+                        <div style="font-weight:900; font-size:0.9rem; color:var(--accent-orange);">③ ビジュアルショート</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted);">Visual Shorts</div>
+                        <p style="font-size:0.79rem; color:var(--text-secondary);"><strong>音声ナレーション・チャプター・字幕付きの1〜2分の解説動画</strong>を自動生成！週次売上報告を「読む」代わりに「動画視聴」できる。</p>
+                    </div>
+
+                    <div class="format-card" style="border-top: 3px solid var(--accent-green);">
+                        <div style="font-weight:900; font-size:0.9rem; color:var(--accent-green);">④ ビジュアル分析</div>
+                        <div style="font-size:0.72rem; color:var(--text-muted);">Visual Analysis</div>
+                        <p style="font-size:0.79rem; color:var(--text-secondary);">「なぜ先月解約率が上がったのか？」など<strong>1つの問いに対し、結論数値 ➔ 要因詳細を上から下へ段階的に解き明かす</strong>形式。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 図解5: ライブ共有・認定クエリ・フォルダ整理 -->
+            <div class="diagram-box">
+                <div class="diagram-label">🔐 図解⑤：チーム運用の壁を突破する「ライブ共有」「認定クエリ」「フォルダ自動整理」（09:17〜12:13）</div>
+
+                <div class="step3-grid">
+                    <div class="step3-card" style="border-left: 4px solid var(--accent-green);">
+                        <div style="font-weight:900; color:var(--accent-green); margin-bottom:0.35rem;">① ライブ共有（Live Sharing）</div>
+                        <p style="font-size:0.81rem; color:var(--text-secondary);">
+                            右上DBアイコン ＞ ソース設定から<strong>「あなたのコネクタを使用」</strong>を選択可能に！これにより、Stripe等のアクセス権限を持たない社内メンバーにも、認証情報を渡さず<strong>必要なクエリ結果だけを最新状態で安全に共有</strong>できる。
+                        </p>
+                    </div>
+
+                    <div class="step3-card" style="border-left: 4px solid var(--accent-amber);">
+                        <div style="font-weight:900; color:var(--accent-amber); margin-bottom:0.35rem;">② 認定クエリ（Verified Queries）</div>
+                        <p style="font-size:0.81rem; color:var(--text-secondary);">
+                            数値をクリック ＞ 鉛筆アイコンから<strong>会社公式の計算式として「認定」</strong>し、「トライアルを除き有料会員のみ集計」等の追加コンテキストを保存。<strong>公式バッジ</strong>が付き、今後AIが作る全グラフで同じ計算定義が自動再利用される！
+                        </p>
+                    </div>
+
+                    <div class="step3-card" style="border-left: 4px solid var(--accent-blue);">
+                        <div style="font-weight:900; color:var(--accent-blue); margin-bottom:0.35rem;">③ Artifactフォルダ＆自動整理</div>
+                        <p style="font-size:0.81rem; color:var(--text-secondary);">
+                            Googleドライブのように部門別・顧客別の階層フォルダを作成し、<strong>フォルダ単位でチーム一括共有</strong>やサイドバー最上部へのピン留めが可能。さらにスケジュールタスクで<strong>毎日作られたArtifactを自動で適切フォルダへ振り分け</strong>できる！
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション5: アップデート④「インタラクティブ・コネクタ」
+             ======================================================= -->
+        <section class="section" id="sec-connectors">
+            <div class="section-header">
+                <span class="section-num">Update 4</span>
+                <h2 class="section-title">目玉機能「インタラクティブ・コネクタ」：外部アプリがチャット横に直接出現！</h2>
+            </div>
+
+            <div class="diagram-box">
+                <div class="diagram-label">🔌 図解⑥：ブラウザ操作ではない！MCP直結で「AIの自動操作」と「人間の直接編集」が同時進行する画面構造（12:14〜14:55）</div>
+
+                <div class="split-screen-mock">
+                    <!-- 左側: Claudeチャット -->
+                    <div class="mock-pane">
+                        <div style="font-weight:900; font-size:0.88rem; color:var(--accent-blue); margin-bottom:0.5rem;">
+                            💬 左画面：Claude チャット欄
+                        </div>
+                        <div class="sub-diagram" style="margin-bottom:0.5rem;">
+                            🗣️ <strong>あなたの指示：</strong><br>
+                            「NotionのYouTubeコンテンツカレンダーを開いて、今日の会議議事録に合わせて動画パイプラインの日程を整理して」
+                        </div>
+                        <div style="font-size:0.78rem; color:var(--text-secondary);">
+                            ⚡ <strong>MCP技術で直接通信：</strong><br>
+                            ブラウザの画面クリック代行（遅い・不安定）ではなく、裏側のMCPコネクタ経由で動くため<strong>超高速かつ高信頼</strong>！
+                        </div>
+                    </div>
+
+                    <!-- 右側: インタラクティブ・コネクタパネル -->
+                    <div class="mock-pane" style="border-color:var(--accent-orange);">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                            <span style="font-weight:900; font-size:0.88rem; color:var(--accent-orange);">🪟 右パネル（または全画面）：外部アプリ本体</span>
+                            <span class="time-chip">Interactiveバッジ対応</span>
+                        </div>
+                        <div class="sub-diagram" style="margin-bottom:0.5rem;">
+                            🤖 <strong>① Claudeがリアルタイムで画面を動かす：</strong><br>
+                            目の前のNotionボード上で、Claudeが動画カードを移動させ日付を書き換える様子がライブで見える！<br>
+                            🖐️ <strong>② 人間もその場で直接マウス編集できる：</strong><br>
+                            微調整したい箇所があれば、Notionアプリを開き直さず<strong>Claudeの画面内のまま自分で直接ドラッグ＆編集して完結！</strong>
+                        </div>
+                        <div style="font-size:0.78rem; color:var(--text-secondary);">
+                            ✅ <strong>対応アプリ例：</strong> <strong>Notion</strong>（カレンダー・タスク管理）、<strong>Adobe</strong>（写真レタッチ・PDF編集）、<strong>Canva</strong>（デザイン共同変更）、<strong>HubSpot</strong>（営業パイプライン整理）など順次拡大中（Web版・デスクトップ版対応）。
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- スマホ親指操作用 ボトムナビゲーション -->
+    <nav class="bottom-nav" aria-label="ボトムナビゲーション">
+        <a href="#top" class="nav-item active" onclick="setActive(this)">
+            <span class="nav-icon">🏠</span>
+            <span>全体像</span>
+        </a>
+        <a href="#sec-sheets" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">📊</span>
+            <span>Sheets</span>
+        </a>
+        <a href="#sec-whiteboard" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🎨</span>
+            <span>Board</span>
+        </a>
+        <a href="#sec-data" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">📈</span>
+            <span>Data・共有</span>
+        </a>
+        <a href="#sec-connectors" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🔌</span>
+            <span>コネクタ</span>
+        </a>
+    </nav>
+
+    <script>
+        const scales = [1, 1.12, 1.25];
+        const labels = ['🔠 文字大', '🔠 文字特大', '🔠 文字標準'];
+        let scaleIdx = 0;
+
+        function cycleFontSize() {
+            scaleIdx = (scaleIdx + 1) % scales.length;
+            document.documentElement.style.setProperty('--font-scale', scales[scaleIdx]);
+            document.getElementById('fontBtn').textContent = labels[scaleIdx];
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                btn.textContent = '☀️ ライト';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙 ダーク';
+            }
+        }
+
+        function setActive(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
