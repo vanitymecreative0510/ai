@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>【完全図解】新Claude 2.0：AIの会社を回す20機能×4レイヤー完全マスター地図</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=JetBrains+Mono:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #111827;
+            --bg-card: rgba(22, 31, 51, 0.85);
+            --bg-diagram: rgba(13, 19, 34, 0.95);
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --accent-orange: #ff6b35;
+            --accent-amber: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-purple: #a855f7;
+            --accent-green: #10b981;
+            --accent-pink: #ec4899;
+            --accent-red: #ef4444;
+            --border-color: rgba(148, 163, 184, 0.2);
+            --code-bg: #060911;
+            --font-scale: 1;
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f1f5f9;
+            --bg-secondary: #e2e8f0;
+            --bg-card: rgba(255, 255, 255, 0.96);
+            --bg-diagram: #f8fafc;
+            --text-primary: #0f172a;
+            --text-secondary: #334155;
+            --text-muted: #64748b;
+            --accent-orange: #ea580c;
+            --accent-amber: #d97706;
+            --accent-blue: #0284c7;
+            --accent-purple: #7e22ce;
+            --accent-green: #059669;
+            --accent-pink: #db2777;
+            --accent-red: #dc2626;
+            --border-color: rgba(15, 23, 42, 0.14);
+            --code-bg: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: calc(16px * var(--font-scale));
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            padding-bottom: 96px;
+            background-image:
+                radial-gradient(circle at 10% 10%, rgba(255, 107, 53, 0.09), transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(56, 189, 248, 0.09), transparent 30%),
+                radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.08), transparent 35%);
+            background-attachment: fixed;
+            transition: background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* 上部固定バー */
+        .top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.88);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.65rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        [data-theme="light"] .top-bar {
+            background: rgba(241, 245, 249, 0.9);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 900;
+            font-size: 0.92rem;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .brand-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            box-shadow: 0 0 10px var(--accent-orange);
+            flex-shrink: 0;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .ctrl-btn {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.35rem 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 1.25rem 1rem;
+        }
+
+        /* ヒーロー */
+        .hero {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.14) 0%, rgba(56, 189, 248, 0.12) 50%, rgba(168, 85, 247, 0.12) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 22px;
+            padding: 1.6rem 1.35rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 800;
+        }
+
+        .badge-orange { background: rgba(255, 107, 53, 0.18); color: var(--accent-orange); border: 1px solid rgba(255, 107, 53, 0.38); }
+        .badge-blue { background: rgba(56, 189, 248, 0.18); color: var(--accent-blue); border: 1px solid rgba(56, 189, 248, 0.38); }
+        .badge-purple { background: rgba(168, 85, 247, 0.18); color: var(--accent-purple); border: 1px solid rgba(168, 85, 247, 0.38); }
+        .badge-green { background: rgba(16, 185, 129, 0.18); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.38); }
+
+        .hero h1 {
+            font-size: clamp(1.35rem, 4.4vw, 2.05rem);
+            font-weight: 900;
+            line-height: 1.32;
+            margin-bottom: 0.7rem;
+        }
+
+        .hero-desc {
+            color: var(--text-secondary);
+            font-size: 0.93rem;
+            margin-bottom: 1rem;
+        }
+
+        .video-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem 1.2rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .video-meta a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* セクション共通 */
+        .section {
+            margin-bottom: 2.4rem;
+            scroll-margin-top: 70px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            margin-bottom: 1.1rem;
+            padding-bottom: 0.55rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .section-num {
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-amber));
+            color: #fff;
+            font-weight: 900;
+            font-size: 0.85rem;
+            padding: 0.25rem 0.65rem;
+            border-radius: 9px;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        /* ==========================================
+           図解コンポーネント専用スタイル (Visual Diagrams)
+           ========================================== */
+        .diagram-box {
+            background: var(--bg-diagram);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .diagram-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--accent-amber);
+            background: rgba(245, 158, 11, 0.14);
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            padding: 0.2rem 0.65rem;
+            border-radius: 999px;
+            margin-bottom: 1rem;
+        }
+
+        /* 図解1: AIの会社組織図 */
+        .org-chart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.85rem;
+        }
+
+        .org-boss {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.22), rgba(245, 158, 11, 0.22));
+            border: 2px solid var(--accent-orange);
+            border-radius: 16px;
+            padding: 0.9rem 1.4rem;
+            text-align: center;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 0 24px rgba(255, 107, 53, 0.18);
+        }
+
+        .org-boss-title {
+            font-weight: 900;
+            font-size: 1.05rem;
+            color: var(--accent-orange);
+        }
+
+        .org-arrow-down {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--accent-blue);
+            font-weight: 900;
+            font-size: 0.8rem;
+            line-height: 1.1;
+        }
+
+        .org-pillars {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.9rem;
+            width: 100%;
+        }
+
+        @media (min-width: 720px) {
+            .org-pillars {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .org-pillar {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--accent-blue);
+            border-radius: 14px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.55rem;
+        }
+
+        .org-pillar.purple { border-top-color: var(--accent-purple); }
+        .org-pillar.green { border-top-color: var(--accent-green); }
+
+        .org-role-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 900;
+            font-size: 0.95rem;
+        }
+
+        .org-sub-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 0.6rem 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        [data-theme="light"] .org-sub-box {
+            background: rgba(15, 23, 42, 0.04);
+        }
+
+        /* 図解2: 4つのレイヤー×20機能 全体マップ */
+        .layer-map-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 760px) {
+            .layer-map-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .layer-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .layer-tag {
+            font-weight: 900;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .chip-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .feat-pill {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.3rem 0.6rem;
+            font-size: 0.78rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            color: var(--text-primary);
+        }
+
+        .feat-num {
+            background: var(--accent-orange);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 900;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .feat-num.blue { background: var(--accent-blue); color: #090d16; }
+        .feat-num.purple { background: var(--accent-purple); }
+        .feat-num.green { background: var(--accent-green); color: #090d16; }
+
+        /* 図解3: コンテキスト95%圧縮ゲージ & 60分キャッシュ図解 */
+        .gauge-container {
+            margin: 0.75rem 0;
+        }
+
+        .gauge-bar {
+            height: 28px;
+            width: 100%;
+            background: rgba(148, 163, 184, 0.15);
+            border-radius: 999px;
+            overflow: hidden;
+            display: flex;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .gauge-seg-chat {
+            width: 48%;
+            background: linear-gradient(90deg, #0284c7, #38bdf8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .gauge-seg-sys {
+            width: 12%;
+            background: linear-gradient(90deg, #7e22ce, #a855f7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: #fff;
+            white-space: nowrap;
+        }
+
+        .gauge-seg-free {
+            width: 35%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .gauge-seg-danger {
+            width: 5%;
+            background: var(--accent-red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.68rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        /* 図解4: 4つのセッション系機能（ネステッド・フォーク・マスター・サブエージェント）のビジュアル構造図 */
+        .visual-compare-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 720px) {
+            .visual-compare-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .v-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.15rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .v-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .v-card-title {
+            font-size: 1rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .time-chip {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            flex-shrink: 0;
+        }
+
+        .mini-diagram {
+            background: var(--bg-diagram);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.9rem;
+            font-size: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 128px;
+            gap: 0.45rem;
+        }
+
+        .node-pill {
+            padding: 0.3rem 0.75rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.78rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            border: 1px solid transparent;
+        }
+
+        .node-orange { background: rgba(255, 107, 53, 0.18); color: var(--accent-orange); border-color: var(--accent-orange); }
+        .node-blue { background: rgba(56, 189, 248, 0.18); color: var(--accent-blue); border-color: var(--accent-blue); }
+        .node-purple { background: rgba(168, 85, 247, 0.18); color: var(--accent-purple); border-color: var(--accent-purple); }
+        .node-green { background: rgba(16, 185, 129, 0.18); color: var(--accent-green); border-color: var(--accent-green); }
+        .node-muted { background: rgba(148, 163, 184, 0.14); color: var(--text-secondary); border-color: var(--border-color); border-style: dashed; }
+
+        .node-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+        }
+
+        /* レスポンシブ比較表 */
+        .desktop-table-wrap {
+            display: none;
+            overflow-x: auto;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+        }
+
+        table.comp-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.86rem;
+        }
+
+        .comp-table th, .comp-table td {
+            padding: 0.8rem 0.95rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comp-table th {
+            background: rgba(56, 189, 248, 0.12);
+            color: var(--accent-blue);
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .mobile-compare-cards {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .m-comp-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.95rem;
+        }
+
+        .m-comp-title {
+            font-weight: 900;
+            font-size: 0.95rem;
+            color: var(--accent-amber);
+            margin-bottom: 0.45rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .m-comp-row {
+            display: flex;
+            flex-direction: column;
+            gap: 0.12rem;
+            padding: 0.35rem 0;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.84rem;
+        }
+
+        .m-comp-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        @media (min-width: 768px) {
+            .desktop-table-wrap { display: block; }
+            .mobile-compare-cards { display: none; }
+        }
+
+        /* スプリットビュー＆モニター画面モックアップ図 */
+        .monitor-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 720px) {
+            .monitor-layout {
+                grid-template-columns: 1.35fr 1fr;
+            }
+        }
+
+        .monitor-frame {
+            background: var(--bg-diagram);
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            padding: 0.85rem;
+        }
+
+        .monitor-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.65rem;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--text-secondary);
+        }
+
+        .split-panes-6 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+        }
+
+        .split-panes-4 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.4rem;
+        }
+
+        .pane-mock {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            border-radius: 8px;
+            padding: 0.55rem 0.4rem;
+            text-align: center;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* キーボードバッジ */
+        .kbd-key {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-bottom-width: 3px;
+            border-radius: 6px;
+            padding: 0.15rem 0.5rem;
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--accent-amber);
+            display: inline-block;
+        }
+
+        .bullet-list {
+            list-style: none;
+            display: grid;
+            gap: 0.42rem;
+        }
+
+        .bullet-list li {
+            font-size: 0.87rem;
+            color: var(--text-secondary);
+            padding-left: 1.1rem;
+            position: relative;
+        }
+
+        .bullet-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0.1rem;
+            color: var(--accent-orange);
+            font-weight: bold;
+        }
+
+        .bullet-list strong {
+            color: var(--text-primary);
+        }
+
+        /* ボトムナビ */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            background: rgba(9, 13, 22, 0.94);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            padding: 0.4rem 0.25rem calc(0.4rem + env(safe-area-inset-bottom));
+        }
+
+        [data-theme="light"] .bottom-nav {
+            background: rgba(241, 245, 249, 0.95);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.15rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.67rem;
+            font-weight: 700;
+            padding: 0.28rem 0.1rem;
+            border-radius: 10px;
+        }
+
+        .nav-item.active, .nav-item:active {
+            color: var(--accent-orange);
+            background: rgba(255, 107, 53, 0.12);
+        }
+
+        .nav-icon {
+            font-size: 1.08rem;
+            line-height: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 上部固定ヘッダー -->
+    <header class="top-bar">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            <span>【完全図解】Claude 2.0（20機能×4レイヤー）</span>
+        </div>
+        <div class="controls">
+            <a href="./index.html" class="ctrl-btn">🏠 一覧</a>
+            <button class="ctrl-btn" id="fontBtn" onclick="cycleFontSize()">🔠 文字大</button>
+            <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">☀️ ライト</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- ヒーローセクション -->
+        <section class="hero" id="top">
+            <div class="hero-badges">
+                <span class="badge badge-orange">🔥 海外で合計170万再生超の話題</span>
+                <span class="badge badge-blue">🏢 AIの会社を回す20機能</span>
+                <span class="badge badge-purple">🗺️ 4レイヤー完全図解マップ</span>
+                <span class="badge badge-green">📱 スマホ図解対応</span>
+            </div>
+            <h1>【完全図解】新Claude 2.0：エンジニアじゃなくても「AIの会社」を回せる20機能×4ステップ完全マスター地図</h1>
+            <p class="hero-desc">
+                海外YouTube（RoboNuggets 94万再生・Ben AI 76万再生）で大バズり中の「Claude 2.0」の正体とは、Claude Codeに密かに追加された<strong>20個の小アップデートを1つの「AI社員チーム運営システム」として統合したもの</strong>。似ている用語（セッション/セクション/フォーク/ネステッド/マスター/プロジェクト）から自己診断・自分専用UI構築（Mods）まで、直感的な図解で一目で理解できる完全ガイド。
+            </p>
+            <div class="video-meta">
+                <span>📺 チャンネル：【まっち】ゼロから始めるAI活用</span>
+                <span>⏱️ 再生時間：46分33秒</span>
+                <span>🔗 <a href="https://www.youtube.com/watch?v=b1G9_wabB70" target="_blank" rel="noopener">YouTube動画を開く ↗</a></span>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             図解セクション0: 全体像が一目でわかる「AIの会社組織図」＆「20機能マップ」
+             ======================================================= -->
+        <section class="section" id="sec-overview">
+            <div class="section-header">
+                <span class="section-num">全体図解</span>
+                <h2 class="section-title">1枚でわかる！「Claude 2.0 ＝ AIの会社」の組織図と4レイヤー地図</h2>
+            </div>
+
+            <!-- 図解1: AIの会社組織図 -->
+            <div class="diagram-box">
+                <div class="diagram-label">🏢 図解①：従来の「1対1チャット」から「あなたが社長のAI会社」へ（02:30〜05:18）</div>
+
+                <div class="org-chart">
+                    <div class="org-boss">
+                        <div class="org-boss-title">👑 社長（あなた）</div>
+                        <div style="font-size:0.82rem; color:var(--text-secondary); margin-top:0.2rem;">
+                            PCの前で作業に張り付くのではなく、<strong>「仕事を振って・方向性を決める」</strong>だけ（スマホからリモート指示もOK）
+                        </div>
+                    </div>
+
+                    <div class="org-arrow-down">
+                        <span>▲ 報告・可視化　｜　▼ 指示・委任</span>
+                        <span style="font-size:1.1rem;">⬇</span>
+                    </div>
+
+                    <div class="org-pillars">
+                        <!-- 柱1: 部長（ネステッド） -->
+                        <div class="org-pillar">
+                            <div class="org-role-badge" style="color:var(--accent-blue);">
+                                <span>👨‍💼 ① 仕事を振る「部長」</span>
+                                <span class="time-chip">03:10</span>
+                            </div>
+                            <div style="font-weight:800; font-size:0.86rem;">＝ ネステッドセッション（入れ子）</div>
+                            <p style="font-size:0.8rem; color:var(--text-secondary);">
+                                1つの親チャットに「3つ調べて」と頼むだけで、部長AIが<strong>3本の別チャット（部下）を自動生成して同時並行</strong>で進める。
+                            </p>
+                            <div class="org-sub-box">
+                                💬 <strong>親セッション（部長）</strong><br>
+                                ┣ 🧑‍💻 子セッションA（リサーチ1）<br>
+                                ┣ 🧑‍💻 子セッションB（動画カット）<br>
+                                ┗ 🧹 <em>裏方：サブエージェント（事実確認）</em>
+                            </div>
+                        </div>
+
+                        <!-- 柱2: 秘書（マスター） -->
+                        <div class="org-pillar purple">
+                            <div class="org-role-badge" style="color:var(--accent-purple);">
+                                <span>📋 ② 全進捗を知る「秘書」</span>
+                                <span class="time-chip">03:48</span>
+                            </div>
+                            <div style="font-weight:800; font-size:0.86rem;">＝ マスターセッション（ピン留め）</div>
+                            <p style="font-size:0.8rem; color:var(--text-secondary);">
+                                部下（チャット）が増えて「どれがどこまで進んだ？」と迷子になったら、<strong>ピン留めした秘書1人に聞くだけ</strong>で全進捗をまとめて報告。
+                            </p>
+                            <div class="org-sub-box">
+                                📌 <strong>マスターセッション（サイドバー最上部）</strong><br>
+                                ┗ 直近 <strong>20個のセッション</strong> の状況を横断で読み取り、「今どうなってる？」に一発回答！
+                            </div>
+                        </div>
+
+                        <!-- 柱3: 社長室ボード（レール＆Mods） -->
+                        <div class="org-pillar green">
+                            <div class="org-role-badge" style="color:var(--accent-green);">
+                                <span>📊 ③ 社長室の「壁ボード」</span>
+                                <span class="time-chip">04:15</span>
+                            </div>
+                            <div style="font-weight:800; font-size:0.86rem;">＝ セッションレール ＆ Mods</div>
+                            <p style="font-size:0.8rem; color:var(--text-secondary);">
+                                秘書にすら聞かなくても、<strong>残りの予算（クレジット枠）・記憶容量（コンテキスト%）・60分キャッシュ残り時間</strong>を画面に常時表示。
+                            </p>
+                            <div class="org-sub-box">
+                                📈 <strong>常時モニタリング項目</strong><br>
+                                ・コンテキスト使用率（95%で圧縮）<br>
+                                ・週間利用枠 / 60分キャッシュ一括延長
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 図解2: 4レイヤー×20機能の全体マップ -->
+            <div class="diagram-box">
+                <div class="diagram-label">🗺️ 図解②：20個のアップデートを迷わず習得する「4つのレイヤー地図」（05:31〜）</div>
+
+                <div class="layer-map-grid">
+                    <!-- レイヤー1 -->
+                    <div class="layer-card" style="border-left: 4px solid var(--accent-orange);">
+                        <div class="layer-card-header">
+                            <div class="layer-tag" style="color:var(--accent-orange);">🌱 レイヤー1：わかる（基礎・言葉の整理）</div>
+                            <span class="time-chip">07:11〜 / 12機能</span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.6rem;">
+                            まずはチャット1本の状態確認と、<strong>「音が似ている・動きが似ている・名前が同じ」</strong>で混乱しやすい用語の関係性を整理する。
+                        </p>
+                        <div class="chip-grid">
+                            <span class="feat-pill"><span class="feat-num">1</span>セッションレール</span>
+                            <span class="feat-pill"><span class="feat-num">2</span>コンテキスト(95%圧縮)</span>
+                            <span class="feat-pill"><span class="feat-num">3</span>リモートコントロール</span>
+                            <span class="feat-pill"><span class="feat-num">4</span>スリープ防止設定</span>
+                            <span class="feat-pill"><span class="feat-num">5</span>セッション(チャット)</span>
+                            <span class="feat-pill"><span class="feat-num">6</span>セクション(フォルダ)</span>
+                            <span class="feat-pill"><span class="feat-num">7</span>ネステッド(親子)</span>
+                            <span class="feat-pill"><span class="feat-num">8</span>フォーク(途中分岐)</span>
+                            <span class="feat-pill"><span class="feat-num">9</span>マスターセッション</span>
+                            <span class="feat-pill"><span class="feat-num">10</span>サブエージェント</span>
+                            <span class="feat-pill"><span class="feat-num">11</span>旧プロジェクト整理</span>
+                            <span class="feat-pill"><span class="feat-num">12</span>Codeプロジェクト(Cloud)</span>
+                        </div>
+                    </div>
+
+                    <!-- レイヤー2 -->
+                    <div class="layer-card" style="border-left: 4px solid var(--accent-blue);">
+                        <div class="layer-card-header">
+                            <div class="layer-tag" style="color:var(--accent-blue);">🚀 レイヤー2：使い倒す（同時並行＆データ）</div>
+                            <span class="time-chip">24:31〜 / 4機能</span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.6rem;">
+                            1画面で最大6〜10本のセッションを同時展開し、文脈を汚さない脇道質問や、スプシ連動＋AI内蔵ダッシュボードを作る。
+                        </p>
+                        <div class="chip-grid">
+                            <span class="feat-pill"><span class="feat-num blue">13</span>スプリットビュー(画面分割)</span>
+                            <span class="feat-pill"><span class="feat-num blue">14</span>サイドモニター展開(最大10画面)</span>
+                            <span class="feat-pill"><span class="feat-num blue">15</span>サイドチャット(Cmd+;)</span>
+                            <span class="feat-pill"><span class="feat-num blue">16</span>Artifact×データ×AI内蔵＆デザイン統一</span>
+                        </div>
+                    </div>
+
+                    <!-- レイヤー3 -->
+                    <div class="layer-card" style="border-left: 4px solid var(--accent-purple);">
+                        <div class="layer-card-header">
+                            <div class="layer-tag" style="color:var(--accent-purple);">🩺 レイヤー3：点検する（健康診断＆自己分析）</div>
+                            <span class="time-chip">33:26〜 / 2機能</span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.6rem;">
+                            スラッシュコマンド2つで、不要なスキルや設定エラーの自動検診と、自分の全チャット履歴から「使い方の癖・改善案」をHTMLレポート化。
+                        </p>
+                        <div class="chip-grid">
+                            <span class="feat-pill"><span class="feat-num purple">17</span><code>/doctor</code>（不具合・不要スキル診断）</span>
+                            <span class="feat-pill"><span class="feat-num purple">18</span><code>/insights</code>（使い方の癖＆改善HTML分析）</span>
+                        </div>
+                    </div>
+
+                    <!-- レイヤー4 -->
+                    <div class="layer-card" style="border-left: 4px solid var(--accent-green);">
+                        <div class="layer-card-header">
+                            <div class="layer-tag" style="color:var(--accent-green);">🛠️ レイヤー4：育てる（自分専用UI＆高速操作）</div>
+                            <span class="time-chip">37:15〜 / 2機能</span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary); margin-bottom:0.6rem;">
+                            60分放置によるキャッシュ切れ（記憶リセット）を防ぐ「社長室ボード（Mods）」の自作と、プロ必須の3大ショートカット（巻き戻し等）。
+                        </p>
+                        <div class="chip-grid">
+                            <span class="feat-pill"><span class="feat-num green">19</span><code>Mods</code>（社長室ボード＆60分キャッシュ一括延長）</span>
+                            <span class="feat-pill"><span class="feat-num green">20</span>3大ショートカット（新規 / タブ移動 / <code>Esc×2</code>巻き戻し）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             セクション1: レイヤー1「わかる」前半（状態可視化＆リモート操作）
+             ======================================================= -->
+        <section class="section" id="sec-layer1-a">
+            <div class="section-header">
+                <span class="section-num">Layer 1-A</span>
+                <h2 class="section-title">チャット1本の健康状態を見る「セッションレール」と「スマホ遠隔操作」</h2>
+            </div>
+
+            <!-- 図解3: セッションレール＆コンテキスト95%圧縮の仕組み -->
+            <div class="diagram-box">
+                <div class="diagram-label">📊 図解③：いつClaudeが記憶喪失（コンパクト化）するか一目でわかる「セッションレール」（07:11〜08:50）</div>
+                <p style="font-size:0.85rem; color:var(--text-secondary);">
+                    画面右上の「三点と線のアイコン（<strong>セッションレール</strong>）」を開くと、現在の環境・MCPコネクタ・稼働中サブエージェント・メモリに加え、<strong>短期記憶（コンテキスト）の内訳</strong>がリアルタイム表示される。
+                </p>
+
+                <div class="gauge-container">
+                    <div style="display:flex; justify-content:space-between; font-size:0.78rem; font-weight:800; margin-bottom:0.35rem;">
+                        <span>現在のコンテキスト使用量：例 55% 使用中</span>
+                        <span style="color:var(--accent-red);">⚠️ 95%到達で自動圧縮（Compact）発動！</span>
+                    </div>
+                    <div class="gauge-bar">
+                        <div class="gauge-seg-chat">💬 会話やり取り (48%)</div>
+                        <div class="gauge-seg-sys">⚙️ ツール/Skill (7%)</div>
+                        <div class="gauge-seg-free">空き容量 (40%)</div>
+                        <div class="gauge-seg-danger">95%</div>
+                    </div>
+                </div>
+
+                <div class="visual-compare-grid" style="margin-top:0.9rem;">
+                    <div class="org-sub-box">
+                        <strong style="color:var(--accent-blue);">🔍 セッションレールで見える5つの情報</strong>
+                        <ul class="bullet-list" style="margin-top:0.35rem;">
+                            <li><strong>環境・コネクタ・成果物：</strong> 接続中のフォルダやMCPツール一覧</li>
+                            <li><strong>サブエージェント稼働状況：</strong> 裏方で何が動いているか</li>
+                            <li><strong>コンテキスト内訳：</strong> 会話何%・システム/スキル何%か</li>
+                        </ul>
+                    </div>
+                    <div class="org-sub-box">
+                        <strong style="color:var(--accent-amber);">📱 リモート操作＋スリープ防止の鉄板セット（08:51〜10:20）</strong>
+                        <ul class="bullet-list" style="margin-top:0.35rem;">
+                            <li><strong>① 環境 ＞ リモートコントロールをON：</strong> 外出先やソファからスマホのClaudeアプリでPC側の続きを確認・指示できる。</li>
+                            <li><strong>② 設定 ＞ Claude Code ＞「スリープしない」をON：</strong> PCがスリープするとスマホから指示できなくなるため、<strong>「新しいセッションをリモート接続」＋「このコンピュータをスリープしない」の2つを必ずON</strong>にする！</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             セクション2: レイヤー1「わかる」後半（似ている用語・機能の完全図解）
+             ======================================================= -->
+        <section class="section" id="sec-layer1-b">
+            <div class="section-header">
+                <span class="section-num">Layer 1-B</span>
+                <h2 class="section-title">一番混乱する「音が似ている・動きが似ている・名前が同じ」を図解で完全整理</h2>
+            </div>
+
+            <!-- パート1: 音が似ている2つ -->
+            <div class="diagram-box">
+                <div class="diagram-label">🔤 図解④：【音が似ている】「セッション」と「セクション」はたった1文字違いで別物！（11:36〜14:08）</div>
+                <div class="visual-compare-grid">
+                    <div class="v-card" style="border-left: 4px solid var(--accent-blue);">
+                        <div class="v-card-head">
+                            <div class="v-card-title">💬 セッション（Session）＝「1本のチャット」</div>
+                            <span class="time-chip">11:46</span>
+                        </div>
+                        <p style="font-size:0.85rem; color:var(--text-secondary);">
+                            1人のAIエージェントとやり取りする<strong>「チャット1本」</strong>のこと。Claude Codeでは「新しいチャット」ではなく「新しいセッション」と呼ぶ。
+                        </p>
+                    </div>
+                    <div class="v-card" style="border-left: 4px solid var(--accent-amber);">
+                        <div class="v-card-head">
+                            <div class="v-card-title">📁 セクション（Section）＝「まとめるフォルダ」</div>
+                            <span class="time-chip">12:27</span>
+                        </div>
+                        <p style="font-size:0.85rem; color:var(--text-secondary);">
+                            増えすぎたセッション（チャット）を整理して束ねる<strong>「区切りフォルダ」</strong>のこと（右クリック →「セクションに移動」やドラッグ＆ドロップで収納）。※旧Codeで「プロジェクト」と呼ばれていたフォルダ整理機能がこの「セクション」に改称された。
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- パート2: 動きが似ている4つのエージェント機能（ビジュアル構造図） -->
+            <div class="diagram-box">
+                <div class="diagram-label">🌳 図解⑤：【動きが似ている】ネステッド・フォーク・マスター・サブエージェントの構造図解（14:09〜21:05）</div>
+
+                <div class="visual-compare-grid">
+                    <!-- 1. ネステッドセッション -->
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-orange);">① ネステッドセッション（入れ子）</div>
+                            <span class="time-chip">14:28</span>
+                        </div>
+                        <div class="mini-diagram">
+                            <div class="node-pill node-orange">👨‍💼 親セッション（部長：動画台本作成）</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">⬇ 「この動画のカットをネステッドで進めて」</div>
+                            <div class="node-row">
+                                <span class="node-pill node-blue">👩‍💻 子セッションA（自動カット編集）</span>
+                                <span class="node-pill node-blue">👩‍💻 子セッションB（別タスク）</span>
+                            </div>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>イメージ：</strong> 部長（親チャット）が担当者（子チャット）を新しく作って仕事を振る。</li>
+                            <li><strong>特徴：</strong> 子チャットがサイドバーに独立して作られるため、<strong>人間が途中から子チャットを直接開いて口出し・追加指示できる</strong>。</li>
+                        </ul>
+                    </div>
+
+                    <!-- 2. フォーク -->
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-blue);">② フォーク（Fork：途中分岐）</div>
+                            <span class="time-chip">15:50</span>
+                        </div>
+                        <div class="mini-diagram">
+                            <div class="node-pill node-blue">💬 途中までの会話（記憶・文脈100%保持）</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">┏━━━ 右クリック「フォーク」で2本に分岐 ━━━┓</div>
+                            <div class="node-row">
+                                <span class="node-pill node-blue">🛣️ 元の道（そのまま残る）</span>
+                                <span class="node-pill node-green">🍴 フォーク（別の企画・別ルートを試す）</span>
+                            </div>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>イメージ：</strong> 食器のフォークのように、ある時点から会話を2本に枝分かれさせる。</li>
+                            <li><strong>特徴：</strong> <strong>そこまでの記憶を全部保ったまま別の道を試せる</strong>。元のチャットは無傷で残るので、失敗したら元に戻るだけ！</li>
+                        </ul>
+                    </div>
+
+                    <!-- 3. マスターセッション -->
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-purple);">③ マスターセッション（全体統括秘書）</div>
+                            <span class="time-chip">17:25</span>
+                        </div>
+                        <div class="mini-diagram">
+                            <div class="node-pill node-purple">📌 マスターセッション（サイドバー最上部にピン留め）</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">▲ 横断的に状態を読み取る（直近20セッション）</div>
+                            <div class="node-row">
+                                <span class="node-pill node-muted">💬 案件A</span>
+                                <span class="node-pill node-muted">💬 動画B</span>
+                                <span class="node-pill node-muted">💬 開発C</span>
+                                <span class="node-pill node-muted">…最大20個</span>
+                            </div>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>作り方：</strong> 「このセッションをマスターセッションにする」と送り、<strong>「…（三点リーダー）」→「ピン留め」</strong>するだけ！</li>
+                            <li><strong>特徴：</strong> 「今の仕事全体の進捗を教えて」と聞くだけで、<strong>直近20個のセッション</strong>の進み具合を一覧報告してくれる。</li>
+                        </ul>
+                    </div>
+
+                    <!-- 4. サブエージェントとの違い -->
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-green);">④ サブエージェント（裏方のお手伝いさん）</div>
+                            <span class="time-chip">19:46</span>
+                        </div>
+                        <div class="mini-diagram">
+                            <div class="node-pill node-green">💬 セッション（私たちが直接話せる席がある）</div>
+                            <div style="font-size:0.75rem; color:var(--text-muted);">⬇ エージェント同士で裏方依頼 ＆ 結果のみ返却 ⬆</div>
+                            <div class="node-pill node-muted">🧹 サブエージェント（裏方：事実確認など／直接会話は不可）</div>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>セッション系との決定的な違い：</strong> ネステッドやフォークは「席（チャット画面）があって私たちが直接話しかけられる部下」だが、サブエージェントは<strong>「裏方で用事を済ませて結果だけ返すお手伝いさん（人間から直接会話は不可）」</strong>。</li>
+                            <li><strong>使い分け：</strong> <strong>途中で口出ししたい仕事＝ネステッド等のセッション機能</strong> ／ <strong>最後まで丸投げでいい仕事＝サブエージェント</strong>。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- パート3: 名前が同じ3つの「プロジェクト」比較表 -->
+            <div class="diagram-box">
+                <div class="diagram-label">⚠️ 図解⑥：【名前が同じ】3種類の「プロジェクト」の違い（21:17〜23:55）</div>
+
+                <!-- PC用テーブル -->
+                <div class="desktop-table-wrap">
+                    <table class="comp-table">
+                        <thead>
+                            <tr>
+                                <th>名称（場所）</th>
+                                <th>正体・役割</th>
+                                <th>PCを閉じた時の動作</th>
+                                <th>PC内ファイルの閲覧</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>① Chatの「プロジェクト」</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">（通常のChatタブ内）</span></td>
+                                <td>前提資料（ナレッジ）とカスタム指示をまとめておく入れ物</td>
+                                <td>チャット時のみ動作</td>
+                                <td>手動でアップロードした資料のみ</td>
+                            </tr>
+                            <tr>
+                                <td><strong>② 旧Codeの「プロジェクト」</strong><br><span style="font-size:0.75rem; color:var(--text-muted);">（現在の「セクション」📁）</span></td>
+                                <td>増えたセッション（チャット）を整理する単なるフォルダ（※検索欄にのみ旧名が残存）</td>
+                                <td>ローカル稼働（PCを閉じると止まる）</td>
+                                <td>✅ PC内のローカルファイルを全て見られる</td>
+                            </tr>
+                            <tr>
+                                <td><strong>③ 新「Claude Code Project」</strong><br><span style="font-size:0.75rem; color:var(--accent-orange);">（ベータ順次開放：Pro/Max/Ultra）</span></td>
+                                <td><strong>クラウド上で親子セッション（ネステッド）を動かす新機能</strong></td>
+                                <td>🔥 <strong>PCを閉じてもクラウド上でエージェントが仕事を続ける！</strong></td>
+                                <td>❌ PC内は見えないため、必要なファイルは先にプロジェクトへ上げておく</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- スマホ用カード -->
+                <div class="mobile-compare-cards">
+                    <div class="m-comp-card">
+                        <div class="m-comp-title"><span>① Chatの「プロジェクト」</span><span class="time-chip">Chatタブ</span></div>
+                        <div class="m-comp-row"><span class="m-comp-label">役割</span><span>資料と指示をまとめる入れ物。</span></div>
+                    </div>
+                    <div class="m-comp-card">
+                        <div class="m-comp-title"><span>② 旧Codeの「プロジェクト」（現：セクション）</span><span class="time-chip">ローカル</span></div>
+                        <div class="m-comp-row"><span class="m-comp-label">役割</span><span>チャットを整理するフォルダ（現在は「セクション」に改称）。PC内のファイルが見える代わり、PCを閉じると止まる。</span></div>
+                    </div>
+                    <div class="m-comp-card">
+                        <div class="m-comp-title"><span>③ 新「Claude Code Project」（ベータ）</span><span class="time-chip">クラウド稼働</span></div>
+                        <div class="m-comp-row"><span class="m-comp-label">役割</span><span><strong>PCを閉じてもクラウド上で親子セッションが動き続ける！</strong>（※必要なファイルは事前にクラウド側へ上げる必要がある）</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             セクション3: レイヤー2「使い倒す」（画面分割・サイドチャット・AI内蔵データ）
+             ======================================================= -->
+        <section class="section" id="sec-layer2">
+            <div class="section-header">
+                <span class="section-num">Layer 2</span>
+                <h2 class="section-title">使い倒す：最大10画面の同時展開・サイドチャット・AI内蔵ダッシュボード</h2>
+            </div>
+
+            <!-- 図解7: スプリットビュー＆サイドモニター配置図 -->
+            <div class="diagram-box">
+                <div class="diagram-label">🖥️ 図解⑦：スプリットビュー＆サイドモニターで最大10セッションを同時指揮（24:31〜28:36）</div>
+
+                <div class="monitor-layout">
+                    <div class="monitor-frame">
+                        <div class="monitor-top">
+                            <span>🖥️ メインモニター（スプリットビュー：最大6分割）</span>
+                            <span style="color:var(--accent-blue);">Option(Alt)+クリック / ドラッグ</span>
+                        </div>
+                        <div class="split-panes-6">
+                            <div class="pane-mock">💬 セッション1<br><span style="font-size:0.65rem; color:var(--text-muted);">企画・台本</span></div>
+                            <div class="pane-mock">💬 セッション2<br><span style="font-size:0.65rem; color:var(--text-muted);">動画カット</span></div>
+                            <div class="pane-mock">💬 セッション3<br><span style="font-size:0.65rem; color:var(--text-muted);">リサーチA</span></div>
+                            <div class="pane-mock">💬 セッション4<br><span style="font-size:0.65rem; color:var(--text-muted);">リサーチB</span></div>
+                            <div class="pane-mock">💬 セッション5<br><span style="font-size:0.65rem; color:var(--text-muted);">LP作成</span></div>
+                            <div class="pane-mock" style="border-color:var(--accent-orange); background:rgba(255,107,53,0.14);">💡 サイドチャット<br><span style="font-size:0.65rem; color:var(--accent-orange);">Cmd/Ctrl + ;</span></div>
+                        </div>
+                    </div>
+
+                    <div class="monitor-frame">
+                        <div class="monitor-top">
+                            <span>🖥️ サイドモニター（外へドラッグ：4分割）</span>
+                            <span style="color:var(--accent-purple);">別ウィンドウ化</span>
+                        </div>
+                        <div class="split-panes-4">
+                            <div class="pane-mock" style="border-color:var(--accent-purple); background:rgba(168,85,247,0.12);">💬 セッション7</div>
+                            <div class="pane-mock" style="border-color:var(--accent-purple); background:rgba(168,85,247,0.12);">💬 セッション8</div>
+                            <div class="pane-mock" style="border-color:var(--accent-purple); background:rgba(168,85,247,0.12);">💬 セッション9</div>
+                            <div class="pane-mock" style="border-color:var(--accent-purple); background:rgba(168,85,247,0.12);">💬 セッション10</div>
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:0.5rem;">
+                            ※実用上は<strong>「4画面程度」</strong>の同時並行が最も把握しやすくおすすめ（サブモニター側にはサイドチャットは出ない点に注意）。
+                        </div>
+                    </div>
+                </div>
+
+                <div class="visual-compare-grid" style="margin-top:1rem;">
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title">💭 サイドチャット（本筋を汚さない脇道質問）</div>
+                            <span class="time-chip">27:12</span>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>起動方法：</strong> 右上の「…」から開くか、ショートカット <span class="kbd-key">Cmd / Ctrl</span> + <span class="kbd-key">;</span> を押す。</li>
+                            <li><strong>メリット：</strong> メインチャットの記憶（文脈）を引き継いだまま、「この専門用語どういう意味？」「今まで何してたっけ？」と<strong>メインの会話の流れを一切汚さずに質問できる</strong>。</li>
+                            <li><strong>閉じた後も記憶は残る：</strong> サイドバーの一覧には出ないが、内部記録は残るため、後から別チャットで「さっきサイドチャットで聞いた件」と参照することも可能！</li>
+                        </ul>
+                    </div>
+
+                    <div class="v-card">
+                        <div class="v-card-head">
+                            <div class="v-card-title">📊 Artifact「データ」× スプシ連動 × AIチャット内蔵</div>
+                            <span class="time-chip">28:37 - 33:20</span>
+                        </div>
+                        <ul class="bullet-list">
+                            <li><strong>1. スプレッドシート自動連動ダッシュボード：</strong> 左上「アーティファクト」→「データ」を選び、Googleスプレッドシート（MCP連携済）のURLを渡すと、<strong>スプシの数字を変えたら「Update Now」で即座にグラフが更新されるダッシュボード</strong>ができる。</li>
+                            <li><strong>2. ダッシュボード内にClaude相談窓口を埋め込む：</strong> 設定 ＞ 機能 ＞ ビジュアル ＞<strong>「AI搭載のアーティファクト」をON</strong>にし、「AI搭載機能でClaudeのチャット画面を加えて」と指示すると、<strong>見る人がグラフの下で「部署ごとの違いは？」と直接AIに質問できるダッシュボード</strong>が完成する！（※共有相手も有料プランまたは同一Teamプランである必要あり）</li>
+                            <li><strong>3. デザインシステムで色・フォントを固定：</strong> Claude Codeの「設定」→「デザインシステム」からマイデザインシステムを作っておけば、毎回作るダッシュボードの見た目を完全統一できる。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =======================================================
+             セクション4: レイヤー3「点検する」＆ レイヤー4「育てる」
+             ======================================================= -->
+        <section class="section" id="sec-layer34">
+            <div class="section-header">
+                <span class="section-num">Layer 3 &amp; 4</span>
+                <h2 class="section-title">点検する（<code>/doctor</code>・<code>/insights</code>）＆ 育てる（<code>Mods</code>・60分キャッシュ・ショートカット）</h2>
+            </div>
+
+            <!-- 図解8: 点検コマンド2つとMods育成ループ -->
+            <div class="diagram-box">
+                <div class="diagram-label">🔄 図解⑧：自己診断から自分専用ボード（Mods）を育てる黄金サイクル（33:26〜40:47）</div>
+
+                <div class="org-pillars">
+                    <div class="org-pillar">
+                        <div class="org-role-badge" style="color:var(--accent-blue);">
+                            <span>🩺 ① <code>/doctor</code> で健康診断</span>
+                            <span class="time-chip">33:26</span>
+                        </div>
+                        <p style="font-size:0.82rem; color:var(--text-secondary);">
+                            チャット欄に <code>/doctor</code> と打つだけで、<strong>設定ファイルのエラーや、使っていなくて削除・停止すべき不要なスキル</strong>を自動検出し、チェック欄からワンクリックで治療してくれる「Claude Codeのお医者さん」。
+                        </p>
+                    </div>
+
+                    <div class="org-pillar purple">
+                        <div class="org-role-badge" style="color:var(--accent-purple);">
+                            <span>🔎 ② <code>/insights</code> で自己分析</span>
+                            <span class="time-chip">35:04</span>
+                        </div>
+                        <p style="font-size:0.82rem; color:var(--text-secondary);">
+                            <code>/insights</code> と打つ（英語が出たら「日本語にして」と指示）と、<strong>過去の全セッション履歴を分析したHTMLレポート</strong>を生成！「自分の使い方の癖・つまずき箇所・試すべき機能（Hooksやヘッドレスモード等）」を教えてくれる。
+                        </p>
+                    </div>
+
+                    <div class="org-pillar green">
+                        <div class="org-role-badge" style="color:var(--accent-green);">
+                            <span>🛠️ ③ <code>Mods</code> で社長室ボード作成</span>
+                            <span class="time-chip">37:15</span>
+                        </div>
+                        <p style="font-size:0.82rem; color:var(--text-secondary);">
+                            <code>/insights</code> の結果を開いたまま<strong>「僕が作った方がいいMods（モッズ）はある？」</strong>と聞くと、自分の働き方に最適なカスタムUIバー（利用枠・稼働中サブエージェント残り時間・キャッシュ延長ボタン等）を提案＆自動生成してくれる！
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 図解9: 知らないと損する「60分キャッシュの壁」と一括延長の仕組み -->
+            <div class="diagram-box">
+                <div class="diagram-label">⏱️ 図解⑨：なぜ「60分放置」でクレジットが激減するのか？キャッシュの仕組みと対策（38:07〜39:46）</div>
+
+                <div class="visual-compare-grid">
+                    <div class="v-card" style="border-left: 4px solid var(--accent-red);">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-red);">❌ 60分以上放置してしまった場合</div>
+                        </div>
+                        <div class="org-sub-box">
+                            ⏳ <strong>最後の会話から60分経過 ＝ キャッシュ（短期保持メモリ）が消滅！</strong><br>
+                            ┣ <strong>パターンA（自動コンパクト）：</strong> 過去の会話が強制要約され、Claudeが少しおバカになった状態で再開する。<br>
+                            ┗ <strong>パターンB（全文読み直し）：</strong> 過去の長文履歴をゼロから全部読み直すため、<strong>大量のクレジット（利用枠）を二重消費</strong>してしまう！
+                        </div>
+                    </div>
+
+                    <div class="v-card" style="border-left: 4px solid var(--accent-green);">
+                        <div class="v-card-head">
+                            <div class="v-card-title" style="color:var(--accent-green);">⭕ Modsで「60分タイマー」を可視化＆一括延長！</div>
+                        </div>
+                        <div class="org-sub-box">
+                            ⚡ <strong>60分以内に1言でも送ればキャッシュは100%維持される！</strong><br>
+                            ・Mods（社長室ボード）に<strong>「各セッションのキャッシュ切れまであと何分」</strong>を表示させる。<br>
+                            ・切れそうなセッションがあれば、Modsに作った<strong>「まとめて延長」ボタンを1クリック</strong>するだけで裏で軽い通信が走り、全セッションの残り時間が60分にリセットされる！
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 図解10: 定番だけど超重要な3大ショートカット -->
+            <div class="diagram-box">
+                <div class="diagram-label">⌨️ 図解⑩：作業スピードが劇的に上がる必須ショートカット3選（40:48〜42:30）</div>
+
+                <div class="org-pillars">
+                    <div class="org-pillar">
+                        <div style="font-weight:900; font-size:0.92rem; color:var(--accent-amber);">① 新規セッション立ち上げ</div>
+                        <div style="margin: 0.35rem 0;">
+                            <span class="kbd-key">Cmd / Ctrl</span> + <span class="kbd-key">N</span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary);">マウスで「新規作成」を探さず、一瞬で新しいチャット（セッション）を開始する。</p>
+                    </div>
+
+                    <div class="org-pillar purple">
+                        <div style="font-weight:900; font-size:0.92rem; color:var(--accent-purple);">② セッションの上下高速移動</div>
+                        <div style="margin: 0.35rem 0;">
+                            下へ：<span class="kbd-key">Ctrl</span> + <span class="kbd-key">Tab</span><br>
+                            上へ：<span class="kbd-key">Ctrl</span> + <span class="kbd-key">Shift</span> + <span class="kbd-key">Tab</span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary);">サイドバーに並んだ複数のセッションを、キーボードだけで次々と切り替える。</p>
+                    </div>
+
+                    <div class="org-pillar green">
+                        <div style="font-weight:900; font-size:0.92rem; color:var(--accent-green);">③ 会話と作業の「巻き戻し」</div>
+                        <div style="margin: 0.35rem 0;">
+                            <span class="kbd-key">Esc</span> × <strong>2回連打</strong>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-secondary);">
+                            これまでの自分の指示一覧が出現し、戻りたい時点を選んで<strong>「ここまで巻き戻す」</strong>でタイムスリップできる！（横の「元に戻す」で巻き戻し自体の取り消しも可能）
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- まとめメッセージ：フォーク型キャリア（プロティアン・キャリア） -->
+            <div class="diagram-box" style="border-left: 4px solid var(--accent-orange);">
+                <div class="diagram-label">🌱 エピローグ：人生やキャリアも「フォーク（分岐）」で試せばいい（42:30〜46:11）</div>
+                <p style="font-size:0.88rem; color:var(--text-secondary);">
+                    これまでのキャリアは「今の会社を続けるか・辞めるか」の二択（ゼロか百か）で考えがちだったが、Claude 2.0の<strong>「フォーク（Fork）」</strong>のように、<strong>「これまでの経験や本業（元のチャット）はしっかり残したまま、もう1本の別の道をAIチームに手伝ってもらいながら試す（プロティアン・キャリア）」</strong>ことができる。朝、親セッションに3つの仕事を振って席を離れ、スマホで方向性だけ決める「社長の働き方」で空いた時間を、ぜひやりたかった新しい挑戦に使おう。
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- スマホ親指操作用 ボトムナビゲーション -->
+    <nav class="bottom-nav" aria-label="ボトムナビゲーション">
+        <a href="#top" class="nav-item active" onclick="setActive(this)">
+            <span class="nav-icon">🏢</span>
+            <span>組織図</span>
+        </a>
+        <a href="#sec-overview" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🗺️</span>
+            <span>20機能地図</span>
+        </a>
+        <a href="#sec-layer1-b" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🌳</span>
+            <span>用語図解</span>
+        </a>
+        <a href="#sec-layer2" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🖥️</span>
+            <span>画面分割</span>
+        </a>
+        <a href="#sec-layer34" class="nav-item" onclick="setActive(this)">
+            <span class="nav-icon">🛠️</span>
+            <span>Mods・診断</span>
+        </a>
+    </nav>
+
+    <script>
+        const scales = [1, 1.12, 1.25];
+        const labels = ['🔠 文字大', '🔠 文字特大', '🔠 文字標準'];
+        let scaleIdx = 0;
+
+        function cycleFontSize() {
+            scaleIdx = (scaleIdx + 1) % scales.length;
+            document.documentElement.style.setProperty('--font-scale', scales[scaleIdx]);
+            document.getElementById('fontBtn').textContent = labels[scaleIdx];
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const btn = document.getElementById('themeBtn');
+            if (html.getAttribute('data-theme') === 'light') {
+                html.removeAttribute('data-theme');
+                btn.textContent = '☀️ ライト';
+            } else {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙 ダーク';
+            }
+        }
+
+        function setActive(el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+        }
+    </script>
+</body>
+</html>
